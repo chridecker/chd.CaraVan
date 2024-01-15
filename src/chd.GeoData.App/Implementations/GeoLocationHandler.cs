@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace chd.GeoData.App.Implementations.Android
+namespace chd.GeoData.App.Implementations
 {
     public class GeoLocationHandler : IGeoLocationHandler
     {
@@ -20,7 +20,7 @@ namespace chd.GeoData.App.Implementations.Android
                 return location;
             }
             catch { }
-            return null;
+            return new Location(47.259659, 11.400375, 580);
         }
     }
 }

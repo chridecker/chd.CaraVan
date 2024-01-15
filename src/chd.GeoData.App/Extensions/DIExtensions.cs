@@ -1,5 +1,4 @@
 ﻿using chd.GeoData.App.Implementations;
-using chd.GeoData.App.Implementations.Android;
 using chd.GeoData.App.Interfaces;
 using System;
 using System.Collections.Generic;
