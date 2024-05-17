@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.UI", "chd.CaraVan.UI\chd.CaraVan.UI.csproj", "{AE8552F9-289D-45DC-BCB8-38853C654933}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE8552F9-289D-45DC-BCB8-38853C654933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8552F9-289D-45DC-BCB8-38853C654933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8552F9-289D-45DC-BCB8-38853C654933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8552F9-289D-45DC-BCB8-38853C654933}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {025A10D3-C98B-43EF-B2C6-B1F9EAF0D7CD}
+	EndGlobalSection
+EndGlobal
