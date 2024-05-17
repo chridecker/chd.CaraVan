@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\chd.CaraVan.UI\chd.CaraVan.UI.csproj" />
+  </ItemGroup>
+
 </Project>
