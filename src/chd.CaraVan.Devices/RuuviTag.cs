@@ -2,6 +2,7 @@
 using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -16,34 +17,54 @@ namespace chd.CaraVan.Devices
         private Adapter _adapter;
         private Device _device;
         private readonly RuvviTagConfiguration _config;
+        private readonly ILogger _logger;
 
-        public RuuviTag(RuvviTagConfiguration config)
+        public RuuviTag(ILogger logger, RuvviTagConfiguration config)
         {
-            this._config = _config;
+            this._config = config;
+            this._logger = logger;
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
         {
+            var adapters = await BlueZManager.GetAdaptersAsync();
 
+            this._adapter = adapters.FirstOrDefault();
+            this._logger?.LogInformation($"Choose Adapter: {this._adapter?.Name}");
 
-            await BlueZManager.GetAdaptersAsync();
+            //this._device = await this._adapter.GetDeviceAsync(this._config.DeviceAddress);
 
-            this._adapter = await BlueZManager.GetAdapterAsync(this._config.BLEAdapter);
+            //var prop = await this._device.GetPropertiesAsync();
+            //this._logger?.LogInformation($"Device. {prop.Name} - {prop.Address}, {prop.Connected} / {prop.IsConnected}");
 
-            var devices = await this._adapter.GetDevicesAsync();
+            //var data = prop.ServiceData;
 
-            _device = await this._adapter.GetDeviceAsync(this._config.DeviceAddress);
-            _device.Connected += this.Device_Connected;
-            _device.Disconnected += this.Device_Connected;
-            _device.ServicesResolved += this.Device_ServicesResolved;
-            await _device.ConnectAsync();
+            //foreach (var d in data)
+            //{
+            //    this._logger?.LogInformation($"Service {d.Key} -> {d.Value}");
+            //}
 
+            this._adapter.DeviceFound += this._adapter_DeviceFound;
 
-            //this._adapter.DeviceFound += this.Adapter1_DeviceFound;
-            //await this._adapter.StartDiscoveryAsync();
+            await this._adapter.StartDiscoveryAsync();
         }
 
-       
+        private async Task _adapter_DeviceFound(Adapter sender, DeviceFoundEventArgs eventArgs)
+        {
+            var device = eventArgs.Device;
+
+            var prop = await device.GetPropertiesAsync();
+
+            if (prop.Address == this._config.DeviceAddress)
+            {
+                this._logger?.LogInformation($"Device {prop.Address}, {prop.Connected} / {prop.IsConnected}");
+                var data = prop.ServiceData;
+                foreach (var d in data)
+                {
+                    this._logger?.LogInformation($"Service {d.Key} -> {d.Value}");
+                }
+            }
+        }
 
         private async Task Device_ServicesResolved(Device sender, BlueZEventArgs eventArgs)
         {
@@ -55,19 +76,15 @@ namespace chd.CaraVan.Devices
 
         }
 
-        private async Task Adapter1_DeviceFound(Adapter sender, DeviceFoundEventArgs eventArgs)
-        {
-            await this._adapter.StopDiscoveryAsync();
-        }
 
-        public Task<RuuviTagData> GetDataAsync(CancellationToken cancellationToken = default)
+        public async Task<RuuviTagData> GetDataAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
         public async Task DisconnectAsync(CancellationToken cancellationToken = default)
         {
-            await this._device.DisconnectAsync();
+            await this._device?.DisconnectAsync();
             await this._adapter.StopDiscoveryAsync();
         }
     }
