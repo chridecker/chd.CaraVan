@@ -3,6 +3,8 @@ using chd.CaraVan.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddUI
+
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
