@@ -1,5 +1,8 @@
-﻿using chd.CaraVan.UI.Implementations;
+﻿using chd.CaraVan.Contracts.Settings;
+using chd.CaraVan.UI.Implementations;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +13,13 @@ namespace chd.CaraVan.UI.Extensions
 {
     public static class DIExtensions
     {
-        public static IServiceCollection AddUi(this IServiceCollection services)
+        public static IServiceCollection AddUi(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
+
             services.AddTransient<IDataService, DataService>();
+
+            services.AddMudServices();
 
             return services;
         }

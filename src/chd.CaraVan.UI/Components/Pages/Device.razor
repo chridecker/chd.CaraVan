@@ -1,0 +1,13 @@
+﻿@page "/device/{Id:int}"
+@using Microsoft.Extensions.Options
+@using chd.CaraVan.Contracts.Dtos
+@using chd.CaraVan.Contracts.Settings
+@inject IOptionsMonitor<DeviceSettings> options
+<h3>@options.CurrentValue.Devices.FirstOrDefault(x => x.Id == this.Id).Name</h3>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private DeviceDto device => options.CurrentValue.Devices.FirstOrDefault(x => x.Id == this.Id);
+
+}

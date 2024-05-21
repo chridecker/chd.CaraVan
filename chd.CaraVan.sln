@@ -7,17 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0F48C08D-70D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Web", "src\chd.CaraVan.Web\chd.CaraVan.Web.csproj", "{882501F2-1594-4526-9B16-6FDD8713F7A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.UI", "src\chd.CaraVan.UI\chd.CaraVan.UI.csproj", "{13422C75-92B5-4BB9-A9B4-6155A4D456FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.UI", "src\chd.CaraVan.UI\chd.CaraVan.UI.csproj", "{13422C75-92B5-4BB9-A9B4-6155A4D456FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Devices", "src\chd.CaraVan.Devices\chd.CaraVan.Devices.csproj", "{85CEFFD9-D91B-4A36-ADA6-D2884D1F0301}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.Devices", "src\chd.CaraVan.Devices\chd.CaraVan.Devices.csproj", "{85CEFFD9-D91B-4A36-ADA6-D2884D1F0301}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Devices.Contracts", "src\chd.CaraVan.Devices.Contracts\chd.CaraVan.Devices.Contracts.csproj", "{16ED750C-F0A6-4DB0-A790-7E3D4A004D71}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{90B0DF00-A855-434A-BAD0-225F7DB65559}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.Devices.Contracts", "src\chd.CaraVan.Devices.Contracts\chd.CaraVan.Devices.Contracts.csproj", "{16ED750C-F0A6-4DB0-A790-7E3D4A004D71}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Worker", "test\chd.CaraVan.Worker\chd.CaraVan.Worker.csproj", "{979A5BB3-8C10-4802-B5FC-07062CCCF52B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.Contracts", "src\chd.CaraVan.Contracts\chd.CaraVan.Contracts.csproj", "{8D5B875D-2149-4025-BDCA-859E8ECBEFA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{90B0DF00-A855-434A-BAD0-225F7DB65559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

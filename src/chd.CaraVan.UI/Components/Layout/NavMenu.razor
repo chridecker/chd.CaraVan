@@ -1,24 +1,15 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">chd.CaraVan.UI</a>
-    </div>
-</div>
+﻿@using Microsoft.Extensions.Options
+@using chd.CaraVan.Contracts.Settings
+@inject IOptionsMonitor<DeviceSettings> optionsMonitor
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+    <MudNavGroup Title="Devices" Expanded="true">
+        @foreach (var dev in optionsMonitor.CurrentValue.Devices)
+        {
+            <MudNavLink Href="@($"/device/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
+            @* <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink> *@
+        }
+    </MudNavGroup>
+    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
+</MudNavMenu>
