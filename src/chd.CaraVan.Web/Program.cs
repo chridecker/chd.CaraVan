@@ -1,9 +1,10 @@
 using chd.CaraVan.UI.Components;
+using chd.CaraVan.UI.Extensions;
 using chd.CaraVan.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddUI
+builder.Services.AddUi(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
