@@ -6,6 +6,13 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
 {
     public partial class DeviceCard
     {
-        [Parameter]public DeviceDto DeviceDto { get; set; }
+        [Parameter] public DeviceDto DeviceDto { get; set; }
+
+        [Inject] private NavigationManager _navigationManager { get; set; }
+
+        private void NavigateToDevice()
+        {
+            this._navigationManager.NavigateTo($"/device/{this.DeviceDto.Id}");
+        }
     }
 }

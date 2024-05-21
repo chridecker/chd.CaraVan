@@ -11,24 +11,23 @@ namespace chd.CaraVan.UI.Implementations
 {
     public class DataService : IDataService
     {
-        public async Task<IQueryable<DeviceData>> GetDeviceDataAsync(int deviceId, DateTime from, DateTime to, CancellationToken cancellationToken = default)
+        public async Task<ICollection<DeviceData>> GetDeviceDataAsync(int deviceId, EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default)
         {
             var lst = new List<DeviceData>();
             var entries = (to - from).TotalMinutes;
-            var rand = new Random(200);
+            var rand = new Random();
             for (var i = 0; i < entries; i++)
             {
-                await Task.Delay(50, cancellationToken);
-                lst.Add(new(i + 1, DateTime.Now.AddMinutes((i - entries)), EDataType.Temperature, rand.Next())
+                lst.Add(new(i + 1, DateTime.Now.AddMinutes((i - entries)), type, rand.Next(18,type== EDataType.Temperature ? 36 : 95 ))
                 {
                     DeviceId = deviceId
                 });
             }
-            return lst.AsQueryable();
+            return lst;
         }
     }
     public interface IDataService
     {
-        Task<IQueryable<DeviceData>> GetDeviceDataAsync(int deviceId, DateTime from, DateTime to, CancellationToken cancellationToken = default);
+        Task<ICollection<DeviceData>> GetDeviceDataAsync(int deviceId, EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default);
     }
 }

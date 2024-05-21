@@ -1,0 +1,25 @@
+﻿<MudChart ChartType="ChartType.Line" @bind-SelectedIndex="_index"
+          ChartSeries="@chartSeries"
+          ChartOptions="@chartOptions"
+          CanHideSeries="true"
+          XAxisLabels="XLables.ToArray()">
+
+</MudChart>
+@code {
+    [Parameter] public IDictionary<string, IEnumerable<double>> Data { get; set; }
+    [Parameter] public IEnumerable<string> XLables { get; set; }
+
+    private int _index = -1;
+
+    private ChartOptions chartOptions = new ChartOptions()
+    {
+        YAxisTicks = 5,
+    };
+
+    private List<ChartSeries> chartSeries => this.Data.Select(s =>
+        new ChartSeries()
+            {
+                Name = s.Key,
+                Data = s.Value.ToArray(),
+            }).ToList();
+}
