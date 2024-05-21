@@ -1,0 +1,9 @@
+﻿<MudText Typo="Typo.h3">
+    @this.Value.ToString("n1") @this.Unit
+</MudText>
+
+@code {
+    [Parameter] public decimal Value { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Unit { get; set; }
+}
