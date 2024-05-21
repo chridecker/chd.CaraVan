@@ -1,5 +1,6 @@
 ﻿using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.UI.Implementations;
+using chd.CaraVan.DataAccess.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
@@ -19,7 +20,11 @@ namespace chd.CaraVan.UI.Extensions
 
             services.AddTransient<IDataService, DataService>();
 
+            services.AddDAL();
             services.AddMudServices();
+
+
+            services.AddHostedService<DeviceWorker>();
 
             return services;
         }

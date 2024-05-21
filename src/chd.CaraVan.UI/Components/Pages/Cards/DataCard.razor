@@ -1,13 +1,13 @@
 ﻿<MudText Typo="Typo.caption" Color="Color.Default">
-    @this.Title 
+    @this.Title
 </MudText>
 
 <MudText Typo="Typo.h4" Color="Color.Default">
-    @this.Value.ToString("n1") @this.Unit
+    @this.Value @this.Unit
 </MudText>
 
 @code {
-    [Parameter] public decimal Value { get; set; }
+    [Parameter] public string Value { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public string Unit { get; set; }
 }

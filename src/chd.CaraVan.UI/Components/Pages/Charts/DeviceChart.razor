@@ -1,25 +1,29 @@
 ﻿<MudChart ChartType="ChartType.Line" @bind-SelectedIndex="_index"
-          ChartSeries="@chartSeries"
-          ChartOptions="@chartOptions"
-          CanHideSeries="true"
-          XAxisLabels="XLables.ToArray()">
+          ChartSeries="@(new List<ChartSeries>(){
+new (){ Data = this.Data,Name = this.Title},_average})"
+          ChartOptions="@(new (){ YAxisTicks = 5 })"
+          CanHideSeries="true">
 
 </MudChart>
 @code {
-    [Parameter] public IDictionary<string, IEnumerable<double>> Data { get; set; }
-    [Parameter] public IEnumerable<string> XLables { get; set; }
+    [Parameter] public double[] Data { get; set; }
+    [Parameter] public string Title { get; set; }
 
     private int _index = -1;
 
-    private ChartOptions chartOptions = new ChartOptions()
-    {
-        YAxisTicks = 5,
-    };
-
-    private List<ChartSeries> chartSeries => this.Data.Select(s =>
-        new ChartSeries()
-            {
-                Name = s.Key,
-                Data = s.Value.ToArray(),
-            }).ToList();
+    private ChartSeries _average => new ChartSeries()
+        {
+            Name = "Durchschnitt",
+            Data = this.Data.Select(s => this.Data.Average()).ToArray()
+        };
+    private ChartSeries _top => new ChartSeries()
+        {
+            Name = "Max",
+            Data = this.Data.Select(s => this.Data.Max()).ToArray()
+        };
+    private ChartSeries _min => new ChartSeries()
+        {
+            Name = "Min",
+            Data = this.Data.Select(s => this.Data.Min()).ToArray()
+        };
 }

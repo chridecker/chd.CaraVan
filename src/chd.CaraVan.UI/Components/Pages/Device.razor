@@ -8,30 +8,26 @@
 @inject IDataService dataService
 <h3>@options.CurrentValue.Devices.FirstOrDefault(x => x.Id == this.Id).Name</h3>
 
-@if (data != null && data.Any())
+@if (dataTemperature != null && dataTemperature.Any())
 {
-    <DeviceChart Data="@data" XLables="@dataLabels"></DeviceChart>
+    <DeviceChart Title="Temperatur" Data="@dataTemperature"></DeviceChart>
+}
+@if (dataHumidity != null && dataHumidity.Any())
+{
+    <DeviceChart Title="Luftfeuchtigkeit" Data="@dataHumidity"></DeviceChart>
 }
 
 @code {
     [Parameter] public int Id { get; set; }
 
     private DeviceDto device => options.CurrentValue.Devices.FirstOrDefault(x => x.Id == this.Id);
-    private IDictionary<string, IEnumerable<double>> data;
-    private IEnumerable<string> dataLabels;
+    private double[] dataTemperature;
+    private double[] dataHumidity;
 
     protected override async Task OnParametersSetAsync()
     {
-        var dataTemp = await this.dataService.GetDeviceDataAsync(this.device.Id, Contracts.Enums.EDataType.Temperature, DateTime.Now.AddHours(-1), DateTime.Now);
-        var dataHumitity = await this.dataService.GetDeviceDataAsync(this.device.Id, Contracts.Enums.EDataType.Humidity, DateTime.Now.AddHours(-1), DateTime.Now);
-
-        data = new Dictionary<string, IEnumerable<double>>
-        {
-            {"Temperatur",dataTemp.Select(s => (double)s.Value)},
-            {"Luftfeuchtigkeit",dataHumitity.Select(s => (double)s.Value)},
-        };
-        dataLabels = dataTemp.Select(s => s.RecordDateTime.ToString("HH:mm:ss"));
-
+        dataTemperature = (await this.dataService.GetDeviceDataAsync(this.device.Id, Contracts.Enums.EDataType.Temperature, DateTime.Now.AddHours(-1), DateTime.Now)).Select(s => (double)s.Value).ToArray();
+        dataHumidity = (await this.dataService.GetDeviceDataAsync(this.device.Id, Contracts.Enums.EDataType.Humidity, DateTime.Now.AddHours(-1), DateTime.Now)).Select(s => (double)s.Value).ToArray();
         await base.OnParametersSetAsync();
     }
 
