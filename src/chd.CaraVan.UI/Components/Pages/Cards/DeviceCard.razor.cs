@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Components;
 
 namespace chd.CaraVan.UI.Components.Pages.Cards
 {
-    public partial class DeviceCard : IDisposable
+    public partial class DeviceCard : IAsyncDisposable
     {
         [Parameter] public DeviceDto DeviceDto { get; set; }
 
-        [Inject] private NavigationManager _navigationManager { get; set; }
+        [Inject] private NavigationManager? _navigationManager { get; set; }
         [Inject] private IDataService _dataService { get; set; }
 
         private CancellationTokenSource _cts = new();
@@ -41,9 +41,11 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
 
         private void NavigateToDevice() => this._navigationManager.NavigateTo($"/device/{this.DeviceDto.Id}");
 
-        public void Dispose()
+
+        public async ValueTask DisposeAsync()
         {
             this._cts.Cancel();
+            await this._reload;
         }
     }
 }
