@@ -1,5 +1,5 @@
 ﻿<MudText Typo="Typo.caption" Color="Color.Default">
-    @this.Title
+    @this.Title (@(this.RecordTime?.ToString("HH:mm:ss dd.MM.yy")))
 </MudText>
 
 <MudText Typo="Typo.h4" Color="Color.Default">
@@ -10,4 +10,5 @@
     [Parameter] public string Value { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public string Unit { get; set; }
+    [Parameter] public DateTime? RecordTime{ get; set; }
 }

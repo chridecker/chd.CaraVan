@@ -3,7 +3,7 @@
         <MudText>@DeviceDto.Name</MudText>
     </MudCardHeader>
     <MudCardContent>
-        <DataCard Title="Temperatur" Value="@(this._data(this._temperature))" Unit="°C" />
-        <DataCard Title="Luftfeuchtigkeit" Value="@(this._data(this._humidity))" Unit="%" />
+        <DataCard Title="Temperatur" Value="@(this._data(this._temperature.Item1))" RecordTime="@this._temperature.Item2" Unit="°C" />
+        <DataCard Title="Luftfeuchtigkeit" Value="@(this._data(this._humidity.Item1))" Unit="%" RecordTime="@this._humidity.Item2" />
     </MudCardContent>
 </MudCard>
