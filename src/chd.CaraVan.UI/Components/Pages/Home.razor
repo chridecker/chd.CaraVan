@@ -1,8 +1,10 @@
 ﻿@page "/"
 @using chd.CaraVan.Contracts.Dtos
+@using chd.CaraVan.UI.Components.Pages.Cards
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@foreach (var device in this.DeviceSettings.CurrentValue.Devices)
+{
+    <DeviceCard DeviceDto="device" />
+}

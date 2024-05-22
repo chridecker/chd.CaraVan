@@ -6,7 +6,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Logging.ClearProviders().AddNLog();
 
-builder.Services.Configure<RuvviTagConfiguration>(builder.Configuration.GetSection(nameof(RuvviTagConfiguration)));
+builder.Services.Configure<RuuviTagConfiguration>(builder.Configuration.GetSection(nameof(RuuviTagConfiguration)));
 
 builder.Services.AddHostedService<Worker>();
 

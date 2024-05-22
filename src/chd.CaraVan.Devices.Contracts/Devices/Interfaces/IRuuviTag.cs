@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Devices.Contracts.Devices.Interfaces
 {
-    public interface IRuuviITag : IDevice
+    public interface IRuuviTag : IDevice
     {
         Task<RuuviTagData> GetDataAsync(CancellationToken cancellationToken = default);
-}
+        event EventHandler<RuuviTagEventArgs> DataReceived;
+    }
 }

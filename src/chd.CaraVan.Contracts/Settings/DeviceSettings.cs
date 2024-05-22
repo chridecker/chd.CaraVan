@@ -9,6 +9,6 @@ namespace chd.CaraVan.Contracts.Settings
 {
     public class DeviceSettings
     {
-        public IEnumerable<Device> Devices { get; set; }
+        public IEnumerable<DeviceDto> Devices { get; set; }
     }
 }

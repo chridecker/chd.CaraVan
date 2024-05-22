@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Devices.Contracts.Dtos.RuvviTag
 {
-    public class RuvviTagConfiguration
+    public class RuuviTagEventArgs
     {
-        public string BLEAdapter { get; set; }
-        public string DeviceAddress { get; set; }
+        public string   UID{ get; set; }
+        public DateTime DateTime { get; set; }
+        public RuuviTagData Data { get; set; }
     }
 }

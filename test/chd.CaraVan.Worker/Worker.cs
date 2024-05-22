@@ -7,9 +7,9 @@ namespace chd.CaraVan.Worker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IOptionsMonitor<RuvviTagConfiguration> _optionsMonitor;
+        private readonly IOptionsMonitor<RuuviTagConfiguration> _optionsMonitor;
 
-        public Worker(ILogger<Worker> logger, IOptionsMonitor<RuvviTagConfiguration> optionsMonitor)
+        public Worker(ILogger<Worker> logger, IOptionsMonitor<RuuviTagConfiguration> optionsMonitor)
         {
             _logger = logger;
             this._optionsMonitor = optionsMonitor;
@@ -19,7 +19,7 @@ namespace chd.CaraVan.Worker
         {
 
 
-            var tag = new RuuviTag(this._logger, new RuvviTagConfiguration
+            var tag = new RuuviTag(this._logger, new RuuviTagConfiguration
             {
                 BLEAdapter = this._optionsMonitor.CurrentValue.BLEAdapter,
                 DeviceAddress = this._optionsMonitor.CurrentValue.DeviceAddress

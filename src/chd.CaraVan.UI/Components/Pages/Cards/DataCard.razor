@@ -1,0 +1,13 @@
+﻿<MudText Typo="Typo.caption" Color="Color.Default">
+    @this.Title
+</MudText>
+
+<MudText Typo="Typo.h4" Color="Color.Default">
+    @this.Value @this.Unit
+</MudText>
+
+@code {
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string Unit { get; set; }
+}

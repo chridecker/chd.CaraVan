@@ -1,0 +1,29 @@
+﻿<MudChart ChartType="ChartType.Line" @bind-SelectedIndex="_index"
+          ChartSeries="@(new List<ChartSeries>(){
+new (){ Data = this.Data,Name = this.Title},_average})"
+          ChartOptions="@(new (){ YAxisTicks = 5 })"
+          CanHideSeries="true">
+
+</MudChart>
+@code {
+    [Parameter] public double[] Data { get; set; }
+    [Parameter] public string Title { get; set; }
+
+    private int _index = -1;
+
+    private ChartSeries _average => new ChartSeries()
+        {
+            Name = "Durchschnitt",
+            Data = this.Data.Select(s => this.Data.Average()).ToArray()
+        };
+    private ChartSeries _top => new ChartSeries()
+        {
+            Name = "Max",
+            Data = this.Data.Select(s => this.Data.Max()).ToArray()
+        };
+    private ChartSeries _min => new ChartSeries()
+        {
+            Name = "Min",
+            Data = this.Data.Select(s => this.Data.Min()).ToArray()
+        };
+}

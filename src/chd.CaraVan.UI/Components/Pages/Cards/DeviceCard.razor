@@ -1,0 +1,9 @@
+﻿<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToDevice">
+    <MudCardHeader>
+        <MudText>@DeviceDto.Name</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <DataCard Title="Temperatur" Value="@(this._data(this._temperature))" Unit="°C" />
+        <DataCard Title="Luftfeuchtigkeit" Value="@(this._data(this._humidity))" Unit="%" />
+    </MudCardContent>
+</MudCard>

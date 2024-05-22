@@ -1,9 +1,15 @@
-﻿<MudNavMenu>
+﻿@using Microsoft.Extensions.Options
+@using chd.CaraVan.Contracts.Settings
+@inject IOptionsMonitor<DeviceSettings> optionsMonitor
+
+<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavLink Href="/servers" Match="NavLinkMatch.Prefix">Servers</MudNavLink>
-    <MudNavGroup Title="Settings" Expanded="true">
-        <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
-        <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
+    <MudNavGroup Title="Devices" Expanded="true">
+        @foreach (var dev in optionsMonitor.CurrentValue.Devices)
+        {
+            <MudNavLink Href="@($"/device/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
+            @* <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink> *@
+        }
     </MudNavGroup>
     <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
 </MudNavMenu>
