@@ -8,8 +8,6 @@
         @foreach (var dev in optionsMonitor.CurrentValue.Devices)
         {
             <MudNavLink Href="@($"/device/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
-            @* <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink> *@
         }
     </MudNavGroup>
-    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
 </MudNavMenu>

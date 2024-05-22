@@ -21,9 +21,9 @@ namespace chd.CaraVan.DataAccess.Repositories
 
         public void Add(TData data) => this._bag.Add(data);
 
-        public void Clean(EDataType type, DateTime till)
+        public void Clean(DateTime till)
         {
-            this._bag.RemoveAll(x => x.Type == type && x.RecordDateTime <= till);
+            this._bag.RemoveAll(x => x.RecordDateTime <= till);
         }
 
         public void Clear() => this._bag.Clear();
@@ -42,7 +42,7 @@ namespace chd.CaraVan.DataAccess.Repositories
 
         void Add(TData data);
 
-        void Clean(EDataType type, DateTime till);
+        void Clean(DateTime till);
     }
 
     public interface IRepository

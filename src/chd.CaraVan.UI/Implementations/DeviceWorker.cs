@@ -1,4 +1,5 @@
-﻿using chd.CaraVan.Contracts.Settings;
+﻿using chd.CaraVan.Contracts.Enums;
+using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.DataAccess.Repositories;
 using chd.CaraVan.Devices;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,7 @@ namespace chd.CaraVan.UI.Implementations
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                this._deviceDataRepository.Clean(DateTime.Now.AddDays(-1));
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
