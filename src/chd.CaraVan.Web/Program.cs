@@ -1,14 +1,25 @@
 using chd.CaraVan.UI.Extensions;
 using chd.CaraVan.UI.Components;
-using chd.CaraVan.UI.Extensions;
 using chd.CaraVan.Web.Components;
-using Microsoft.AspNetCore.Identity;
+using System.Diagnostics;
+using NLog.Extensions.Logging;
+
+if (!(Debugger.IsAttached || args.Contains("--console")))
+{
+    var pathToExe = Process.GetCurrentProcess()?.MainModule?.FileName ?? string.Empty;
+    var pathToContentRoot = Path.GetDirectoryName(pathToExe);
+    if (!string.IsNullOrWhiteSpace(pathToContentRoot))
+    {
+        Directory.SetCurrentDirectory(pathToContentRoot);
+    }
+}
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddUi(builder.Configuration);
+builder.Logging.ClearProviders().AddNLog();
 
-// Add services to the container.
+builder.Services.AddUi(builder.Configuration);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddCircuitOptions(opt =>
 {
     opt.DetailedErrors = true;
@@ -16,11 +27,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddCircui
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
+app.UseExceptionHandler("/Error", createScopeForErrors: true);
 
 app.UseStaticFiles();
 app.UseAntiforgery();
