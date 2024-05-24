@@ -3,6 +3,7 @@ using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 using System.Text;
 
 namespace chd.CaraVan.Devices
@@ -31,20 +32,7 @@ namespace chd.CaraVan.Devices
             {
                 var adapters = await BlueZManager.GetAdaptersAsync();
                 this._adapter = adapters.FirstOrDefault();
-                this._logger?.LogInformation($"Choose Adapter: {this._adapter?.Name}");
-
-                //this._device = await this._adapter.GetDeviceAsync(this._config.DeviceAddress);
-
-                //var prop = await this._device.GetPropertiesAsync();
-                //this._logger?.LogInformation($"Device. {prop.Name} - {prop.Address}, {prop.Connected} / {prop.IsConnected}");
-
-                //var data = prop.ServiceData;
-
-                //foreach (var d in data)
-                //{
-                //    this._logger?.LogInformation($"Service {d.Key} -> {d.Value}");
-                //}
-
+                this._logger?.LogDebug($"Choose Adapter: {this._adapter?.Name}");
                 this._adapter.DeviceFound += this._adapter_DeviceFound;
 
                 await this._adapter.StartDiscoveryAsync();
@@ -63,7 +51,8 @@ namespace chd.CaraVan.Devices
             var prop = await device.GetPropertiesAsync();
             if (this._config.Any(a => a.DeviceAddress == prop.Address))
             {
-                this._logger?.LogInformation($"Defined Device {prop.Address}");
+                var config = this._config.FirstOrDefault(x => x.DeviceAddress == prop.Address);
+                this._logger?.LogInformation($"Found Device {config.Alias} [{prop.Address}]");
                 await this.HandleDevice(device);
             }
         }
@@ -75,33 +64,69 @@ namespace chd.CaraVan.Devices
             this._devices.Add(device);
             var all = await device.GetAllAsync();
             this._logger?.LogInformation($"{all.Name}, {all.Connected}, {all.ServicesResolved}");
-
-
         }
 
-        private async Task Device_ServicesResolved1(Device sender, BlueZEventArgs eventArgs)
+        private async Task Device_ServicesResolved1(Device device, BlueZEventArgs eventArgs)
         {
-            string serviceUUID = "0000180a-0000-1000-8000-00805f9b34fb";
-            string characteristicUUID = "00002a24-0000-1000-8000-00805f9b34fb";
+            string nordicUart = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+            string rxCharacterisitc = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
+            string txCharacterisitc = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+            var service = await device.GetServiceAsync(nordicUart);
+            if (service is not null)
+            {
+                this._logger?.LogDebug($"Found NordicUartService on device");
+                var rxC = await service.GetCharacteristicAsync(rxCharacterisitc);
+                var txC = await service.GetCharacteristicAsync(txCharacterisitc);
+                try
+                {
+                    await rxC.StartNotifyAsync();
+                    await txC.StartNotifyAsync();
 
-            foreach (var service in await sender.GetServicesAsync())
+                    rxC.Value += this.RxC_Value;
+
+                }
+                catch (Exception ex)
+                {
+                    this._logger?.LogError(ex, ex.Message);
+                }
+            }
+            else
+            {
+                await this.ScanForServices(device);
+            }
+        }
+
+        private async Task RxC_Value(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        {
+            var service = await characteristic.GetServiceAsync();
+            var device = await service.GetDeviceAsync();
+            var address = await device.GetAddressAsync();
+            var config = this._config.FirstOrDefault(x => x.DeviceAddress == address);
+
+            this._logger?.LogInformation($"Received Value {config?.Alias}: {string.Join("-", e.Value)}");
+        }
+
+        private async Task ScanForServices(Device device)
+        {
+
+            foreach (var service in await device.GetServicesAsync())
             {
                 var props = await service.GetAllAsync();
-                this._logger?.LogInformation($"Service: {props.UUID}");
+                this._logger?.LogDebug($"Service: {props.UUID}");
                 foreach (var c in await service.GetCharacteristicsAsync())
                 {
                     var cprops = await c.GetAllAsync();
-                    this._logger?.LogInformation($"{cprops.UUID}, {cprops.Notifying}, {string.Join(",", cprops.Flags)}");
+                    this._logger?.LogDebug($"{cprops.UUID}, {cprops.Notifying}, {string.Join(",", cprops.Flags)}");
                     if (cprops.Notifying)
                     {
-                        characteristicUUID = await c.GetUUIDAsync();
+                        var characteristicUUID = await c.GetUUIDAsync();
                         var gatt = await service.GetCharacteristicAsync(characteristicUUID);
                         gatt.Value += this.Gatt_Value;
                     }
 
                     var val = await c.GetValueAsync();
                     var data = Encoding.UTF8.GetString(val);
-                    this._logger?.LogInformation($"val: {data}");
+                    this._logger?.LogDebug($"val: {data}");
                 }
             }
         }

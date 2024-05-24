@@ -46,7 +46,7 @@ namespace chd.CaraVan.UI.Implementations
         {
             this._tag = new RuuviTag(this._logger, this._optionsMonitor.CurrentValue.Devices.Select(s => new Devices.Contracts.Dtos.RuvviTag.RuuviTagConfiguration
             {
-                BLEAdapter = "hci0",
+                Alias = s.Name,
                 DeviceAddress = s.UID
             }));
 

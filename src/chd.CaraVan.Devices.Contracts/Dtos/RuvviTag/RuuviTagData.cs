@@ -16,7 +16,7 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.RuvviTag
         public decimal pressure { get; set; }
         public decimal temperature { get; set; }
         public decimal tx_power { get; set; }
-        public decimal battery { get; set; }
-        public string Mac { get; set; }
+        public decimal battery_voltage { get; set; }
+        public string mac_address { get; set; }
     }
 }
