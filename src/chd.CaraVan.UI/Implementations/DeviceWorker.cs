@@ -13,7 +13,7 @@ namespace chd.CaraVan.UI.Implementations
         private readonly ILogger<DeviceWorker> _logger;
         private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
         private readonly IDeviceDataRepository _deviceDataRepository;
-        private List<RuuviTag> _tags;
+        private RuuviTag _tag;
 
         public DeviceWorker(ILogger<DeviceWorker> logger, IOptionsMonitor<DeviceSettings> optionsMonitor, IDeviceDataRepository deviceDataRepository)
         {
@@ -27,6 +27,12 @@ namespace chd.CaraVan.UI.Implementations
             await this.StartDevices(cancellationToken);
             await base.StartAsync(cancellationToken);
         }
+
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await this._tag?.DisconnectAsync();
+            await base.StopAsync(cancellationToken);
+        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
@@ -38,18 +44,14 @@ namespace chd.CaraVan.UI.Implementations
 
         private async Task StartDevices(CancellationToken cancellationToken)
         {
-            this._tags = new List<RuuviTag>();
-            foreach (var device in this._optionsMonitor.CurrentValue.Devices)
+            this._tag = new RuuviTag(this._logger, this._optionsMonitor.CurrentValue.Devices.Select(s => new Devices.Contracts.Dtos.RuvviTag.RuuviTagConfiguration
             {
-                var tag = new RuuviTag(this._logger, new Devices.Contracts.Dtos.RuvviTag.RuuviTagConfiguration
-                {
-                    BLEAdapter = "hci0",
-                    DeviceAddress = device.UID
-                });
-                tag.DataReceived += this.Tag_DataReceived;
-                await tag.ConnectAsync(cancellationToken);
-                this._tags.Add(tag);
-            }
+                BLEAdapter = "hci0",
+                DeviceAddress = s.UID
+            }));
+
+            this._tag.DataReceived += this.Tag_DataReceived;
+            await this._tag.ConnectAsync(cancellationToken);
         }
 
         private void Tag_DataReceived(object? sender, Devices.Contracts.Dtos.RuvviTag.RuuviTagEventArgs e)
