@@ -9,7 +9,7 @@ namespace chd.CaraVan.Devices.Contracts.Devices.Interfaces
 {
     public interface IRuuviTag : IDevice
     {
-        Task<RuuviTagData> GetDataAsync(CancellationToken cancellationToken = default);
+        Task ConnectAsync(CancellationToken cancellationToken = default);
         event EventHandler<RuuviTagEventArgs> DataReceived;
     }
 }

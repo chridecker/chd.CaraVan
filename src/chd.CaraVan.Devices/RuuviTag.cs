@@ -4,6 +4,7 @@ using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace chd.CaraVan.Devices
@@ -32,27 +33,24 @@ namespace chd.CaraVan.Devices
             {
                 var adapters = await BlueZManager.GetAdaptersAsync();
                 this._adapter = adapters.FirstOrDefault();
-                this._logger?.LogDebug($"Choose Adapter: {this._adapter?.Name}");
+
                 this._adapter.DeviceFound += this._adapter_DeviceFound;
 
                 await this._adapter.StartDiscoveryAsync();
+                this._logger?.LogDebug($"Choose Adapter: {this._adapter?.Name}");
             }
             catch (Exception ex)
             {
                 this._logger?.LogError(ex, ex.Message);
             }
-
         }
 
-        private async Task _adapter_DeviceFound(Adapter sender, DeviceFoundEventArgs eventArgs)
+        private async Task _adapter_DeviceFound(Adapter sender, DeviceFoundEventArgs e)
         {
-            var device = eventArgs.Device;
-
-            var prop = await device.GetPropertiesAsync();
-            if (this._config.Any(a => a.DeviceAddress == prop.Address))
+            var device = e.Device;
+            var uid = await device.GetAddressAsync();
+            if (this._config.Any(a => a.DeviceAddress.ToLower() == uid.ToLower()))
             {
-                var config = this._config.FirstOrDefault(x => x.DeviceAddress == prop.Address);
-                this._logger?.LogInformation($"Found Device {config.Alias} [{prop.Address}]");
                 await this.HandleDevice(device);
             }
         }
@@ -69,30 +67,23 @@ namespace chd.CaraVan.Devices
         private async Task Device_ServicesResolved1(Device device, BlueZEventArgs eventArgs)
         {
             string nordicUart = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-            string rxCharacterisitc = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
             string txCharacterisitc = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
             var service = await device.GetServiceAsync(nordicUart);
             if (service is not null)
             {
                 this._logger?.LogDebug($"Found NordicUartService on device");
-                var rxC = await service.GetCharacteristicAsync(rxCharacterisitc);
                 var txC = await service.GetCharacteristicAsync(txCharacterisitc);
+
                 try
                 {
-                    await rxC.StartNotifyAsync();
-                    await txC.StartNotifyAsync();
-
-                    rxC.Value += this.RxC_Value;
-
+                    txC.Value += RxC_Value;
+                    var txCProp = await txC.GetAllAsync();
+                    this._logger?.LogInformation($"Start TX Notifify, {txCProp.Notifying}");
                 }
                 catch (Exception ex)
                 {
                     this._logger?.LogError(ex, ex.Message);
                 }
-            }
-            else
-            {
-                await this.ScanForServices(device);
             }
         }
 
@@ -102,71 +93,18 @@ namespace chd.CaraVan.Devices
             var device = await service.GetDeviceAsync();
             var address = await device.GetAddressAsync();
             var config = this._config.FirstOrDefault(x => x.DeviceAddress == address);
-
             this._logger?.LogInformation($"Received Value {config?.Alias}: {string.Join("-", e.Value)}");
+            //this._logger?.LogInformation(Convert.ToHexString(e.Value));
+            this.InvokeDataReceived(new RuuviTagData(e.Value), config);
         }
 
-        private async Task ScanForServices(Device device)
-        {
-
-            foreach (var service in await device.GetServicesAsync())
-            {
-                var props = await service.GetAllAsync();
-                this._logger?.LogDebug($"Service: {props.UUID}");
-                foreach (var c in await service.GetCharacteristicsAsync())
-                {
-                    var cprops = await c.GetAllAsync();
-                    this._logger?.LogDebug($"{cprops.UUID}, {cprops.Notifying}, {string.Join(",", cprops.Flags)}");
-                    if (cprops.Notifying)
-                    {
-                        var characteristicUUID = await c.GetUUIDAsync();
-                        var gatt = await service.GetCharacteristicAsync(characteristicUUID);
-                        gatt.Value += this.Gatt_Value;
-                    }
-
-                    var val = await c.GetValueAsync();
-                    var data = Encoding.UTF8.GetString(val);
-                    this._logger?.LogDebug($"val: {data}");
-                }
-            }
-        }
-
-        private async Task Gatt_Value(GattCharacteristic sender, GattCharacteristicValueEventArgs e)
-        {
-            try
-            {
-                this._logger?.LogWarning($"Characteristic value (hex): {BitConverter.ToString(e.Value)}");
-
-                this._logger?.LogWarning($"Characteristic value (UTF-8): \"{Encoding.UTF8.GetString(e.Value)}\"");
-            }
-            catch (Exception ex)
-            {
-                this._logger?.LogError(ex, ex.Message);
-            }
-        }
-
-        private async Task Device_ServicesResolved(Device sender, BlueZEventArgs eventArgs)
-        {
-
-        }
-
-        private async Task Device_Connected(Device sender, BlueZEventArgs eventArgs)
-        {
-
-        }
-
-        private void InvokeDataReceived(RuuviTagData data) => this.DataReceived.Invoke(this, new RuuviTagEventArgs
+        private void InvokeDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.DataReceived.Invoke(this, new RuuviTagEventArgs
         {
             Data = data,
             DateTime = DateTime.Now,
-            // UID = this._config.DeviceAddress
+            UID = config.DeviceAddress
         });
 
-
-        public async Task<RuuviTagData> GetDataAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task DisconnectAsync(CancellationToken cancellationToken = default)
         {

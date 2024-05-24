@@ -57,11 +57,11 @@ namespace chd.CaraVan.UI.Implementations
         private void Tag_DataReceived(object? sender, Devices.Contracts.Dtos.RuvviTag.RuuviTagEventArgs e)
         {
             var device = this._optionsMonitor.CurrentValue.Devices.FirstOrDefault(x => x.UID == e.UID);
-            this._deviceDataRepository.Add(new Contracts.Dtos.DeviceData(0, e.DateTime, Contracts.Enums.EDataType.Temperature, e.Data.temperature)
+            this._deviceDataRepository.Add(new Contracts.Dtos.DeviceData(0, e.DateTime, Contracts.Enums.EDataType.Temperature, e.Data.Temperature.Value)
             {
                 DeviceId = device.Id,
             });
-            this._deviceDataRepository.Add(new Contracts.Dtos.DeviceData(0, e.DateTime, Contracts.Enums.EDataType.Humidity, e.Data.humidity)
+            this._deviceDataRepository.Add(new Contracts.Dtos.DeviceData(0, e.DateTime, Contracts.Enums.EDataType.Humidity, e.Data.Humidity.Value)
             {
                 DeviceId = device.Id,
             });

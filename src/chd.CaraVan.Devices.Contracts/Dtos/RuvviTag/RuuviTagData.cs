@@ -1,5 +1,6 @@
 ﻿using chd.CaraVan.Devices.Contracts.Enums;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,37 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.RuvviTag
 {
     public class RuuviTagData
     {
-        [JsonPropertyName("data_format")]
-        public ERuuviDataFormat DataFormat { get; set; }
-        public decimal humidity { get; set; }
-        public decimal pressure { get; set; }
-        public decimal temperature { get; set; }
-        public decimal tx_power { get; set; }
-        public decimal battery_voltage { get; set; }
-        public string mac_address { get; set; }
+        private readonly byte[] _data;
+
+        public decimal? Temperature => this.GetTemperature(this._data);
+        public decimal? Humidity => this.GetHumidity(this._data);
+        public decimal? Pressure => this.GetPressure(this._data);
+        public RuuviTagData(byte[] data)
+        {
+            this._data = data;
+        }
+
+        private decimal? GetTemperature(byte[] data)
+        {
+            var hex = Convert.ToHexString(data.Skip(1).Take(2).ToArray());
+            var val = Convert.ToInt16(hex, 16);
+            if (val == -32768) { return null; }
+            return Math.Round(val / 200m, 2);
+
+        }
+        private decimal? GetHumidity(byte[]data)
+        {
+            var hex = Convert.ToHexString(data.Skip(3).Take(2).ToArray());
+            var val = Convert.ToInt16(hex, 16);
+            if (val == 65535) { return null; }
+            return Math.Round(val / 400m, 2);
+        }
+        private decimal? GetPressure(byte[]data)
+        {
+            var hex = Convert.ToHexString(data.Skip(3).Take(2).ToArray());
+            var val = Convert.ToInt16(hex, 16);
+            if (val == 0xFFFF) { return null; }
+            return Math.Round((val + 5000) / 100m, 2);
+        }
     }
 }
