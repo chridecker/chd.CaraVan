@@ -11,34 +11,33 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.DataAccess.Repositories
 {
-    public abstract class BaseDataRepository<TData, TId> : IDataRepository<TData, TId> where TData : class, IData<TId> where TId : struct
+    public abstract class BaseDataRepository<TData> : IDataRepository<TData> where TData : class, IData
     {
-        protected List<TData> _bag;
+        protected List<TData> _lst;
         protected BaseDataRepository()
         {
-            this._bag = new List<TData>();
+            this._lst = new List<TData>();
         }
 
-        public void Add(TData data) => this._bag.Add(data);
+        public void Add(TData data) => this._lst.Add(data);
 
         public void Clean(DateTime till)
         {
-            this._bag.RemoveAll(x => x.RecordDateTime <= till);
+            this._lst.RemoveAll(x => x.RecordDateTime <= till);
         }
 
-        public void Clear() => this._bag.Clear();
+        public void Clear() => this._lst.Clear();
 
-        public Task<IEnumerable<TData>> GetAllAsync(CancellationToken cancellationToken = default) => Task.FromResult((IEnumerable<TData>)this._bag.ToList());
+        public IEnumerable<TData> GetAll() => this._lst;
 
-        public async Task<IEnumerable<TData>> GetAsync(EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default)
-        => this._bag.Where(x => x.Type == type && x.RecordDateTime >= from && x.RecordDateTime < to);
+        public IEnumerable<TData> Get(EDataType type, DateTime from, DateTime to) => this._lst.Where(x => x.Type == type && x.RecordDateTime >= from && x.RecordDateTime < to);
 
     }
-    public interface IDataRepository<TData, TId> : IRepository
-        where TData : class, IData<TId> where TId : struct
+    public interface IDataRepository<TData> : IRepository
+        where TData : class, IData
     {
-        Task<IEnumerable<TData>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<IEnumerable<TData>> GetAsync(EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default);
+        IEnumerable<TData> GetAll();
+        IEnumerable<TData> Get(EDataType type, DateTime from, DateTime to);
 
         void Add(TData data);
 

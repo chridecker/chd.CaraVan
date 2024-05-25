@@ -20,7 +20,6 @@
 	
 	<ItemGroup>
 	  <ProjectReference Include="..\chd.CaraVan.Contracts\chd.CaraVan.Contracts.csproj" />
-	  <ProjectReference Include="..\chd.CaraVan.DataAccess\chd.CaraVan.DataAccess.csproj" />
 	  <ProjectReference Include="..\chd.CaraVan.Devices\chd.CaraVan.Devices.csproj" />
 	</ItemGroup>
 

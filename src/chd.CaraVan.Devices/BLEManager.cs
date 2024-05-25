@@ -1,5 +1,5 @@
-﻿using chd.CaraVan.Devices.Contracts.Devices.Interfaces;
-using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
+﻿using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
+using chd.CaraVan.Devices.Contracts.Dtos.Votronic;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
 using Microsoft.Extensions.Logging;
@@ -9,21 +9,22 @@ using System.Text;
 
 namespace chd.CaraVan.Devices
 {
-    public class RuuviTag : IRuuviTag
+    public class BLEManager
     {
         private Adapter _adapter;
         private List<Device> _devices;
-        private readonly IEnumerable<RuuviTagConfiguration> _config;
+        private readonly IEnumerable<RuuviTagConfiguration> _ruuviTagConfig;
+        private readonly VotronicConfiguration _votronicConfiguration;
         private readonly ILogger _logger;
 
-        public event EventHandler<RuuviTagEventArgs> DataReceived;
+        public event EventHandler<RuuviTagEventArgs> RuuviTagDataReceived;
 
 
-        public RuuviTag(ILogger logger, IEnumerable<RuuviTagConfiguration> config)
+        public BLEManager(ILogger logger, IEnumerable<RuuviTagConfiguration> config, VotronicConfiguration votronicConfiguration)
         {
-            this._config = config;
+            this._ruuviTagConfig = config;
+            this._votronicConfiguration = votronicConfiguration;
             this._logger = logger;
-
             this._devices = new();
         }
 
@@ -49,7 +50,8 @@ namespace chd.CaraVan.Devices
         {
             var device = e.Device;
             var uid = await device.GetAddressAsync();
-            if (this._config.Any(a => a.DeviceAddress.ToLower() == uid.ToLower()))
+            if (this._ruuviTagConfig.Any(a => a.DeviceAddress.ToLower() == uid.ToLower())
+                || uid.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
             {
                 await this.HandleDevice(device);
             }
@@ -66,43 +68,40 @@ namespace chd.CaraVan.Devices
 
         private async Task Device_ServicesResolved1(Device device, BlueZEventArgs eventArgs)
         {
-            string nordicUart = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-            string txCharacterisitc = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
-            var service = await device.GetServiceAsync(nordicUart);
-            if (service is not null)
+            var address = await device.GetAddressAsync();
+            if (this._ruuviTagConfig.Any(a => a.DeviceAddress.ToLower() == address.ToLower()))
             {
-                this._logger?.LogDebug($"Found NordicUartService on device");
-                var txC = await service.GetCharacteristicAsync(txCharacterisitc);
-
-                try
+                string nordicUart = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+                string txCharacterisitc = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+                var service = await device.GetServiceAsync(nordicUart);
+                if (service is not null)
                 {
-                    txC.Value += RxC_Value;
+                    var txC = await service.GetCharacteristicAsync(txCharacterisitc);
+                    txC.Value += RuuviTag_Value;
                     var txCProp = await txC.GetAllAsync();
-                    this._logger?.LogInformation($"Start TX Notifify, {txCProp.Notifying}");
                 }
-                catch (Exception ex)
-                {
-                    this._logger?.LogError(ex, ex.Message);
-                }
+            }
+            else  if(address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
+            {
+
             }
         }
 
-        private async Task RxC_Value(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        private async Task RuuviTag_Value(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
         {
             var service = await characteristic.GetServiceAsync();
             var device = await service.GetDeviceAsync();
             var address = await device.GetAddressAsync();
-            var config = this._config.FirstOrDefault(x => x.DeviceAddress == address);
-            this._logger?.LogInformation($"Received Value {config?.Alias}: {string.Join("-", e.Value)}");
-            //this._logger?.LogInformation(Convert.ToHexString(e.Value));
+            var config = this._ruuviTagConfig.FirstOrDefault(x => x.DeviceAddress == address);
+            this._logger?.LogTrace($"Received Value {config?.Alias}: {string.Join("-", e.Value)}");
             this.InvokeDataReceived(new RuuviTagData(e.Value), config);
         }
 
-        private void InvokeDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.DataReceived.Invoke(this, new RuuviTagEventArgs
+        private void InvokeDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.RuuviTagDataReceived.Invoke(this, new RuuviTagEventArgs
         {
             Data = data,
             DateTime = DateTime.Now,
-            UID = config.DeviceAddress
+            Id = config.Id
         });
 
 

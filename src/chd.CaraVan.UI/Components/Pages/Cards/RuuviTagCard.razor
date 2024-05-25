@@ -1,0 +1,11 @@
+﻿<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToDevice">
+    <MudCardHeader>
+        <MudText>@DeviceDto.Name</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (this._data != null)
+        {
+            <DataCard Data="this._data" />
+        }
+    </MudCardContent>
+</MudCard>

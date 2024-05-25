@@ -1,8 +1,8 @@
 ﻿using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Contracts.Dtos.Base;
 using chd.CaraVan.Contracts.Enums;
-using chd.CaraVan.DataAccess.Repositories;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,23 +14,30 @@ namespace chd.CaraVan.UI.Implementations
 {
     public class DataService : IDataService
     {
-        private readonly IDeviceDataRepository _deviceDataRepository;
+        private readonly ConcurrentDictionary<int, IDictionary<EDataType, DeviceData>> _dataDict;
 
-        public DataService(IDeviceDataRepository deviceDataRepository)
+        public DataService()
         {
-            this._deviceDataRepository = deviceDataRepository;
+            this._dataDict = new ConcurrentDictionary<int, IDictionary<EDataType, DeviceData>>();
         }
-        public async Task<ICollection<DeviceData>> GetDeviceDataAsync(int deviceId, EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default)
+        public void AddData(int id, DeviceData data)
         {
-            var entries = await this._deviceDataRepository.GetAsync(type, from, to, cancellationToken);
-            return entries.Where(x => x.DeviceId == deviceId).ToList();
+            if (!this._dataDict.ContainsKey(id)) { this._dataDict[id] = new Dictionary<EDataType, DeviceData>(); }
+            this._dataDict[id][data.Type] = data;
         }
-        public Task<DeviceData> GetLatestDataToDeviceAsync(int device, EDataType type, CancellationToken cancellationToken = default)
-            => this._deviceDataRepository.GetLatestAsync(device, type, cancellationToken);
+        public DeviceData GetData(int id, EDataType type)
+        {
+            if (this._dataDict.TryGetValue(id, out var dic)
+                && dic.TryGetValue(type, out var val))
+            {
+                return val;
+            }
+            return null;
+        }
     }
     public interface IDataService
     {
-        Task<ICollection<DeviceData>> GetDeviceDataAsync(int deviceId, EDataType type, DateTime from, DateTime to, CancellationToken cancellationToken = default);
-        Task<DeviceData> GetLatestDataToDeviceAsync(int device, EDataType type, CancellationToken cancellationToken = default);
+        void AddData(int id, DeviceData data);
+        DeviceData GetData(int id, EDataType type);
     }
 }

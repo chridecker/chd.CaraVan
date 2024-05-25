@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Contracts.Dtos.Base
 {
-    public interface IData<T> where T:struct
+    public interface IData
     {
-        T Id { get; }
         DateTime RecordDateTime { get; }
         EDataType Type { get; }
         decimal Value { get; }

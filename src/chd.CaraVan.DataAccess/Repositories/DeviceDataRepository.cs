@@ -9,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.DataAccess.Repositories
 {
-    public class DeviceDataRepository : BaseDataRepository<DeviceData, int>, IDeviceDataRepository
+    public class DeviceDataRepository : BaseDataRepository<DeviceData>, IDeviceDataRepository
     {
-        public async Task<DeviceData> GetLatestAsync(int device, EDataType type, CancellationToken cancellationToken = default)
-        => this._bag.Where(x => x.DeviceId == device && x.Type == type).OrderByDescending(o => o.RecordDateTime).FirstOrDefault();
+        public DeviceData GetLatest(int device, EDataType type) => this._lst.Where(x => x.DeviceId == device && x.Type == type).OrderByDescending(o => o.RecordDateTime).FirstOrDefault();
 
     }
-    public interface IDeviceDataRepository : IDataRepository<DeviceData, int>
+    public interface IDeviceDataRepository : IDataRepository<DeviceData>
     {
-        Task<DeviceData> GetLatestAsync(int device, EDataType type, CancellationToken cancellationToken = default);
+        DeviceData GetLatest(int device, EDataType type);
     }
 }

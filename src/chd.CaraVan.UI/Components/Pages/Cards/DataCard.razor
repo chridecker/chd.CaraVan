@@ -1,14 +1,15 @@
-﻿<MudText Typo="Typo.caption" Color="Color.Default">
-    @this.Title (@(this.RecordTime?.ToString("HH:mm:ss dd.MM.yy")))
+﻿@using chd.CaraVan.Contracts.Dtos.Base
+@using chd.CaraVan.UI.Implementations
+@inject ITypeNameService svc
+<MudText Typo="Typo.caption" Color="Color.Default">
+    @svc.GetName(this.Data).name (@(this.Data.RecordDateTime.ToString("HH:mm:ss dd.MM.yy")))
 </MudText>
 
 <MudText Typo="Typo.h4" Color="Color.Default">
-    @this.Value @this.Unit
+    @this.Data.Value.ToString("n2") @svc.GetName(this.Data).unit
 </MudText>
 
 @code {
-    [Parameter] public string Value { get; set; }
-    [Parameter] public string Title { get; set; }
-    [Parameter] public string Unit { get; set; }
-    [Parameter] public DateTime? RecordTime{ get; set; }
+    [Parameter] public DataBase Data { get; set; }
+
 }

@@ -1,6 +1,5 @@
 ﻿using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.UI.Implementations;
-using chd.CaraVan.DataAccess.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
@@ -18,9 +17,9 @@ namespace chd.CaraVan.UI.Extensions
         {
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
 
-            services.AddTransient<IDataService, DataService>();
+            services.AddSingleton<ITypeNameService, TypeNameService>();
+            services.AddSingleton<IDataService, DataService>();
 
-            services.AddDAL();
             services.AddMudServices();
 
 

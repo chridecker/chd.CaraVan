@@ -4,8 +4,8 @@
 
 <MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavGroup Title="Devices" Expanded="true">
-        @foreach (var dev in optionsMonitor.CurrentValue.Devices)
+    <MudNavGroup Title="Ruuvi Sensoren" Expanded="true">
+        @foreach (var dev in optionsMonitor.CurrentValue.RuuviTags)
         {
             <MudNavLink Href="@($"/device/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
         }

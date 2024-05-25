@@ -4,7 +4,7 @@
 
 <PageTitle>Home</PageTitle>
 
-@foreach (var device in this.DeviceSettings.CurrentValue.Devices)
+@foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
 {
-    <DeviceCard DeviceDto="device" />
+    <RuuviTagCard DeviceDto="device" />
 }

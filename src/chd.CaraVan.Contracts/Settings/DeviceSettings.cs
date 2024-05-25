@@ -9,6 +9,7 @@ namespace chd.CaraVan.Contracts.Settings
 {
     public class DeviceSettings
     {
-        public IEnumerable<DeviceDto> Devices { get; set; }
+        public IEnumerable<RuuviDeviceDto> RuuviTags { get; set; }
+        public VotronicDto Votronic{ get; set; }
     }
 }

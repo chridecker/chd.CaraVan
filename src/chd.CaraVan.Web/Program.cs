@@ -25,6 +25,8 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddCircui
     opt.DetailedErrors = true;
 });
 
+builder.Host.UseSystemd();
+
 var app = builder.Build();
 
 app.UseExceptionHandler("/Error", createScopeForErrors: true);
