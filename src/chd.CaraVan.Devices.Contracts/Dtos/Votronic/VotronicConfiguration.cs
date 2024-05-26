@@ -11,5 +11,6 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Votronic
         public int Id { get; set; }
         public string Alias { get; set; }
         public string DeviceAddress { get; set; }
+        public int BatteryAH { get; set; }
     }
 }

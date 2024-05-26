@@ -12,6 +12,14 @@ namespace chd.CaraVan.Devices
 {
     public class BLEManager
     {
+
+        private const string NORDIC_UART_SVC = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+        private const string TX_CHARACTERISTIC = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+
+        private const string VOTRONIC_SVC = "d0cb6aa7-8548-46d0-99f8-2d02611e5270";
+        private const string BATTERY_CHARACTERISTIC = "9a082a4e-5bcc-4b1d-9958-a97cfccfa5ec";
+        private const string SOLAR_CHARACTERISTIC = "971ccec2-521d-42fd-b570-cf46fe5ceb65";
+
         private Adapter _adapter;
         private List<Device> _devices;
         private readonly IEnumerable<RuuviTagConfiguration> _ruuviTagConfig;
@@ -19,6 +27,7 @@ namespace chd.CaraVan.Devices
         private readonly ILogger _logger;
 
         public event EventHandler<RuuviTagEventArgs> RuuviTagDataReceived;
+        public event EventHandler<VotronicEventArgs> VotronicDataReceived;
 
 
         public BLEManager(ILogger logger, IEnumerable<RuuviTagConfiguration> config, VotronicConfiguration votronicConfiguration)
@@ -84,18 +93,24 @@ namespace chd.CaraVan.Devices
             var address = await device.GetAddressAsync();
             if (this._ruuviTagConfig.Any(a => a.DeviceAddress.ToLower() == address.ToLower()))
             {
-                string nordicUart = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-                string txCharacterisitc = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
-                var service = await device.GetServiceAsync(nordicUart);
+                var service = await device.GetServiceAsync(NORDIC_UART_SVC);
                 if (service is not null)
                 {
-                    var txC = await service.GetCharacteristicAsync(txCharacterisitc);
+                    var txC = await service.GetCharacteristicAsync(TX_CHARACTERISTIC);
                     txC.Value += RuuviTag_Value;
-                    var txCProp = await txC.GetAllAsync();
                 }
             }
             else if (address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
             {
+                var service = await device.GetServiceAsync(VOTRONIC_SVC);
+                if (service is not null)
+                {
+                    var batteryC = await service.GetCharacteristicAsync(BATTERY_CHARACTERISTIC);
+                    batteryC.Value += VotronicBattery_Received;
+
+                    var solarC = await service.GetCharacteristicAsync(SOLAR_CHARACTERISTIC);
+                    solarC.Value += VotronicSolar_Received;
+                }
             }
         }
 
@@ -106,14 +121,37 @@ namespace chd.CaraVan.Devices
             var address = await device.GetAddressAsync();
             var config = this._ruuviTagConfig.FirstOrDefault(x => x.DeviceAddress == address);
             this._logger?.LogTrace($"Received Value {config?.Alias}: {string.Join("-", e.Value)}");
-            this.InvokeDataReceived(new RuuviTagData(e.Value), config);
+            this.InvokeRuuviTagDataReceived(new RuuviTagData(e.Value), config);
         }
 
-        private void InvokeDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.RuuviTagDataReceived.Invoke(this, new RuuviTagEventArgs
+        private async Task VotronicBattery_Received(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        {
+            var service = await characteristic.GetServiceAsync();
+            var device = await service.GetDeviceAsync();
+            var address = await device.GetAddressAsync();
+            var config = this._ruuviTagConfig.FirstOrDefault(x => x.DeviceAddress == address);
+            this._logger?.LogDebug($"Received Battery Value {config?.Alias}: {string.Join("-", e.Value)}");
+            this.InvokeVotronicDataReceived(new VotronicBatteryData(e.Value, this._votronicConfiguration.BatteryAH));
+        }
+
+        private async Task VotronicSolar_Received(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        {
+            this._logger?.LogDebug($"Received Solar Value {this._votronicConfiguration?.Alias}: {string.Join("-", e.Value)}");
+            this.InvokeVotronicDataReceived(new VotronicSolarData(e.Value));
+        }
+
+        private void InvokeRuuviTagDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.RuuviTagDataReceived.Invoke(this, new RuuviTagEventArgs
         {
             Data = data,
             DateTime = DateTime.Now,
             Id = config.Id
+        });
+
+        private void InvokeVotronicDataReceived(VotronicData data) => this.VotronicDataReceived.Invoke(this, new VotronicEventArgs
+        {
+            DateTime = DateTime.Now,
+            BatteryData = data is VotronicBatteryData b ? b : null,
+            SolarData = data is VotronicSolarData s ? s : null
         });
 
 

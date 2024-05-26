@@ -54,7 +54,8 @@ namespace chd.CaraVan.UI.Implementations
             {
                 Id = this._optionsMonitor.CurrentValue.Votronic?.Id ?? 0,
                 DeviceAddress = this._optionsMonitor.CurrentValue.Votronic?.UID,
-                Alias = this._optionsMonitor.CurrentValue.Votronic?.Name 
+                Alias = this._optionsMonitor.CurrentValue.Votronic?.Name,
+                BatteryAH = this._optionsMonitor.CurrentValue.Votronic.BatteryAH
             });
 
             this._tag.RuuviTagDataReceived += this.RuuviTag_DataReceived;
