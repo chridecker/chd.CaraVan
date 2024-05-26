@@ -18,7 +18,8 @@ namespace chd.CaraVan.UI.Extensions
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
 
             services.AddSingleton<ITypeNameService, TypeNameService>();
-            services.AddSingleton<IDataService, DataService>();
+            services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();
+            services.AddSingleton<IVotronicDataService, VotronicDataService>();
 
             services.AddMudServices();
 

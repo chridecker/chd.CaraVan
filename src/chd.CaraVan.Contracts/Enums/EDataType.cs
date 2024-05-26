@@ -23,6 +23,8 @@ namespace chd.CaraVan.Contracts.Enums
         [DataName("Akutell", "A")]
         Ampere = 6,
         [DataName("Leistung", "W")]
-        Watt = 7
+        Watt = 7,
+        [DataName("Ladung", "%")]
+        BatteryPercent = 8
     }
 }

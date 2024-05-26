@@ -10,11 +10,11 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
         [Parameter] public DeviceDto DeviceDto { get; set; }
 
         [Inject] private NavigationManager? _navigationManager { get; set; }
-        [Inject] private IDataService _dataService { get; set; }
+        [Inject] private IRuuviTagDataService _dataService { get; set; }
         [Inject] private ITypeNameService _typeNameService { get; set; }
 
         private CancellationTokenSource _cts = new();
-        private DeviceData _data;
+        private RuuviTagDeviceData _data;
 
         protected override async Task OnInitializedAsync()
         {

@@ -14,14 +14,16 @@ namespace chd.CaraVan.UI.Implementations
     {
         private readonly ILogger<DeviceWorker> _logger;
         private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
-        private readonly IDataService _dataService;
+        private readonly IRuuviTagDataService _dataService;
+        private readonly IVotronicDataService _votronicDataService;
         private BLEManager _tag;
 
-        public DeviceWorker(ILogger<DeviceWorker> logger, IOptionsMonitor<DeviceSettings> optionsMonitor, IDataService dataService)
+        public DeviceWorker(ILogger<DeviceWorker> logger, IOptionsMonitor<DeviceSettings> optionsMonitor, IRuuviTagDataService dataService, IVotronicDataService votronicDataService)
         {
             this._logger = logger;
             this._optionsMonitor = optionsMonitor;
             this._dataService = dataService;
+            this._votronicDataService = votronicDataService;
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken)
@@ -59,18 +61,44 @@ namespace chd.CaraVan.UI.Implementations
             });
 
             this._tag.RuuviTagDataReceived += this.RuuviTag_DataReceived;
+            this._tag.VotronicDataReceived += this._tag_VotronicDataReceived;
             await this._tag.ConnectAsync(cancellationToken);
+        }
+
+        private void _tag_VotronicDataReceived(object? sender, VotronicEventArgs e)
+        {
+            if (e.BatteryData is not null)
+            {
+                this._votronicDataService.AddData(new Contracts.Dtos.VotronicBatteryData()
+                {
+                    Ampere = e.BatteryData.Ampere,
+                    AmpereH = e.BatteryData.LeftAH,
+                    Voltage = e.BatteryData.Voltage,
+                    Percent = e.BatteryData.Percent
+                });
+            }
+            if (e.SolarData is not null)
+            {
+                this._votronicDataService.AddData(new Contracts.Dtos.VotronicSolarData()
+                {
+                   Ampere = e.SolarData.Ampere,
+                   WattH = e.SolarData.WattH,
+                   AmpereH = e.SolarData.AH,
+                   State = e.SolarData.State,
+                   Voltage = e.SolarData.Voltage
+                });
+            }
         }
 
         private void RuuviTag_DataReceived(object? sender, RuuviTagEventArgs e)
         {
             var device = this._optionsMonitor.CurrentValue.RuuviTags.FirstOrDefault(x => x.Id == e.Id);
 
-            this._dataService.AddData(device.Id, new DeviceData(e.DateTime, EDataType.Temperature, e.Data.Temperature ?? 0)
+            this._dataService.AddData(device.Id, new RuuviTagDeviceData(e.DateTime, EDataType.Temperature, e.Data.Temperature ?? 0)
             {
                 DeviceId = device.Id
             });
-            this._dataService.AddData(device.Id, new DeviceData(e.DateTime, EDataType.Humidity, e.Data.Humidity ?? 0)
+            this._dataService.AddData(device.Id, new RuuviTagDeviceData(e.DateTime, EDataType.Humidity, e.Data.Humidity ?? 0)
             {
                 DeviceId = device.Id
             });

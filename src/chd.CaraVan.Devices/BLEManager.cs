@@ -84,7 +84,7 @@ namespace chd.CaraVan.Devices
             if (address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower()
                 && !paired)
             {
-                await device.PairAsync();
+                this._logger?.LogError($"Not paired");
             }
         }
 

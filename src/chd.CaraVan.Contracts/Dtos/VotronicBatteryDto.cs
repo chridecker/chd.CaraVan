@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Contracts.Dtos
 {
-    public class VotronicDto : DeviceDto
+    public class VotronicBatteryDto : DeviceDto
     {
         public int BatteryAH { get; set; }
     }
