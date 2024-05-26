@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Tmds.DBus;
 
 namespace chd.CaraVan.Devices
 {
@@ -59,11 +60,23 @@ namespace chd.CaraVan.Devices
 
         private async Task HandleDevice(Device device)
         {
+            device.Connected += this.Device_Connected; ;
             device.ServicesResolved += this.Device_ServicesResolved1;
             await device.ConnectAsync();
             this._devices.Add(device);
             var all = await device.GetAllAsync();
             this._logger?.LogInformation($"{all.Name}, {all.Connected}, {all.ServicesResolved}");
+        }
+
+        private async Task Device_Connected(Device device, BlueZEventArgs eventArgs)
+        {
+            var address = await device.GetAddressAsync();
+            var paired = await device.GetPairedAsync();
+            if (address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower()
+                && !paired)
+            {
+                await device.PairAsync();
+            }
         }
 
         private async Task Device_ServicesResolved1(Device device, BlueZEventArgs eventArgs)
@@ -81,9 +94,8 @@ namespace chd.CaraVan.Devices
                     var txCProp = await txC.GetAllAsync();
                 }
             }
-            else  if(address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
+            else if (address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
             {
-
             }
         }
 
