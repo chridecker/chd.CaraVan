@@ -115,14 +115,14 @@ namespace chd.CaraVan.UI.Implementations
                 DeviceId = device.Id
             };
             this._dataService.AddData(device.Id, data);
-            this._hub.Clients.All.RuuviTagData(device.Id, data);
+            this._hub.Clients.All.RuuviTagData(data);
 
             data = new RuuviTagDeviceData(e.DateTime, EDataType.Humidity, e.Data.Humidity ?? 0)
             {
                 DeviceId = device.Id
             };
             this._dataService.AddData(device.Id, data);
-            this._hub.Clients.All.RuuviTagData(device.Id, data);
+            this._hub.Clients.All.RuuviTagData(data);
         }
     }
 }

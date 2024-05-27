@@ -32,7 +32,7 @@ namespace chd.CaraVan.UI.Components.Pages
             await base.OnInitializedAsync();
         }
 
-        private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, (int, RuuviTagDeviceData) e) => await this.InvokeAsync(this.StateHasChanged);
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, RuuviTagDeviceData e) => await this.InvokeAsync(this.StateHasChanged);
 
         private async void _dataHubClient_VotronicDataReceived(object sender, VotronicData e) => await this.InvokeAsync(this.StateHasChanged);
 

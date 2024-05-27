@@ -1,5 +1,6 @@
 using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Contracts.Enums;
+using chd.CaraVan.UI.Hubs.Clients;
 using chd.CaraVan.UI.Implementations;
 using Microsoft.AspNetCore.Components;
 
@@ -11,19 +12,17 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
 
         [Inject] private NavigationManager? _navigationManager { get; set; }
         [Inject] private IRuuviTagDataService _dataService { get; set; }
+        [Inject] private IDataHubClient _dataHubClient { get; set; }    
 
-        private RuuviTagDeviceData _data;
+        private RuuviTagDeviceData _data=> this._dataService.GetData(this.DeviceDto.Id, EDataType.Temperature);
 
         protected override async Task OnInitializedAsync()
         {
-            this.ReloadData();
+            this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
             await base.OnInitializedAsync();
         }
 
-        private void ReloadData()
-        {
-            this._data = this._dataService.GetData(this.DeviceDto.Id, EDataType.Temperature);
-        }
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, RuuviTagDeviceData e) => await this.InvokeAsync(this.StateHasChanged);
 
         private void NavigateToDevice() => this._navigationManager.NavigateTo($"/ruuvitag/{this.DeviceDto.Id}");
     }
