@@ -58,7 +58,7 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
                 {
                     this._connection = new HubConnectionBuilder()
                          .WithAutomaticReconnect()
-                         .WithUrl(this.LoadUri())
+                         //.WithUrl(this.LoadUri())
                         .Build();
 
                     this._connection.Reconnecting += this.Error;

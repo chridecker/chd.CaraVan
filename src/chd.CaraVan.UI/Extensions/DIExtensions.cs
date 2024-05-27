@@ -1,4 +1,5 @@
 ﻿using chd.CaraVan.Contracts.Settings;
+using chd.CaraVan.UI.Hubs.Clients;
 using chd.CaraVan.UI.Implementations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ namespace chd.CaraVan.UI.Extensions
         public static IServiceCollection AddUi(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
+            services.AddScoped<IDataHubClient, DataHubClient>();
 
             services.AddSingleton<ITypeNameService, TypeNameService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();

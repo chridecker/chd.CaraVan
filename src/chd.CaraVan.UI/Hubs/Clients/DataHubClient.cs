@@ -20,10 +20,7 @@ namespace chd.CaraVan.UI.Hubs.Clients
         }
 
 
-        protected override async Task DoInvokations(CancellationToken cancellationToken)
-        {
-
-        }
+        protected override Task DoInvokations(CancellationToken cancellationToken) => Task.CompletedTask;
 
         protected override void HookIncomingCalls()
         {
@@ -38,16 +35,14 @@ namespace chd.CaraVan.UI.Hubs.Clients
             });
         }
 
-        protected override Uri LoadUri()
-        {
-            throw new NotImplementedException();
-        }
+        protected override Uri LoadUri() =>
 
         protected override Task<bool> ShouldInitialize(CancellationToken cancellationToken) => Task.FromResult(true);
 
         protected override void SpecificReinitialize()
         {
-            throw new NotImplementedException();
+            this._connection.Remove(nameof(IDataHub.VotronicData));
+            this._connection.Remove(nameof(IDataHub.RuuviTagData));
         }
     }
     public interface IDataHubClient : IBaseHubClient
