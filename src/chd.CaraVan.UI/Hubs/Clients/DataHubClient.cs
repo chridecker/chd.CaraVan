@@ -31,7 +31,6 @@ namespace chd.CaraVan.UI.Hubs.Clients
 
             this._connection.On(nameof(IDataHub.RuuviTagData), () =>
             {
-                this._logger?.LogDebug($"Received Ruuvi");
                 this.RuuviTagDeviceDataReceived?.Invoke(this, EventArgs.Empty);
             });
         }
