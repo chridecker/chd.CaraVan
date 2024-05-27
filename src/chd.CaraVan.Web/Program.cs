@@ -3,6 +3,7 @@ using chd.CaraVan.UI.Components;
 using chd.CaraVan.Web.Components;
 using System.Diagnostics;
 using NLog.Extensions.Logging;
+using chd.CaraVan.UI.Hubs;
 
 if (!(Debugger.IsAttached || args.Contains("--console")))
 {
@@ -19,6 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders().AddNLog();
 
+
+builder.Services.AddSignalR();
 builder.Services.AddUi(builder.Configuration);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddCircuitOptions(opt =>
 {
@@ -33,6 +36,8 @@ app.UseExceptionHandler("/Error", createScopeForErrors: true);
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.MapHub<DataHub>("data-hub");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode().
