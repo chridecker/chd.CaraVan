@@ -1,16 +1,16 @@
 ﻿@using chd.CaraVan.Contracts.Dtos.Base
 @using chd.CaraVan.UI.Implementations
 @inject ITypeNameService svc
-<MudText Typo="Typo.caption" Color="Color.Default">
+<MudText Typo="Typo.caption" Color="Color.Default" Align="@MudBlazor.Align.Center">
     @svc.GetName(this.Data).Name (@(this.Data.RecordDateTime.ToString("HH:mm:ss dd.MM.yy")))
 </MudText>
 
-<MudText Typo="Typo.h4" Color="Color.Default">
+<MudText Typo="Typo.h4" Color="Color.Default" Align="@MudBlazor.Align.Center">
     @this.Data.Value.ToString("n2") @svc.GetName(this.Data).Unit
 </MudText>
 
 
-<MudText Typo="Typo.body1" Color="Color.Default">
+<MudText Typo="Typo.body1" Color="Color.Default Align=" @MudBlazor.Align.Center"">
     @this.Min?.ToString("n2") / @this.Max?.ToString("n2")
 </MudText>
 
