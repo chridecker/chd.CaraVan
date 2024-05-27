@@ -21,7 +21,7 @@ namespace chd.CaraVan.Devices
         private const string SOLAR_CHARACTERISTIC = "971ccec2-521d-42fd-b570-cf46fe5ceb65";
 
         private Adapter _adapter;
-        private List<Device> _devices;
+        private IDictionary<string, Device> _devices;
         private readonly IEnumerable<RuuviTagConfiguration> _ruuviTagConfig;
         private readonly VotronicConfiguration _votronicConfiguration;
         private readonly ILogger _logger;
@@ -35,7 +35,7 @@ namespace chd.CaraVan.Devices
             this._ruuviTagConfig = config;
             this._votronicConfiguration = votronicConfiguration;
             this._logger = logger;
-            this._devices = new();
+            this._devices = new Dictionary<string, Device>();
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default)
@@ -64,17 +64,35 @@ namespace chd.CaraVan.Devices
                 || uid.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
             {
                 await this.HandleDevice(device);
+                if (this._devices.Count == this._ruuviTagConfig.Count() + 1)
+                {
+                    await this._adapter.StopDiscoveryAsync();
+                }
+
             }
         }
 
         private async Task HandleDevice(Device device)
         {
-            device.Connected += this.Device_Connected; ;
-            device.ServicesResolved += this.Device_ServicesResolved1;
-            await device.ConnectAsync();
-            this._devices.Add(device);
+            device.Connected += this.Device_Connected;
+            device.Disconnected += this.Device_Disconnected;
+            device.ServicesResolved += this.Device_ServicesResolved;
             var all = await device.GetAllAsync();
+
+            await device.ConnectAsync();
+            this._devices[all.Address] = device;
+
             this._logger?.LogInformation($"{all.Name}, {all.Connected}, {all.ServicesResolved}");
+        }
+
+        private async Task Device_Disconnected(Device device, BlueZEventArgs eventArgs)
+        {
+            var address = await device.GetAddressAsync();
+            if (this._devices.ContainsKey(address))
+            {
+                this._devices.Remove(address);
+                await this._adapter.StartDiscoveryAsync();
+            }
         }
 
         private async Task Device_Connected(Device device, BlueZEventArgs eventArgs)
@@ -88,7 +106,7 @@ namespace chd.CaraVan.Devices
             }
         }
 
-        private async Task Device_ServicesResolved1(Device device, BlueZEventArgs eventArgs)
+        private async Task Device_ServicesResolved(Device device, BlueZEventArgs eventArgs)
         {
             var address = await device.GetAddressAsync();
             if (this._ruuviTagConfig.Any(a => a.DeviceAddress.ToLower() == address.ToLower()))
@@ -161,7 +179,10 @@ namespace chd.CaraVan.Devices
             {
                 await device?.DisconnectAsync();
             }
-            await this._adapter.StopDiscoveryAsync();
+            if (await this._adapter.GetDiscoveringAsync())
+            {
+                await this._adapter.StopDiscoveryAsync();
+            }
         }
 
 
