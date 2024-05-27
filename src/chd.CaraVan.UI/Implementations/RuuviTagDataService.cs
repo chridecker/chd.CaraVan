@@ -65,8 +65,13 @@ namespace chd.CaraVan.UI.Implementations
         {
             if (!this._minDataDict.ContainsKey(id)) { this._minDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, decimal?>>(); }
             if (!this._maxDataDict.ContainsKey(id)) { this._maxDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, decimal?>>(); }
+
             if (!this._minDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._minDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, decimal?>(); }
             if (!this._maxDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._maxDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, decimal?>(); }
+
+            if (!this._minDataDict[id][data.RecordDateTime.Date].ContainsKey(data.Type)) { this._minDataDict[id][data.RecordDateTime.Date][data.Type] = null; }
+            if (!this._maxDataDict[id][data.RecordDateTime.Date].ContainsKey(data.Type)) { this._maxDataDict[id][data.RecordDateTime.Date][data.Type] = null; }
+
             if (this._minDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._minDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
             if (this._maxDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._maxDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
 
@@ -81,8 +86,6 @@ namespace chd.CaraVan.UI.Implementations
                 this._maxDataDict[id][data.RecordDateTime.Date][data.Type] = data.Value;
             }
         }
-
-
     }
     public interface IRuuviTagDataService
     {
