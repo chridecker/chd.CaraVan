@@ -28,8 +28,11 @@ namespace chd.CaraVan.UI.Components.Pages
                 this.StartHub();
             }
             this._dataHubClient.VotronicDataReceived += this._dataHubClient_VotronicDataReceived;
+            this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
             await base.OnInitializedAsync();
         }
+
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, (int, RuuviTagDeviceData) e) => await this.InvokeAsync(this.StateHasChanged);
 
         private async void _dataHubClient_VotronicDataReceived(object sender, VotronicData e) => await this.InvokeAsync(this.StateHasChanged);
 

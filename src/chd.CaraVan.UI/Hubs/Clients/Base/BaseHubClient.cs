@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.UI.Hubs.Clients.Base
 {
-    public abstract class BaseHubClient
+    public abstract class BaseHubClient : IBaseHubClient
     {
 
         protected readonly ILogger<BaseHubClient> _logger;
@@ -86,10 +86,18 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
             }
         }
         private Task Error(Exception? ex) => this.ReInitialize();
+
+
+        public async ValueTask DisposeAsync()
+        {
+            await this._connection.DisposeAsync();
+
+        }
+
         public bool IsConnected => this._connection?.State == HubConnectionState.Connected;
     }
 
-    public interface IBaseHubClient
+    public interface IBaseHubClient : IAsyncDisposable
     {
         Task StartAsync(string baseUri, CancellationToken cancellationToken = default);
         bool IsConnected { get; }
