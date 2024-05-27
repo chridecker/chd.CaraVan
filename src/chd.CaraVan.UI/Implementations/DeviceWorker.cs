@@ -76,7 +76,7 @@ namespace chd.CaraVan.UI.Implementations
             }
         }
 
-        private void _tag_VotronicDataReceived(object? sender, VotronicEventArgs e)
+        private async void _tag_VotronicDataReceived(object? sender, VotronicEventArgs e)
         {
             if (e.BatteryData is not null)
             {
@@ -89,7 +89,7 @@ namespace chd.CaraVan.UI.Implementations
                     Percent = e.BatteryData.Percent
                 };
                 this._votronicDataService.AddData(data);
-                this._hub.Clients.All.VotronicData(data);
+                await this._hub.Clients.All.VotronicData(data);
             }
             if (e.SolarData is not null)
             {
@@ -103,11 +103,11 @@ namespace chd.CaraVan.UI.Implementations
                     Voltage = e.SolarData.Voltage
                 };
                 this._votronicDataService.AddData(data);
-                this._hub.Clients.All.VotronicData(data);
+                await this._hub.Clients.All.VotronicData(data);
             }
         }
 
-        private void RuuviTag_DataReceived(object? sender, RuuviTagEventArgs e)
+        private async void RuuviTag_DataReceived(object? sender, RuuviTagEventArgs e)
         {
             var device = this._optionsMonitor.CurrentValue.RuuviTags.FirstOrDefault(x => x.Id == e.Id);
             var data = new RuuviTagDeviceData(e.DateTime, EDataType.Temperature, e.Data.Temperature ?? 0)
@@ -115,14 +115,14 @@ namespace chd.CaraVan.UI.Implementations
                 DeviceId = device.Id
             };
             this._dataService.AddData(device.Id, data);
-            this._hub.Clients.All.RuuviTagData(data);
+            await this._hub.Clients.All.RuuviTagData(data);
 
             data = new RuuviTagDeviceData(e.DateTime, EDataType.Humidity, e.Data.Humidity ?? 0)
             {
                 DeviceId = device.Id
             };
             this._dataService.AddData(device.Id, data);
-            this._hub.Clients.All.RuuviTagData(data);
+            await this._hub.Clients.All.RuuviTagData(data);
         }
     }
 }
