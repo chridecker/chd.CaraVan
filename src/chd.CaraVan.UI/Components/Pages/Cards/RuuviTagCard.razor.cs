@@ -23,7 +23,7 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
         }
 
         private decimal? _min=> this._dataService.GetMinMaxData(this.DeviceDto.Id,this._data.Type).Min;
-        private decimal? _max=> this._dataService.GetMinMaxData(this.DeviceDto.Id,this._data.Type).Min;
+        private decimal? _max=> this._dataService.GetMinMaxData(this.DeviceDto.Id,this._data.Type).Max;
 
         private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, EventArgs e) => await this.InvokeAsync(this.StateHasChanged);
 
