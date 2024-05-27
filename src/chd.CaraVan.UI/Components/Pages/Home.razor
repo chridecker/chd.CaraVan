@@ -5,7 +5,7 @@
 <PageTitle>Home</PageTitle>
 
 
-<MudCarousel Class="mud-width-full" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
+<MudCarousel Class="mud-width-full" Style="min-height:15rem" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
     @if (this.VotronicBatteryData != null)
     {
         <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
@@ -34,6 +34,8 @@
             </MudCard>
         </MudCarouselItem>
     }
+</MudCarousel>
+<MudCarousel Style="min-height:15rem" Class="mud-width-full chd-carousel" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
     @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
     {
         <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
