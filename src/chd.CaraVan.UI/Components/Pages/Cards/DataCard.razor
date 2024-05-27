@@ -9,7 +9,14 @@
     @this.Data.Value.ToString("n2") @svc.GetName(this.Data).Unit
 </MudText>
 
+
+<MudText Typo="Typo.body1" Color="Color.Default">
+    @this.Min?.ToString("n2") / @this.Max?.ToString("n2")
+</MudText>
+
 @code {
     [Parameter] public DataBase Data { get; set; }
+    [Parameter] public decimal? Min { get; set; }
+    [Parameter] public decimal? Max { get; set; }
 
 }

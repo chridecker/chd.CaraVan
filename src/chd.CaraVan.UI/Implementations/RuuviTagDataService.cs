@@ -21,6 +21,7 @@ namespace chd.CaraVan.UI.Implementations
         public RuuviTagDataService()
         {
             this._dataDict = new ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>>();
+            this._minDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>>();
             this._maxDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>>();
         }
         public void AddData(int id, RuuviTagDeviceData data)
@@ -28,6 +29,28 @@ namespace chd.CaraVan.UI.Implementations
             if (!this._dataDict.ContainsKey(id)) { this._dataDict[id] = new Dictionary<EDataType, RuuviTagDeviceData>(); }
             this._dataDict[id][data.Type] = data;
             this.HandleMinMax(id, data);
+        }
+
+        public (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type)
+        {
+            decimal? min = null;
+            decimal? max = null;
+
+            if (this._minDataDict.TryGetValue(id, out var minVal))
+            {
+                if (minVal.TryGetValue(DateTime.Now.Date, out var data))
+                {
+                    data.TryGetValue(type, out min);
+                }
+            }
+            if (this._maxDataDict.TryGetValue(id, out var maxVal))
+            {
+                if (maxVal.TryGetValue(DateTime.Now.Date, out var data))
+                {
+                    data.TryGetValue(type, out max);
+                }
+            }
+            return (min, max);
         }
         public RuuviTagDeviceData GetData(int id, EDataType type)
         {
@@ -65,5 +88,6 @@ namespace chd.CaraVan.UI.Implementations
     {
         void AddData(int id, RuuviTagDeviceData data);
         RuuviTagDeviceData GetData(int id, EDataType type);
+        (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type);
     }
 }
