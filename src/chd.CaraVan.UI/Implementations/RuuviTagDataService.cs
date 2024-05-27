@@ -15,10 +15,12 @@ namespace chd.CaraVan.UI.Implementations
     public class RuuviTagDataService : IRuuviTagDataService
     {
         private readonly ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>> _dataDict;
+        private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, (decimal? min, decimal? max)>>> _minMaxDataDict;
 
         public RuuviTagDataService()
         {
             this._dataDict = new ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>>();
+            this._minMaxDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, (decimal? min, decimal? max)>>>();
         }
         public void AddData(int id, RuuviTagDeviceData data)
         {
@@ -34,6 +36,26 @@ namespace chd.CaraVan.UI.Implementations
             }
             return null;
         }
+        private void HandleMinMax(int id, RuuviTagDeviceData data)
+        {
+            if (!this._minMaxDataDict.ContainsKey(id)) { this._minMaxDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, (decimal?, decimal?)>>(); }
+            if (this._minMaxDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._minMaxDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, (decimal?, decimal?)>(); }
+            if (this._minMaxDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._minMaxDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
+            if (!this._minMaxDataDict[id][data.RecordDateTime.Date].ContainsKey(data.Type)){this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type] = (null, null);}
+
+            if (!this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.HasValue
+                || this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.Value > data.Value)
+            {
+                this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min = data.Value;
+            }
+            if (!this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.HasValue
+                || this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.Value > data.Value)
+            {
+                this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min = data.Value;
+            }
+        }
+
+
     }
     public interface IRuuviTagDataService
     {
