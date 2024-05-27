@@ -15,8 +15,9 @@
                     <MudText Typo="Typo.subtitle2"> Batterie</MudText>
                 </MudCardHeader>
                 <MudCardContent>
-                    <BatteryData Type="EDataType.BatteryPercent" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Percent.ToString("n2"))" />
-                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Ampere.ToString("n2"))" />
+                    <BatteryLevelCard ValuePerecent="@((double)VotronicBatteryData.Percent)" Value="@VotronicBatteryData.AmpereH" />
+                    @* <BatteryData Type="EDataType.BatteryPercent" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Percent.ToString("n2"))" /> *@
+                    @* <BatteryData Type="EDataType.Ampere" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Ampere.ToString("n2"))" /> *@
                 </MudCardContent>
             </MudCard>
         </MudCarouselItem>
@@ -35,6 +36,7 @@
         </MudCarouselItem>
     }
 </MudCarousel>
+<MudSpacer />
 <MudCarousel Style="min-height:15rem" Class="mud-width-full chd-carousel" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
     @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
     {
@@ -43,4 +45,3 @@
         </MudCarouselItem>
     }
 </MudCarousel>
-

@@ -1,0 +1,6 @@
+﻿<MudChip T="object" Color="@_color" Variant="Variant.Outlined">@Ampere.ToString("n2")</MudChip>
+@code {
+    [Parameter] public decimal Ampere { get; set; }
+
+    private Color _color => this.Ampere < 0 ? Color.Error : this.Ampere > 0 ? Color.Success : Color.Primary;
+}

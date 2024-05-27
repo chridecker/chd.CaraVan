@@ -1,0 +1,15 @@
+﻿@inject ITypeNameService typeNameService
+<MudProgressLinear Vertical="false" Color="_color" Size="Size.Large" Value="@ValuePerecent" Min="0" Max="100" Style="height: 4rem; width:60%; margin-left:20%;">
+    <MudText Align="@MudBlazor.Align.Center" Typo="Typo.h4"> @ValuePerecent.ToString("n0") @typeNameService.GetName(EDataType.BatteryPercent).Unit</MudText>
+</MudProgressLinear>
+<MudText Align="MudBlazor.Align.Center" Typo="Typo.h5">
+    @this.Value.ToString("n0")  @typeNameService.GetName(EDataType.BatteryLevelAh).Unit 
+    <BatteryLoadingCard Ampere="@this.Ampere" />
+</MudText>
+@code {
+    [Parameter] public double ValuePerecent { get; set; }
+    [Parameter] public decimal Value { get; set; }
+    [Parameter] public decimal Ampere { get; set; }
+
+    private Color _color => this.ValuePerecent <= 10 ? Color.Error : this.ValuePerecent <= 20 ? Color.Warning : this.ValuePerecent > 90 ? Color.Success : Color.Primary;
+}
