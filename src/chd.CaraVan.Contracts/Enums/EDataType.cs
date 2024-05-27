@@ -9,8 +9,8 @@ namespace chd.CaraVan.Contracts.Enums
 {
     public enum EDataType
     {
-        None= 0,
-        [DataName("Temperatur","°C")]
+        None = 0,
+        [DataName("Temperatur", "°C")]
         Temperature = 1,
         [DataName("Luftfeuchtigkeit", "%")]
         Humidity = 2,
@@ -25,6 +25,8 @@ namespace chd.CaraVan.Contracts.Enums
         [DataName("Leistung", "W")]
         Watt = 7,
         [DataName("Ladung", "%")]
-        BatteryPercent = 8
+        BatteryPercent = 8,
+        [DataName("Status", "")]
+        BatteryLoadingState = 9
     }
 }

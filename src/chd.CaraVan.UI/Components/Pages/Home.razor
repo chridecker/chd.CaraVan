@@ -4,6 +4,30 @@
 
 <PageTitle>Home</PageTitle>
 
+<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
+    <MudCardHeader>
+        <MudIcon Icon="@Icons.Material.Filled.Battery6Bar" />
+        <MudText Typo="Typo.subtitle2"> Batterie</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <BatteryData Type="EDataType.BatteryPercent" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Percent.ToString("n2"))" />
+        <BatteryData Type="EDataType.Ampere" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Ampere.ToString("n2"))" />
+    </MudCardContent>
+</MudCard>
+
+
+<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
+    <MudCardHeader>
+        <MudIcon Icon="@Icons.Material.Filled.SolarPower" />
+        <MudText Typo="Typo.subtitle2"> Solar</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.AmpereH.ToString("n2"))" />
+        <BatteryData Type="EDataType.BatteryLoadingState" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.State)" />
+    </MudCardContent>
+</MudCard>
+
+
 @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
 {
     <RuuviTagCard DeviceDto="device" />

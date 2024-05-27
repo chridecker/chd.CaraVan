@@ -2,11 +2,11 @@
 @using chd.CaraVan.UI.Implementations
 @inject ITypeNameService svc
 <MudText Typo="Typo.caption" Color="Color.Default">
-    @svc.GetName(this.Data).name (@(this.Data.RecordDateTime.ToString("HH:mm:ss dd.MM.yy")))
+    @svc.GetName(this.Data).Name (@(this.Data.RecordDateTime.ToString("HH:mm:ss dd.MM.yy")))
 </MudText>
 
 <MudText Typo="Typo.h4" Color="Color.Default">
-    @this.Data.Value.ToString("n2") @svc.GetName(this.Data).unit
+    @this.Data.Value.ToString("n2") @svc.GetName(this.Data).Unit
 </MudText>
 
 @code {

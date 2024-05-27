@@ -1,0 +1,32 @@
+﻿@page "/ruuvitag/{Id:int}"
+@using chd.CaraVan.UI.Components.Pages.Cards
+@inject IOptionsMonitor<DeviceSettings> options
+@inject IRuuviTagDataService dataService
+<MudText Typo="Typo.h3">@device.Name</MudText>
+
+@foreach (var devData in dataLst)
+{
+    <DataCard Data="devData" />
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    DeviceDto device => options.CurrentValue.RuuviTags.FirstOrDefault(x => x.Id == this.Id);
+
+    List<RuuviTagDeviceData> dataLst = new();
+
+    protected override Task OnInitializedAsync()
+    {
+        foreach (var type in new[] { EDataType.Temperature, EDataType.Humidity })
+        {
+            var data = dataService.GetData(this.Id, type);
+            if (data is not null)
+            {
+                this.dataLst.Add(data);
+            }
+        }
+        return base.OnInitializedAsync();
+    }
+
+}

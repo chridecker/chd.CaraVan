@@ -1,0 +1,18 @@
+﻿@inject ITypeNameService typeNameService
+
+@if (!string.IsNullOrWhiteSpace(this.Value))
+{
+    <MudText Typo="Typo.caption" Color="Color.Default">
+        @typeNameService.GetName(this.Type).Name
+        @(this.DateTime.HasValue ? $"({this.DateTime?.ToString("HH:mm:ss dd.MM.yy")})" : "")))
+    </MudText>
+
+    <MudText Typo="Typo.h4" Color="Color.Default">
+        @this.Value @typeNameService.GetName(this.Type).Unit
+    </MudText>
+}
+@code {
+    [Parameter] public string Value { get; set; }
+    [Parameter] public EDataType Type { get; set; }
+    [Parameter] public DateTime? DateTime { get; set; }
+}

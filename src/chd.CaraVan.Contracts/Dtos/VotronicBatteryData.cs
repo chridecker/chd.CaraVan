@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Contracts.Dtos
 {
-    public class VotronicBatteryData
-    {
-        public decimal Voltage { get; set; }
-        public decimal AmpereH { get; set; }
+    public class VotronicBatteryData : VotronicData
+    {   
         public decimal Percent { get; set; }
-        public decimal Ampere { get; set; }
     }
 }

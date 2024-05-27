@@ -38,7 +38,7 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
             this._data = this._dataService.GetData(this.DeviceDto.Id, EDataType.Temperature);
         }
 
-        private void NavigateToDevice() => this._navigationManager.NavigateTo($"/device/{this.DeviceDto.Id}");
+        private void NavigateToDevice() => this._navigationManager.NavigateTo($"/ruuvitag/{this.DeviceDto.Id}");
 
 
         public async ValueTask DisposeAsync()

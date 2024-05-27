@@ -8,16 +8,20 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace chd.CaraVan.UI.Implementations
 {
     public class TypeNameService : ITypeNameService
     {
-        public (string name, string unit) GetName(DataBase data)
+        public (string Name, string Unit) GetName(DataBase data) => this.GetName(data.Type);
+
+        public (string Name, string Unit) GetName(EDataType type)
         {
-            var val = this.GetAttribute(data.Type);
+            var val = this.GetAttribute(type);
             return (val.Name, val.Unit);
         }
+
         private DataNameAttribute GetAttribute(EDataType type)
         {
             var enumType = typeof(EDataType);
@@ -29,6 +33,7 @@ namespace chd.CaraVan.UI.Implementations
     }
     public interface ITypeNameService
     {
-        (string name, string unit) GetName(DataBase type);
+        (string Name, string Unit) GetName(DataBase data);
+        (string Name, string Unit) GetName(EDataType type);
     }
 }

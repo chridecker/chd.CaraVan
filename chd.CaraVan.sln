@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Contracts", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "links", "links", "{8BDAC021-8BFF-44C6-B4D1-42C2B82970F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chd.CaraVan.Worker", "src\chd.CaraVan.Worker\chd.CaraVan.Worker.csproj", "{2A929F34-D782-4FAA-A85A-4F75E1F2AEC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Worker", "src\chd.CaraVan.Worker\chd.CaraVan.Worker.csproj", "{2A929F34-D782-4FAA-A85A-4F75E1F2AEC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,11 +3,15 @@
 @inject IOptionsMonitor<DeviceSettings> optionsMonitor
 
 <MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavGroup Title="Ruuvi Sensoren" Expanded="true">
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+    <MudNavGroup Title="Ruuvi Sensoren" Icon="@Icons.Material.Filled.Sensors" Expanded="false">
         @foreach (var dev in optionsMonitor.CurrentValue.RuuviTags)
         {
-            <MudNavLink Href="@($"/device/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
+            <MudNavLink Href="@($"/ruuvitag/{dev.Id}")" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Devices">@dev.Name</MudNavLink>
         }
+    </MudNavGroup>
+    <MudNavGroup Title="Stromversorgung" Icon="@Icons.Material.Filled.PowerInput">
+        <MudNavLink Href="/battery" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.BatteryStd">Battery</MudNavLink>
+        <MudNavLink Href="/solar" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.SolarPower">Solar</MudNavLink>
     </MudNavGroup>
 </MudNavMenu>

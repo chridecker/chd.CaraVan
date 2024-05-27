@@ -62,7 +62,11 @@ namespace chd.CaraVan.UI.Implementations
 
             this._tag.RuuviTagDataReceived += this.RuuviTag_DataReceived;
             this._tag.VotronicDataReceived += this._tag_VotronicDataReceived;
-            await this._tag.ConnectAsync(cancellationToken);
+
+            if (OperatingSystem.IsLinux())
+            {
+                await this._tag.ConnectAsync(cancellationToken);
+            }
         }
 
         private void _tag_VotronicDataReceived(object? sender, VotronicEventArgs e)
@@ -71,6 +75,7 @@ namespace chd.CaraVan.UI.Implementations
             {
                 this._votronicDataService.AddData(new Contracts.Dtos.VotronicBatteryData()
                 {
+                    DateTime = e.DateTime,
                     Ampere = e.BatteryData.Ampere,
                     AmpereH = e.BatteryData.LeftAH,
                     Voltage = e.BatteryData.Voltage,
@@ -81,11 +86,12 @@ namespace chd.CaraVan.UI.Implementations
             {
                 this._votronicDataService.AddData(new Contracts.Dtos.VotronicSolarData()
                 {
-                   Ampere = e.SolarData.Ampere,
-                   WattH = e.SolarData.WattH,
-                   AmpereH = e.SolarData.AH,
-                   State = e.SolarData.State,
-                   Voltage = e.SolarData.Voltage
+                    DateTime = e.DateTime,
+                    Ampere = e.SolarData.Ampere,
+                    WattH = e.SolarData.WattH,
+                    AmpereH = e.SolarData.AH,
+                    State = e.SolarData.State,
+                    Voltage = e.SolarData.Voltage
                 });
             }
         }

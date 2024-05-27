@@ -15,17 +15,19 @@ namespace chd.CaraVan.UI.Implementations
     public class RuuviTagDataService : IRuuviTagDataService
     {
         private readonly ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>> _dataDict;
-        private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, (decimal? min, decimal? max)>>> _minMaxDataDict;
+        private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>> _minDataDict;
+        private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>> _maxDataDict;
 
         public RuuviTagDataService()
         {
             this._dataDict = new ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>>();
-            this._minMaxDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, (decimal? min, decimal? max)>>>();
+            this._maxDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>>();
         }
         public void AddData(int id, RuuviTagDeviceData data)
         {
             if (!this._dataDict.ContainsKey(id)) { this._dataDict[id] = new Dictionary<EDataType, RuuviTagDeviceData>(); }
             this._dataDict[id][data.Type] = data;
+            this.HandleMinMax(id, data);
         }
         public RuuviTagDeviceData GetData(int id, EDataType type)
         {
@@ -38,20 +40,22 @@ namespace chd.CaraVan.UI.Implementations
         }
         private void HandleMinMax(int id, RuuviTagDeviceData data)
         {
-            if (!this._minMaxDataDict.ContainsKey(id)) { this._minMaxDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, (decimal?, decimal?)>>(); }
-            if (this._minMaxDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._minMaxDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, (decimal?, decimal?)>(); }
-            if (this._minMaxDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._minMaxDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
-            if (!this._minMaxDataDict[id][data.RecordDateTime.Date].ContainsKey(data.Type)){this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type] = (null, null);}
+            if (!this._minDataDict.ContainsKey(id)) { this._minDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, decimal?>>(); }
+            if (!this._maxDataDict.ContainsKey(id)) { this._maxDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, decimal?>>(); }
+            if (this._minDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._minDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, decimal?>(); }
+            if (this._maxDataDict[id].ContainsKey(data.RecordDateTime.Date)) { this._maxDataDict[id][data.RecordDateTime.Date] = new Dictionary<EDataType, decimal?>(); }
+            if (this._minDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._minDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
+            if (this._maxDataDict[id].ContainsKey(data.RecordDateTime.AddDays(-1).Date)) { this._maxDataDict[id].Remove(data.RecordDateTime.AddDays(-1).Date); }
 
-            if (!this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.HasValue
-                || this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.Value > data.Value)
+            if (!this._minDataDict[id][data.RecordDateTime.Date][data.Type].HasValue
+                || this._minDataDict[id][data.RecordDateTime.Date][data.Type].Value > data.Value)
             {
-                this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min = data.Value;
+                this._minDataDict[id][data.RecordDateTime.Date][data.Type] = data.Value;
             }
-            if (!this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.HasValue
-                || this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min.Value > data.Value)
+            if (!this._maxDataDict[id][data.RecordDateTime.Date][data.Type].HasValue
+                || this._maxDataDict[id][data.RecordDateTime.Date][data.Type].Value < data.Value)
             {
-                this._minMaxDataDict[id][data.RecordDateTime.Date][data.Type].min = data.Value;
+                this._maxDataDict[id][data.RecordDateTime.Date][data.Type] = data.Value;
             }
         }
 

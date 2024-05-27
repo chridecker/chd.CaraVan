@@ -177,7 +177,7 @@ namespace chd.CaraVan.Devices
         {
             foreach (var device in this._devices)
             {
-                await device?.DisconnectAsync();
+                await device.Value?.DisconnectAsync();
             }
             if (await this._adapter.GetDiscoveringAsync())
             {

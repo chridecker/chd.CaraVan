@@ -1,0 +1,25 @@
+﻿@page "/battery"
+@inject IVotronicDataService dataService
+@using chd.CaraVan.UI.Components.Pages.Cards
+
+<MudText Typo="Typo.h3">Batterie Lade- und Verbrauchsdaten</MudText>
+@if (data is not null)
+{
+    <BatteryData DateTime="@data.DateTime" Value="@data.AmpereH.ToString("n2")" Type="EDataType.BatteryLevelAh" />
+<BatteryData DateTime="@data.DateTime" Value="@data.Percent.ToString("n2")" Type="EDataType.BatteryPercent" />
+<BatteryData DateTime="@data.DateTime" Value="@data.Ampere.ToString("n2")" Type="EDataType.Ampere" />
+<BatteryData DateTime="@data.DateTime" Value="@data.Voltage.ToString("n2")" Type="EDataType.BatteryLevel" />
+}
+else{
+    <MudText>NaN</MudText>
+}
+@code {
+    VotronicBatteryData data;
+
+    protected override Task OnInitializedAsync()
+    {
+        data = dataService.GetBatteryData();
+
+        return base.OnInitializedAsync();
+    }
+}

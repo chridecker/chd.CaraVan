@@ -1,6 +1,7 @@
 ﻿<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToDevice">
     <MudCardHeader>
-        <MudText>@DeviceDto.Name</MudText>
+        <MudIcon Icon="@Icons.Material.Filled.Sensors" />
+        <MudText Typo="Typo.subtitle2"> @DeviceDto.Name</MudText>
     </MudCardHeader>
     <MudCardContent>
         @if (this._data != null)
