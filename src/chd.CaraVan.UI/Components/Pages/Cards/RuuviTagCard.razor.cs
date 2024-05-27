@@ -22,7 +22,7 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
             await base.OnInitializedAsync();
         }
 
-        private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, RuuviTagDeviceData e) => await this.InvokeAsync(this.StateHasChanged);
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, EventArgs e) => await this.InvokeAsync(this.StateHasChanged);
 
         private void NavigateToDevice() => this._navigationManager.NavigateTo($"/ruuvitag/{this.DeviceDto.Id}");
     }

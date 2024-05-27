@@ -29,7 +29,7 @@ namespace chd.CaraVan.UI.Hubs
 
     public interface IDataHub
     {
-        Task RuuviTagData(RuuviTagDeviceData data);
-        Task VotronicData(VotronicData data);
+        Task RuuviTagData();
+        Task VotronicData();
     }
 }

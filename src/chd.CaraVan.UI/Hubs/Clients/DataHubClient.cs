@@ -12,8 +12,8 @@ namespace chd.CaraVan.UI.Hubs.Clients
 {
     public class DataHubClient : BaseHubClient, IDataHubClient
     {
-        public event EventHandler<VotronicData> VotronicDataReceived;
-        public event EventHandler<RuuviTagDeviceData> RuuviTagDeviceDataReceived;
+        public event EventHandler VotronicDataReceived;
+        public event EventHandler RuuviTagDeviceDataReceived;
 
         public DataHubClient(ILogger<DataHubClient> logger) : base(logger)
         {
@@ -24,15 +24,15 @@ namespace chd.CaraVan.UI.Hubs.Clients
 
         protected override void HookIncomingCalls()
         {
-            this._connection.On<VotronicData>(nameof(IDataHub.VotronicData), (data) =>
+            this._connection.On(nameof(IDataHub.VotronicData), () =>
             {
-                this.VotronicDataReceived?.Invoke(this, data);
+                this.VotronicDataReceived?.Invoke(this, EventArgs.Empty);
             });
 
-            this._connection.On<RuuviTagDeviceData>(nameof(IDataHub.RuuviTagData), (data) =>
+            this._connection.On(nameof(IDataHub.RuuviTagData), () =>
             {
                 this._logger?.LogDebug($"Received Ruuvi");
-                this.RuuviTagDeviceDataReceived?.Invoke(this, data);
+                this.RuuviTagDeviceDataReceived?.Invoke(this, EventArgs.Empty);
             });
         }
 
@@ -46,7 +46,7 @@ namespace chd.CaraVan.UI.Hubs.Clients
     }
     public interface IDataHubClient : IBaseHubClient
     {
-        event EventHandler<VotronicData> VotronicDataReceived;
-        event EventHandler<RuuviTagDeviceData> RuuviTagDeviceDataReceived;
+        event EventHandler VotronicDataReceived;
+        event EventHandler RuuviTagDeviceDataReceived;
     }
 }
