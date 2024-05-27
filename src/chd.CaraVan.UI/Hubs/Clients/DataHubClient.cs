@@ -35,8 +35,6 @@ namespace chd.CaraVan.UI.Hubs.Clients
             });
         }
 
-        protected override Uri LoadUri() => new Uri("");
-
         protected override Task<bool> ShouldInitialize(CancellationToken cancellationToken) => Task.FromResult(true);
 
         protected override void SpecificReinitialize()

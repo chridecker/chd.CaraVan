@@ -16,6 +16,7 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
         protected readonly ILogger<BaseHubClient> _logger;
         protected volatile bool _isInitializing;
         protected HubConnection _connection;
+        protected string _baseUri;
 
         protected BaseHubClient(ILogger<BaseHubClient> logger)
         {
@@ -23,14 +24,16 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
             this._isInitializing = false;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken = default) => this.ReInitialize(cancellationToken);
+        public Task StartAsync(string baseUri, CancellationToken cancellationToken = default)
+        {
+            this._baseUri = baseUri;
+            return this.ReInitialize(cancellationToken);
+        }
 
         protected abstract void SpecificReinitialize();
         protected abstract Task<bool> ShouldInitialize(CancellationToken cancellationToken);
         protected abstract void HookIncomingCalls();
         protected abstract Task DoInvokations(CancellationToken cancellationToken);
-
-        protected abstract Uri LoadUri();
 
         protected async Task ReInitialize(CancellationToken cancellationToken = default)
         {
@@ -58,7 +61,7 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
                 {
                     this._connection = new HubConnectionBuilder()
                          .WithAutomaticReconnect()
-                         //.WithUrl(this.LoadUri())
+                         .WithUrl($"{_baseUri}data-hub")
                         .Build();
 
                     this._connection.Reconnecting += this.Error;
@@ -88,7 +91,7 @@ namespace chd.CaraVan.UI.Hubs.Clients.Base
 
     public interface IBaseHubClient
     {
-        Task StartAsync(CancellationToken cancellationToken = default);
+        Task StartAsync(string baseUri, CancellationToken cancellationToken = default);
         bool IsConnected { get; }
 
     }

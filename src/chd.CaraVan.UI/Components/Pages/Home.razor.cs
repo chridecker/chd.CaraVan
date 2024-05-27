@@ -33,7 +33,7 @@ namespace chd.CaraVan.UI.Components.Pages
 
         private async void _dataHubClient_VotronicDataReceived(object sender, VotronicData e) => await this.InvokeAsync(this.StateHasChanged);
 
-        private void StartHub() => Task.Run(async () => await this._dataHubClient.StartAsync());
+        private void StartHub() => Task.Run(async () => await this._dataHubClient.StartAsync(this._navigationManager.BaseUri));
         public void Dispose()
         {
             this._dataHubClient.VotronicDataReceived -= this._dataHubClient_VotronicDataReceived;
