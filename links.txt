@@ -1,5 +1,0 @@
-https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/broadcast_formats.md
-
-https://github.com/ruuvi/ruuvi-sensor-protocols/tree/master
-
-https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcom.nordic.infocenter.sdk5.v14.0.0%2Fble_sdk_app_nus_eval.html
