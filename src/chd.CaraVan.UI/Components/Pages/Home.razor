@@ -5,7 +5,7 @@
 <PageTitle>Home</PageTitle>
 
 
-<MudCarousel Class="mud-width-full" Style="min-height:12rem" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
+<MudCarousel Class="mud-width-full" Style="min-height:12rem" ShowArrows="true" EnableSwipeGesture="true" TData="object">
     @if (this.VotronicBatteryData != null)
     {
         <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
@@ -29,7 +29,7 @@
                     <MudText Typo="Typo.subtitle2"> Solar</MudText>
                 </MudCardHeader>
                 <MudCardContent>
-                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.AmpereH.ToString("n2"))" />
+                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.Ampere.ToString("n2"))" />
                     <BatteryData Type="EDataType.BatteryLoadingState" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.State)" />
                 </MudCardContent>
             </MudCard>
@@ -37,7 +37,7 @@
     }
 </MudCarousel>
 <MudSpacer />
-<MudCarousel Style="min-height:12rem" Class="mud-width-full chd-carousel" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" TData="object">
+<MudCarousel Style="min-height:10rem" Class="mud-width-full chd-carousel" ShowArrows="true" EnableSwipeGesture="true" TData="object">
     @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
     {
         <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
