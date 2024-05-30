@@ -4,7 +4,6 @@
 
 <PageTitle>Home</PageTitle>
 
-
 <MudCarousel Class="mud-width-full" Style="min-height:12rem" ShowBullets="false" AutoCycle="false" ShowArrows="true" EnableSwipeGesture="true" TData="object">
     @if (this.VotronicBatteryData != null)
     {
@@ -15,9 +14,7 @@
                     <MudText Typo="Typo.subtitle2"> Batterie</MudText>
                 </MudCardHeader>
                 <MudCardContent>
-                    <BatteryLevelCard ValuePerecent="@((double)VotronicBatteryData.Percent)" Value="@VotronicBatteryData.AmpereH" />
-                    @* <BatteryData Type="EDataType.BatteryPercent" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Percent.ToString("n2"))" /> *@
-                    @* <BatteryData Type="EDataType.Ampere" DateTime="@VotronicBatteryData?.DateTime" Value="@(VotronicBatteryData?.Ampere.ToString("n2"))" /> *@
+                    <BatteryLevelCard ValuePerecent="@((double)VotronicBatteryData.Percent)" Ampere="@VotronicBatteryData.Ampere" Value="@VotronicBatteryData.AmpereH" />
                 </MudCardContent>
             </MudCard>
         </MudCarouselItem>
@@ -26,11 +23,13 @@
             <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
                 <MudCardHeader>
                     <MudIcon Icon="@Icons.Material.Filled.SolarPower" />
-                    <MudText Typo="Typo.subtitle2"> Solar</MudText>
+                    <MudText Typo="Typo.subtitle2">Solar</MudText>
                 </MudCardHeader>
                 <MudCardContent>
-                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.Ampere.ToString("n2"))" />
-                    <BatteryData Type="EDataType.BatteryLoadingState" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData?.State)" />
+                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData.Ampere.ToString("n2"))" />
+                    <MudText Align="MudBlazor.Align.Center">
+                        <SolarLoadingStateCard State="@VotronicSolarData.State" />
+                    </MudText>
                 </MudCardContent>
             </MudCard>
         </MudCarouselItem>

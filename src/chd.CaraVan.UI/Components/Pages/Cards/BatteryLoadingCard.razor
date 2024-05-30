@@ -1,4 +1,8 @@
-﻿<MudChip T="object" Color="@_color" Variant="Variant.Outlined">@Ampere.ToString("n2")</MudChip>
+﻿<MudChip T="object" Color="@_color" Variant="Variant.Outlined">
+    <MudText Typo="Typo.h6">
+        @Ampere.ToString("n2")
+    </MudText>
+</MudChip>
 @code {
     [Parameter] public decimal Ampere { get; set; }
 

@@ -1,0 +1,11 @@
+﻿<MudChip T="object" Color="@_color" Variant="Variant.Outlined">
+    <MudText Typo="Typo.h6" Align="MudBlazor.Align.Center">
+        @State
+    </MudText>
+</MudChip>
+
+@code {
+    [Parameter] public string State { get; set; }
+
+    private Color _color => this.State == "Aktiv" ? Color.Success : this.State == "Stromreduzierung" ? Color.Default : Color.Warning;
+}
