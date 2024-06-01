@@ -19,6 +19,7 @@ namespace chd.CaraVan.UI.Extensions
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
             services.AddScoped<IDataHubClient, DataHubClient>();
 
+            services.AddSingleton<ISolarStateService, SolarStateService>();
             services.AddSingleton<ITypeNameService, TypeNameService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();
             services.AddSingleton<IVotronicDataService, VotronicDataService>();

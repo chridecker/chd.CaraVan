@@ -8,7 +8,7 @@ namespace chd.CaraVan.Contracts.Dtos
 {
     public class VotronicSolarData : VotronicData
     {
-        public string State { get; set; }
+        public decimal State { get; set; }
         public decimal WattH { get; set; }
     }
 }

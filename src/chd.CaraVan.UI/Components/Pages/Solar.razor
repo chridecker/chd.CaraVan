@@ -1,12 +1,13 @@
 ﻿@page "/solar"
 @inject IVotronicDataService dataService
+@inject ISolarStateService solarStateService
 @using chd.CaraVan.UI.Components.Pages.Cards
 
 <MudText Typo="Typo.h3">Solar Ladedaten</MudText>
 @if (data is not null)
 {
     <BatteryData DateTime="@data.DateTime" Value="@data.Ampere.ToString("n2")" Type="EDataType.Ampere" />
-<BatteryData DateTime="@data.DateTime" Value="@data.State" Type="EDataType.BatteryLoadingState" />
+    <BatteryData DateTime="@data.DateTime" Value="@solarStateService.GetState(data.State)" Type="EDataType.BatteryLoadingState" />
 <BatteryData DateTime="@data.DateTime" Value="@data.AmpereH.ToString("n2")" Type="EDataType.BatteryLevelAh" />
 <BatteryData DateTime="@data.DateTime" Value="@data.WattH.ToString("n2")" Type="EDataType.Watt" />
 <BatteryData DateTime="@data.DateTime" Value="@data.Voltage.ToString("n2")" Type="EDataType.BatteryLevel" />

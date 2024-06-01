@@ -1,11 +1,14 @@
-﻿<MudChip T="object" Color="@_color" Variant="Variant.Outlined">
+﻿@using chd.CaraVan.Devices.Contracts.Constants
+<MudChip T="object" Color="@_color" Variant="Variant.Outlined">
     <MudText Typo="Typo.h6" Align="MudBlazor.Align.Center">
-        @State
+        @this._solarStateService.GetState(State)
     </MudText>
 </MudChip>
 
 @code {
-    [Parameter] public string State { get; set; }
+    [Parameter] public decimal State { get; set; }
+    [Inject] private ISolarStateService _solarStateService { get; set; }
 
-    private Color _color => this.State == "Aktiv" ? Color.Success : this.State == "Stromreduzierung" ? Color.Default : Color.Warning;
+    private Color _color => this.State == SolarStateConstants.ACTIVE_STATE ? Color.Success : (this.State == SolarStateConstants.REDUCE_STATE2 ||this.State == SolarStateConstants.REDUCE_STATE) 
+    ? Color.Secondary : this.State == SolarStateConstants.STANDBY_STATE ? Color.Default : Color.Warning;
 }

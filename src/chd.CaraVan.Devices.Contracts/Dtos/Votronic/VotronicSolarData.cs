@@ -8,6 +8,8 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Votronic
 {
     public class VotronicSolarData : VotronicData
     {
+
+
         public VotronicSolarData(byte[] data) : base(data)
         {
         }
@@ -17,11 +19,6 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Votronic
         public decimal WattH => this.GetData(15, 2, 0.1m);
         public decimal AH => this.GetData(13, 2, 1m);
 
-        public string State => this.GetData(12, 1, 1m) switch
-        {
-            9 => "Aktiv",
-            25 => "Stromeduzierung",
-            _ => $"{this.GetData(12, 1, 1m)}"
-        };
+        public decimal State => this.GetData(12, 1, 1m);
     }
 }
