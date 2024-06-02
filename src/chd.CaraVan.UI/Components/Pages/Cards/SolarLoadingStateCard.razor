@@ -3,13 +3,12 @@
 @inject ISolarStateService solarStateService
 
 <div class="solar-state">
-    <MudChip Class="solar-loading" T="object" Color="@_colorLoading" Variant="Variant.Outlined">
-        <MudIcon Icon="@Icons.Material.Filled.SolarPower" />
-        <MudText Typo="Typo.h6">
-            @this.Value.ToString("n2")
+    <MudProgressLinear Vertical="false" Color="_colorLoading" Size="Size.Large" Value="@((double)this.Value)" Min="0" Max="20" Style="height: 3rem; width:5rem; margin-left:1rem; margin-top:1rem;">
+        <MudText Align="@MudBlazor.Align.Center" Typo="Typo.h5">
+            @Value.ToString("n2")@typeNameService.GetName(EDataType.Ampere).Unit
         </MudText>
-    </MudChip>
-    <MudChip Class="solar-text" T="object" Color="@_color" Variant="Variant.Outlined">
+    </MudProgressLinear>
+    <MudChip Class="solar-text" T="object" Color="@_color" Variant="Variant.Outlined" Style="margin-top:1rem;">
         <MudIcon Icon="@StateIcon" />
         <MudText Typo="Typo.h6" Align="MudBlazor.Align.Center">
             @this.solarStateService.GetState(State)
@@ -26,7 +25,7 @@
 
         this.solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Icons.Material.Filled.ChargingStation : Icons.Material.Filled.BatteryUnknown;
 
-    private Color _colorLoading => this.Value < 0 ? Color.Error : this.Value > 0 ? Color.Success : Color.Primary;
+    private Color _colorLoading => this.Value <= 0 ? Color.Default : this.Value <= 10 ? Color.Success : Color.Error;
 
     private Color _color => this.solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Color.Success :
         this.solarStateService.GetState(State) == SolarStateConstants.REDUCE ? Color.Info :

@@ -1,7 +1,7 @@
 ﻿@inject ITypeNameService typeNameService
 
 <div class="battery-level">
-    <MudProgressLinear Vertical="false" Color="_color" Size="Size.Large" Value="@ValuePerecent" Min="0" Max="100" Style="height: 4.5rem; width:60%; margin-left:20%;">
+    <MudProgressLinear Vertical="false" Color="_color" Size="Size.Large" Value="@ValuePerecent" Min="0" Max="100" Style="height: 4.5rem; width:60%; margin-left:1rem;">
         <MudText Class="battery-level-text" Align="@MudBlazor.Align.Center" Typo="Typo.h4">
             @ValuePerecent.ToString("n0")@typeNameService.GetName(EDataType.BatteryPercent).Unit
             <br />

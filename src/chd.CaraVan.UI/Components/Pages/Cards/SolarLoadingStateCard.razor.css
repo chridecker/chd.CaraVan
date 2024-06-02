@@ -1,8 +1,10 @@
 ﻿.solar-state ::deep {
+    display:flex;
 }
 
     .solar-state ::deep .solar-loading {
     }
 
-    .solar-state ::deep .solar-state-text {
+    .solar-state ::deep .solar-state-text ::deep {
+        margin-top:1rem;
     }
