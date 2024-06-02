@@ -4,18 +4,18 @@
 
 <PageTitle>Home</PageTitle>
 
-@* @if (this.VotronicBatteryData != null) *@
-@* { *@
+@if (this.VotronicBatteryData != null)
+{
     <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
         <MudCardHeader>
             Batterie und Solaranlage
         </MudCardHeader>
         <MudCardContent>
-            <BatteryLevelCard ValuePerecent="@(91)" Ampere="4" Value="185" />
-            <SolarLoadingStateCard State="25" Value="9.5m" />
+            <BatteryLevelCard ValuePerecent="@((double)this.VotronicBatteryData.Percent)" Ampere="@this.VotronicBatteryData.Ampere" Value="@this.VotronicBatteryData.AmpereH" />
+            <SolarLoadingStateCard State="@this.VotronicSolarData.State" Value="@this.VotronicSolarData.Ampere" />
         </MudCardContent>
     </MudCard>
-@* } *@
+}
 <MudSpacer />
 <MudCarousel Style="min-height:10rem" Class="mud-width-full chd-carousel" AutoCycle="false" ShowBullets="false" ShowArrows="true" EnableSwipeGesture="true" TData="object">
     @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
