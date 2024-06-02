@@ -88,7 +88,7 @@ namespace chd.CaraVan.UI.Implementations
                     Voltage = e.BatteryData.Voltage,
                     Percent = e.BatteryData.Percent
                 };
-                this._votronicDataService.AddData(data);
+                await this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
             }
             if (e.SolarData is not null)
@@ -102,7 +102,7 @@ namespace chd.CaraVan.UI.Implementations
                     State = e.SolarData.State,
                     Voltage = e.SolarData.Voltage
                 };
-                this._votronicDataService.AddData(data);
+                await this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
             }
         }
@@ -114,14 +114,7 @@ namespace chd.CaraVan.UI.Implementations
             {
                 DeviceId = device.Id
             };
-            this._dataService.AddData(device.Id, data);
-            await this._hub.Clients.All.RuuviTagData();
-
-            data = new RuuviTagDeviceData(e.DateTime, EDataType.Humidity, e.Data.Humidity ?? 0)
-            {
-                DeviceId = device.Id
-            };
-            this._dataService.AddData(device.Id, data);
+            await this._dataService.AddData(device.Id, data);
             await this._hub.Clients.All.RuuviTagData();
         }
     }

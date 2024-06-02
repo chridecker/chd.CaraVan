@@ -1,5 +1,6 @@
 ﻿using InfluxDB.Client;
 using InfluxDB.Client.Writes;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,27 +9,30 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.DataAccess
 {
-    public class InfluxContext : IDisposable
+    public class InfluxContext : IInfluxContext
     {
         private readonly InfluxDBClient _client;
+        private readonly IOptionsMonitor<InfluxSettings> _optionsMonitor;
 
-        public InfluxContext()
+        public InfluxContext(IOptionsMonitor<InfluxSettings> optionsMonitor)
         {
-            this._client = InfluxDBClientFactory.Create(new InfluxDBClientOptions(InfluxConstants.URL)
+            this._client = new InfluxDBClient(new InfluxDBClientOptions(this._optionsMonitor.CurrentValue.Url)
             {
-                Token = InfluxConstants.API_KEY,
-                Org = "chdCaraVan",
-                Bucket = InfluxConstants.DATABASE,
+                Token = this._optionsMonitor.CurrentValue.ApiKey,
+                Org = this._optionsMonitor.CurrentValue.Org,
+                Bucket = this._optionsMonitor.CurrentValue.Database,
             });
+            this._optionsMonitor = optionsMonitor;
         }
 
-        public async Task WriteBatteryData(DateTime time, decimal ampere, decimal ampereH, decimal percent)
+        public async Task WriteBatteryData(DateTime time, decimal ampere, decimal ampereH, decimal percent, decimal voltage)
         {
             var point = PointData.Measurement("battery")
                 .Timestamp(time, InfluxDB.Client.Api.Domain.WritePrecision.S)
                 .Field("ampere", ampere)
                 .Field("ampereH", ampereH)
-                .Field("percent", percent);
+                .Field("percent", percent)
+                .Field("voltage", voltage);
             await this._client.GetWriteApiAsync().WritePointAsync(point, InfluxConstants.DATABASE);
         }
         public async Task WriteSolarData(DateTime time, decimal ampere, byte state)
@@ -50,11 +54,19 @@ namespace chd.CaraVan.DataAccess
             await this._client.GetWriteApiAsync().WritePointAsync(point, InfluxConstants.DATABASE);
         }
 
+        public 
+
 
 
         public void Dispose()
         {
             this._client.Dispose();
         }
+    }
+    public interface IInfluxContext : IDisposable
+    {
+        Task WriteBatteryData(DateTime time, decimal ampere, decimal ampereH, decimal percent, decimal voltage);
+        Task WriteSensorData(DateTime time, int id, decimal temp);
+        Task WriteSolarData(DateTime time, decimal ampere, byte state);
     }
 }

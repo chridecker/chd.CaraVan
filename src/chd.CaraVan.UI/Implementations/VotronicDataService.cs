@@ -1,6 +1,8 @@
 ﻿using chd.CaraVan.Contracts.Dtos;
+using chd.CaraVan.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,19 +11,27 @@ namespace chd.CaraVan.UI.Implementations
 {
     public class VotronicDataService : IVotronicDataService
     {
-        private VotronicBatteryData _votronicBatteryData;
+        private readonly IInfluxContext _influxContext;
 
-        private VotronicSolarData _votronicSolarData;
-
-        public void AddData(VotronicSolarData votronicSolarData) => this._votronicSolarData = votronicSolarData;
-        public void AddData(VotronicBatteryData votronicBatteryData) => this._votronicBatteryData = votronicBatteryData;
+        public VotronicDataService(IInfluxContext influxContext)
+        {
+            this._influxContext = influxContext;
+        }
+        public async Task AddData(VotronicSolarData data)
+        {
+            await this._influxContext.WriteSolarData(data.DateTime, data.Ampere, data.State);
+        }
+        public async Task AddData(VotronicBatteryData data)
+        {
+            await this._influxContext.WriteBatteryData(data.DateTime, data.Ampere, data.AmpereH, data.Percent, data.Voltage);
+        }
         public VotronicBatteryData GetBatteryData() => this._votronicBatteryData;
         public VotronicSolarData GetSolarData() => this._votronicSolarData;
     }
     public interface IVotronicDataService
     {
-        void AddData(VotronicBatteryData votronicBatteryData);
-        void AddData(VotronicSolarData votronicSolarData);
+         Task AddData(VotronicBatteryData votronicBatteryData);
+        Task AddData(VotronicSolarData votronicSolarData);
         VotronicBatteryData GetBatteryData();
         VotronicSolarData GetSolarData();
     }
