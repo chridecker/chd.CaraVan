@@ -6,9 +6,11 @@
 </MudChip>
 
 @code {
-    [Parameter] public decimal State { get; set; }
+    [Parameter] public byte State { get; set; }
     [Inject] private ISolarStateService _solarStateService { get; set; }
 
-    private Color _color => this.State == SolarStateConstants.ACTIVE_STATE ? Color.Success : (this.State == SolarStateConstants.REDUCE_STATE2 ||this.State == SolarStateConstants.REDUCE_STATE) 
-    ? Color.Secondary : this.State == SolarStateConstants.STANDBY_STATE ? Color.Default : Color.Warning;
+    private Color _color => this._solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Color.Success :
+        this._solarStateService.GetState(State) == SolarStateConstants.REDUCE ? Color.Info :
+        this._solarStateService.GetState(State) == SolarStateConstants.STANDBY ? Color.Default
+        : Color.Warning;
 }
