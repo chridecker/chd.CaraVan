@@ -1,15 +1,25 @@
 ﻿@inject ITypeNameService typeNameService
-<MudProgressLinear Vertical="false" Color="_color" Size="Size.Large" Value="@ValuePerecent" Min="0" Max="100" Style="height: 4rem; width:60%; margin-left:20%;">
-    <MudText Align="@MudBlazor.Align.Center" Typo="Typo.h4"> @ValuePerecent.ToString("n0") @typeNameService.GetName(EDataType.BatteryPercent).Unit</MudText>
-</MudProgressLinear>
-<MudText Align="MudBlazor.Align.Center" Typo="Typo.h5">
-    @this.Value.ToString("n0")  @typeNameService.GetName(EDataType.BatteryLevelAh).Unit 
-    <BatteryLoadingCard Ampere="@this.Ampere" />
-</MudText>
+
+<div class="battery-level">
+    <MudProgressLinear Vertical="false" Color="_color" Size="Size.Large" Value="@ValuePerecent" Min="0" Max="100" Style="height: 4.5rem; width:60%; margin-left:20%;">
+        <MudText Class="battery-level-text" Align="@MudBlazor.Align.Center" Typo="Typo.h4">
+            @ValuePerecent.ToString("n0")@typeNameService.GetName(EDataType.BatteryPercent).Unit
+            <br />
+            <MudText Class="battery-level-text" Align="@MudBlazor.Align.Center" Typo="Typo.h6"> @Value.ToString("n0")@typeNameService.GetName(EDataType.BatteryLevelAh).Unit</MudText>
+        </MudText>
+    </MudProgressLinear>
+    <MudChip Class="battery_level_loading" T="object" Color="@_colorLoading" Variant="Variant.Outlined">
+        <MudIcon Icon="@Icons.Material.Filled.Battery6Bar" />
+        <MudText Typo="Typo.h6">
+            @this.Ampere.ToString("n2")
+        </MudText>
+    </MudChip>
+</div>
 @code {
     [Parameter] public double ValuePerecent { get; set; }
     [Parameter] public decimal Value { get; set; }
     [Parameter] public decimal Ampere { get; set; }
 
     private Color _color => this.ValuePerecent <= 10 ? Color.Error : this.ValuePerecent <= 20 ? Color.Warning : this.ValuePerecent > 90 ? Color.Success : Color.Primary;
+    private Color _colorLoading => this.Ampere < 0 ? Color.Error : this.Ampere > 0 ? Color.Success : Color.Primary;
 }

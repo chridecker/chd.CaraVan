@@ -4,37 +4,19 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudCarousel Class="mud-width-full" Style="min-height:12rem" ShowBullets="false" AutoCycle="false" ShowArrows="true" EnableSwipeGesture="true" TData="object">
-    @if (this.VotronicBatteryData != null)
-    {
-        <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
-            <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
-                <MudCardHeader>
-                    <MudIcon Icon="@Icons.Material.Filled.Battery6Bar" />
-                    <MudText Typo="Typo.subtitle2"> Batterie</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <BatteryLevelCard ValuePerecent="@((double)VotronicBatteryData.Percent)" Ampere="@VotronicBatteryData.Ampere" Value="@VotronicBatteryData.AmpereH" />
-                </MudCardContent>
-            </MudCard>
-        </MudCarouselItem>
-
-        <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
-            <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
-                <MudCardHeader>
-                    <MudIcon Icon="@Icons.Material.Filled.SolarPower" />
-                    <MudText Typo="Typo.subtitle2">Solar</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <BatteryData Type="EDataType.Ampere" DateTime="@VotronicSolarData?.DateTime" Value="@(VotronicSolarData.Ampere.ToString("n2"))" />
-                    <MudText Align="MudBlazor.Align.Center">
-                        <SolarLoadingStateCard State="@VotronicSolarData.State" />
-                    </MudText>
-                </MudCardContent>
-            </MudCard>
-        </MudCarouselItem>
-    }
-</MudCarousel>
+@* @if (this.VotronicBatteryData != null) *@
+@* { *@
+    <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
+        <MudCardHeader>
+            Batterie und Solaranlage
+        </MudCardHeader>
+        <MudCardContent>
+            <BatteryLevelCard ValuePerecent="@(91)" Ampere="4" Value="185" />
+            <MudSpacer  />
+            <SolarLoadingStateCard State="25" Value="4.5m" />
+        </MudCardContent>
+    </MudCard>
+@* } *@
 <MudSpacer />
 <MudCarousel Style="min-height:10rem" Class="mud-width-full chd-carousel" AutoCycle="false" ShowBullets="false" ShowArrows="true" EnableSwipeGesture="true" TData="object">
     @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)

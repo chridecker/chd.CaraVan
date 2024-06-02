@@ -6,11 +6,12 @@
 @if (data is not null)
 {
     <BatteryData DateTime="@data.DateTime" Value="@data.AmpereH.ToString("n2")" Type="EDataType.BatteryLevelAh" />
-<BatteryData DateTime="@data.DateTime" Value="@data.Percent.ToString("n2")" Type="EDataType.BatteryPercent" />
-<BatteryData DateTime="@data.DateTime" Value="@data.Ampere.ToString("n2")" Type="EDataType.Ampere" />
-<BatteryData DateTime="@data.DateTime" Value="@data.Voltage.ToString("n2")" Type="EDataType.BatteryLevel" />
+    <BatteryData DateTime="@data.DateTime" Value="@data.Percent.ToString("n2")" Type="EDataType.BatteryPercent" />
+    <BatteryData DateTime="@data.DateTime" Value="@data.Ampere.ToString("n2")" Type="EDataType.Ampere" />
+    <BatteryData DateTime="@data.DateTime" Value="@data.Voltage.ToString("n2")" Type="EDataType.BatteryLevel" />
 }
-else{
+else
+{
     <MudText>NaN</MudText>
 }
 @code {

@@ -1,16 +1,35 @@
 ﻿@using chd.CaraVan.Devices.Contracts.Constants
-<MudChip T="object" Color="@_color" Variant="Variant.Outlined">
-    <MudText Typo="Typo.h6" Align="MudBlazor.Align.Center">
-        @this._solarStateService.GetState(State)
-    </MudText>
-</MudChip>
+@inject ITypeNameService typeNameService
+@inject ISolarStateService solarStateService
+
+<div class="solar-state">
+    <MudChip Class="solar-loading" T="object" Color="@_colorLoading" Variant="Variant.Outlined">
+        <MudIcon Icon="@Icons.Material.Filled.SolarPower" />
+        <MudText Typo="Typo.h6">
+            @this.Value.ToString("n2")
+        </MudText>
+    </MudChip>
+    <MudChip Class="solar-text" T="object" Color="@_color" Variant="Variant.Outlined">
+        <MudIcon Icon="@StateIcon" />
+        <MudText Typo="Typo.h6" Align="MudBlazor.Align.Center">
+            @this.solarStateService.GetState(State)
+        </MudText>
+    </MudChip>
+</div>
 
 @code {
+    [Parameter] public decimal Value { get; set; }
     [Parameter] public byte State { get; set; }
-    [Inject] private ISolarStateService _solarStateService { get; set; }
 
-    private Color _color => this._solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Color.Success :
-        this._solarStateService.GetState(State) == SolarStateConstants.REDUCE ? Color.Info :
-        this._solarStateService.GetState(State) == SolarStateConstants.STANDBY ? Color.Default
+    private string StateIcon => this.solarStateService.GetState(State) == SolarStateConstants.STANDBY ? Icons.Material.Filled.ModeStandby :
+    this.solarStateService.GetState(State) == SolarStateConstants.REDUCE ? Icons.Material.Filled.BatteryChargingFull :
+
+        this.solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Icons.Material.Filled.ChargingStation : Icons.Material.Filled.BatteryUnknown;
+
+    private Color _colorLoading => this.Value < 0 ? Color.Error : this.Value > 0 ? Color.Success : Color.Primary;
+
+    private Color _color => this.solarStateService.GetState(State) == SolarStateConstants.ACTIVE ? Color.Success :
+        this.solarStateService.GetState(State) == SolarStateConstants.REDUCE ? Color.Info :
+        this.solarStateService.GetState(State) == SolarStateConstants.STANDBY ? Color.Default
         : Color.Warning;
 }
