@@ -21,7 +21,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        data = await dataService.GetSolarData();
+        data =  dataService.GetSolarData();
 
         await base.OnInitializedAsync();
     }

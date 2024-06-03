@@ -14,23 +14,18 @@ namespace chd.CaraVan.UI.Components.Pages.Cards
         [Inject] private IRuuviTagDataService _dataService { get; set; }
         [Inject] private IDataHubClient _dataHubClient { get; set; }
 
-        private RuuviTagDeviceData _data;
+        private RuuviTagDeviceData _data => this._dataService.GetData(this.DeviceDto.Id, EDataType.Temperature);
 
         protected override async Task OnInitializedAsync()
         {
             this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
-            _data = await this._dataService.GetData(this.DeviceDto.Id);
             await base.OnInitializedAsync();
         }
 
-        private decimal? _min => 0;
-        private decimal? _max => 0;
+        private decimal? _min => this._dataService.GetMinMaxData(this.DeviceDto.Id, this._data.Type).Min;
+        private decimal? _max => this._dataService.GetMinMaxData(this.DeviceDto.Id, this._data.Type).Max;
 
-        private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, EventArgs e)
-        {
-            this._data = await this._dataService.GetData(this.DeviceDto.Id);
-            await this.InvokeAsync(this.StateHasChanged);
-        }
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object? sender, EventArgs e) => await this.InvokeAsync(this.StateHasChanged);
 
         private void NavigateToDevice() => this._navigationManager.NavigateTo($"/ruuvitag/{this.DeviceDto.Id}");
     }

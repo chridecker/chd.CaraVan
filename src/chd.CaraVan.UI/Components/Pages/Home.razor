@@ -11,7 +11,10 @@
             Batterie und Solaranlage <SolarLoadingStateCard State="@VotronicSolarData.State" Value="@VotronicSolarData.Ampere" />
         </MudCardHeader>
         <MudCardContent>
-            <BatteryLevelCard ValuePerecent="@((double)this.VotronicBatteryData.Percent)" Ampere="@this.VotronicBatteryData.Ampere" Value="@this.VotronicBatteryData.AmpereH" />
+            <LoadingCard BatteryAmpere="@this.VotronicBatteryData.Ampere"
+                         BatteryAmpereH="@this.VotronicBatteryData.AmpereH"
+                         BatteryPercent="@this.VotronicBatteryData.Percent"
+                         SolarAmpere="@this.VotronicSolarData.Ampere" SolarState="@this.VotronicSolarData.State" />
         </MudCardContent>
     </MudCard>
 }

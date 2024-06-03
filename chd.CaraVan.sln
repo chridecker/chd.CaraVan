@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.Contracts", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "links", "links", "{8BDAC021-8BFF-44C6-B4D1-42C2B82970F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "chd.CaraVan.DataAccess", "src\chd.CaraVan.DataAccess\chd.CaraVan.DataAccess.csproj", "{96DCA912-92D2-48E5-A677-F1EFFF73F51A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,10 +43,6 @@ Global
 		{8D5B875D-2149-4025-BDCA-859E8ECBEFA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D5B875D-2149-4025-BDCA-859E8ECBEFA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D5B875D-2149-4025-BDCA-859E8ECBEFA3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96DCA912-92D2-48E5-A677-F1EFFF73F51A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96DCA912-92D2-48E5-A677-F1EFFF73F51A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96DCA912-92D2-48E5-A677-F1EFFF73F51A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96DCA912-92D2-48E5-A677-F1EFFF73F51A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,7 +53,6 @@ Global
 		{85CEFFD9-D91B-4A36-ADA6-D2884D1F0301} = {0F48C08D-70DB-49B9-89C3-AFBEE6CA5114}
 		{16ED750C-F0A6-4DB0-A790-7E3D4A004D71} = {0F48C08D-70DB-49B9-89C3-AFBEE6CA5114}
 		{8D5B875D-2149-4025-BDCA-859E8ECBEFA3} = {0F48C08D-70DB-49B9-89C3-AFBEE6CA5114}
-		{96DCA912-92D2-48E5-A677-F1EFFF73F51A} = {0F48C08D-70DB-49B9-89C3-AFBEE6CA5114}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {025A10D3-C98B-43EF-B2C6-B1F9EAF0D7CD}

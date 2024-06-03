@@ -19,7 +19,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        data = await dataService.GetBatteryData();
+        data = dataService.GetBatteryData();
 
         await base.OnInitializedAsync();
     }

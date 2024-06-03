@@ -29,8 +29,8 @@ namespace chd.CaraVan.UI.Components.Pages
             }
             this._dataHubClient.VotronicDataReceived += this._dataHubClient_VotronicDataReceived;
             this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
-            this.VotronicSolarData = await this._votronicData.GetSolarData();
-            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
+            this.VotronicSolarData =  this._votronicData.GetSolarData();
+            this.VotronicBatteryData =  this._votronicData.GetBatteryData();
 
             await base.OnInitializedAsync();
         }
@@ -42,8 +42,8 @@ namespace chd.CaraVan.UI.Components.Pages
 
         private async void _dataHubClient_VotronicDataReceived(object sender, EventArgs e)
         {
-            this.VotronicSolarData = await this._votronicData.GetSolarData();
-            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
+            this.VotronicSolarData =  this._votronicData.GetSolarData();
+            this.VotronicBatteryData =  this._votronicData.GetBatteryData();
             await this.InvokeAsync(this.StateHasChanged);
         }
 

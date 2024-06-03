@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@inject ISolarStateService stateService
+
 <div class="loading-container">
     <div class="battery-loading-state">
         <div class="current-loading @_loading">
@@ -26,7 +28,7 @@
                         <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.SolarPower" />
                     </div>
                     <div class="amp">@SolarAmpere.ToString("n2")</div>
-                    <div class="state">@_solarStateName</div>
+                    <div class="state">@stateService.GetState(this.SolarState)</div>
                 </div>
             </div>
         </div>
@@ -48,12 +50,5 @@
         (0, _, _) => "standby",
         (_, true, 0) => "active",
         (_, true, 1) => "reduce",
-    };
-
-    private string _solarStateName => (this.SolarState, int.TryParse(this.SolarState.ToString("X2").Substring(0, 1), out var d), d % 2) switch
-    {
-        (0, _, _) => "StandBy",
-        (_, true, 0) => "Aktiv",
-        (_, true, 1) => "Stromreduzierung",
     };
 }
