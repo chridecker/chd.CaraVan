@@ -10,55 +10,71 @@
     .loading-container .battery-loading-state {
     }
 
-        .loading-container .battery-loading-state .current-loading {
-            position: absolute;
-            margin-top: 2.1rem;
-            width: 4.3rem;
-            height: 2.5rem;
-            border: 0.15rem solid white;
-            border-radius: 0.5rem 0 0 0.5rem;
-            background-color: white;
+        .loading-container .battery-loading-state .battery-pols {
+            margin-left:1rem;
+            width:15rem;
+            height: 2rem;
         }
 
-            .loading-container .battery-loading-state .current-loading .current-loading-bar {
-                position: absolute;
-                margin-top: 0.1rem;
-                height: 2.2rem;
-                width: 1rem;
+            .loading-container .battery-loading-state .battery-pols .current-loading {
+                position:absolute;
+                width: 4rem;
+                height: 1.7rem;
                 border: 0.15rem solid white;
-                border-radius: 0.5rem 0 0 0.5rem;
-                opacity: 0.7;
+                border-radius: 0.5rem 0.5rem 0 0;
+                background-color: white;
             }
 
-                .loading-container .battery-loading-state .current-loading .current-loading-bar.loading {
-                    background-color: green;
+                .loading-container .battery-loading-state .battery-pols .current-loading.plus {
+                    margin-left: 1.5rem;
                 }
 
-                .loading-container .battery-loading-state .current-loading .current-loading-bar.deloading {
-                    background-color: red;
+                .loading-container .battery-loading-state .battery-pols .current-loading.minus {
+                    margin-left: 9.5rem;
                 }
 
-                .loading-container .battery-loading-state .current-loading .current-loading-bar.none {
-                    background-color: grey;
+                .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar {
+                    position: absolute;
+                    margin-top: 0.05rem;
+                    height: 1.5rem;
+                    width: 3.7rem;
+                    border: 0.15rem solid white;
+                    border-radius: 0.5rem 0.5rem 0 0;
+                    color:black;
+                    opacity: 0.6;
                 }
 
-            .loading-container .battery-loading-state .current-loading .current-amp {
-                font-size: 1rem;
-                margin-top: 0.5rem;
-                color: black;
-                text-align: right;
-                margin-right: 0.1rem;
-            }
+                    .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.loading {
+                        background-color: green;
+                    }
 
-            .loading-container .battery-loading-state .current-loading.loading {
-            }
-            .loading-container .battery-loading-state .current-loading.deloading {
-            }
-            .loading-container .battery-loading-state .current-loading.none {
-            }
+                    .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.deloading {
+                        background-color: red;
+                    }
+
+                    .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.none {
+                        background-color: grey;
+                    }
+
+                .loading-container .battery-loading-state .battery-pols .current-loading .current-amp {
+                    font-size: 1rem;
+                    margin-top: 0.1rem;
+                    color: black;
+                    text-align: right;
+                    margin-right: 0.2rem;
+                }
+
+                .loading-container .battery-loading-state .battery-pols .current-loading.loading {
+                }
+
+                .loading-container .battery-loading-state .battery-pols .current-loading.deloading {
+                }
+
+                .loading-container .battery-loading-state .battery-pols .current-loading.none {
+                }
 
         .loading-container .battery-loading-state .battery-charging {
-            margin-left: 4.5rem;
+            margin-left: 1rem;
             position: relative;
             width: 15rem;
             border: 0.25rem solid white;
@@ -112,6 +128,7 @@
                         animation: deloading 3s linear infinite;
                         background-color: red;
                     }
+
                     .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.none {
                         width: 100%;
                         background-color: grey;
@@ -123,7 +140,7 @@
         .loading-container .solar-loading-state .current-loading {
             position: absolute;
             margin-top: 0.2rem;
-            margin-left: 7.5rem;
+            margin-left: 4rem;
             width: 5rem;
             height: 1rem;
             border: 0.15rem solid white;
@@ -156,7 +173,7 @@
 
         .loading-container .solar-loading-state .solar-charging {
             margin-top: 1rem;
-            margin-left: 4.5rem;
+            margin-left: 1.5rem;
             position: absolute;
             width: 10rem;
             border: 0.25rem solid white;
