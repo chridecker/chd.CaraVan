@@ -17,10 +17,10 @@ else
 @code {
     VotronicBatteryData data;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        data = dataService.GetBatteryData();
+        data = await dataService.GetBatteryData();
 
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 }

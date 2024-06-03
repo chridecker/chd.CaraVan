@@ -8,11 +8,10 @@
 {
     <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
         <MudCardHeader>
-            Batterie und Solaranlage
+            Batterie und Solaranlage <SolarLoadingStateCard State="@VotronicSolarData.State" Value="@VotronicSolarData.Ampere" />
         </MudCardHeader>
         <MudCardContent>
             <BatteryLevelCard ValuePerecent="@((double)this.VotronicBatteryData.Percent)" Ampere="@this.VotronicBatteryData.Ampere" Value="@this.VotronicBatteryData.AmpereH" />
-            <SolarLoadingStateCard State="@this.VotronicSolarData.State" Value="@this.VotronicSolarData.Ampere" />
         </MudCardContent>
     </MudCard>
 }

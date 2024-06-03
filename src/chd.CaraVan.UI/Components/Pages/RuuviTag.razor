@@ -16,19 +16,16 @@
 
     List<RuuviTagDeviceData> dataLst = new();
 
-    private (decimal? Min, decimal? Max) minMax(EDataType type) => dataService.GetMinMaxData(this.Id, type);
+    private (decimal? Min, decimal? Max) minMax(EDataType type) => (0, 0);
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        foreach (var type in new[] { EDataType.Temperature, EDataType.Humidity })
+        var data = await dataService.GetData(this.Id);
+        if (data is not null)
         {
-            var data = dataService.GetData(this.Id, type);
-            if (data is not null)
-            {
-                this.dataLst.Add(data);
-            }
+            this.dataLst.Add(data);
         }
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
 }

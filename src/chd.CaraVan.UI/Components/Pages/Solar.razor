@@ -19,10 +19,10 @@ else
 @code {
     VotronicSolarData data;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        data = dataService.GetSolarData();
+        data = await dataService.GetSolarData();
 
-        return base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 }

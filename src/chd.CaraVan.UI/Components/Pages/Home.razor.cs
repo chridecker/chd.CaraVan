@@ -15,8 +15,8 @@ namespace chd.CaraVan.UI.Components.Pages
         [Inject] private IDataHubClient _dataHubClient { get; set; }
         [Inject] private NavigationManager? _navigationManager { get; set; }
 
-        private VotronicBatteryData VotronicBatteryData => this._votronicData.GetBatteryData();
-        private VotronicSolarData VotronicSolarData => this._votronicData.GetSolarData();
+        private VotronicBatteryData VotronicBatteryData;
+        private VotronicSolarData VotronicSolarData;
 
         private void NavigateToBattery() => this._navigationManager.NavigateTo($"/battery");
         private void NavigateToSolar() => this._navigationManager.NavigateTo($"/solar");
@@ -29,12 +29,23 @@ namespace chd.CaraVan.UI.Components.Pages
             }
             this._dataHubClient.VotronicDataReceived += this._dataHubClient_VotronicDataReceived;
             this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
+            this.VotronicSolarData = await this._votronicData.GetSolarData();
+            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
+
             await base.OnInitializedAsync();
         }
 
-        private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, EventArgs e) => await this.InvokeAsync(this.StateHasChanged);
+        private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, EventArgs e)
+        {
+            await this.InvokeAsync(this.StateHasChanged);
+        }
 
-        private async void _dataHubClient_VotronicDataReceived(object sender, EventArgs e) => await this.InvokeAsync(this.StateHasChanged);
+        private async void _dataHubClient_VotronicDataReceived(object sender, EventArgs e)
+        {
+            this.VotronicSolarData = await this._votronicData.GetSolarData();
+            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
+            await this.InvokeAsync(this.StateHasChanged);
+        }
 
         private void StartHub() => Task.Run(async () => await this._dataHubClient.StartAsync(this._navigationManager.BaseUri));
         public void Dispose()

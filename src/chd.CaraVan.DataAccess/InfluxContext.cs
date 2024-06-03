@@ -16,13 +16,14 @@ namespace chd.CaraVan.DataAccess
 
         public InfluxContext(IOptionsMonitor<InfluxSettings> optionsMonitor)
         {
+            this._optionsMonitor = optionsMonitor;
+
             this._client = new InfluxDBClient(new InfluxDBClientOptions(this._optionsMonitor.CurrentValue.Url)
             {
                 Token = this._optionsMonitor.CurrentValue.ApiKey,
                 Org = this._optionsMonitor.CurrentValue.Org,
                 Bucket = this._optionsMonitor.CurrentValue.Database,
             });
-            this._optionsMonitor = optionsMonitor;
         }
 
         public async Task WriteBatteryData(DateTime time, decimal ampere, decimal ampereH, decimal percent, decimal voltage)
@@ -53,8 +54,6 @@ namespace chd.CaraVan.DataAccess
 
             await this._client.GetWriteApiAsync().WritePointAsync(point, InfluxConstants.DATABASE);
         }
-
-        public 
 
 
 
