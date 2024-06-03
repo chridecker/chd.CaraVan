@@ -120,12 +120,12 @@
                 }
 
                     .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.loading {
-                        animation: loading 3s linear infinite;
+                        animation: loading 5s linear infinite;
                         background-color: green;
                     }
 
                     .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.deloading {
-                        animation: deloading 3s linear infinite;
+                        animation: deloading 5s linear infinite;
                         background-color: red;
                     }
 
