@@ -51,8 +51,13 @@ namespace chd.CaraVan.DataAccess
                 .Timestamp(time, InfluxDB.Client.Api.Domain.WritePrecision.S)
                 .Tag("id", id.ToString())
                 .Field("temperature", temp);
-
-            await this._client.GetWriteApiAsync().WritePointAsync(point, InfluxConstants.DATABASE);
+            try
+            {
+                await this._client.GetWriteApiAsync().WritePointAsync(point, InfluxConstants.DATABASE);
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
 
