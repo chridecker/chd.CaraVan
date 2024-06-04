@@ -5,8 +5,7 @@
 <PageTitle>Home</PageTitle>
 
 
-<MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
-    
+<MudCard Outlined="true" @onclick="this.NavigateToBattery">
     <MudCardContent>
         @if (this.VotronicBatteryData != null)
         {
@@ -28,11 +27,15 @@
 </MudCard>
 
 <MudSpacer />
-<MudCarousel Style="min-height:10rem" Class="mud-width-full chd-carousel" AutoCycle="false" ShowBullets="false" ShowArrows="true" EnableSwipeGesture="true" TData="object">
-    @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
-    {
-        <MudCarouselItem Transition="@Transition.Slide" Color="@Color.Primary">
-            <RuuviTagCard DeviceDto="device" />
-        </MudCarouselItem>
-    }
-</MudCarousel>
+@foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
+{
+    <MudCard Outlined="true">
+        <MudCardContent>
+            <SensorCard Time="DateTime.Now"
+                        Name="@device.Name"
+                        Value="12.23m"
+                        Min="4"
+                        Max="23" />
+        </MudCardContent>
+    </MudCard>
+}
