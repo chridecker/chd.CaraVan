@@ -91,7 +91,9 @@
         }
 
             .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar {
-                background-color: white;
+                background-size: 6rem 10rem;
+                background-color:inherit;
+                background-image: repeating-conic-gradient(white 0% 25%, grey 0% 50%);
                 position: absolute;
                 top: 0.25rem;
                 left: 0.25rem;
