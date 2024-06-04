@@ -6,9 +6,7 @@
 
 
 <MudCard Outlined="true" Class="device-card" @onclick="this.NavigateToBattery">
-    <MudCardHeader>
-        Batterie und Solaranlage 
-    </MudCardHeader>
+    
     <MudCardContent>
         @if (this.VotronicBatteryData != null)
         {
@@ -21,7 +19,7 @@
         else
         {
             <LoadingCard Time="DateTime.Now"
-                BatteryAmpere="-20.6m"
+                BatteryAmpere="30.6m"
                          BatteryAmpereH="200"
                          BatteryPercent="100"
                          SolarAmpere="4.2m" SolarState="25" />

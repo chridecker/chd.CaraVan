@@ -2,15 +2,22 @@
 @inject ISolarStateService stateService
 
 <div class="loading-container">
+    <div class="loading-container-date">
+        @Time.ToString("HH:mm:ss dd.MM.yy")
+    </div>
     <div class="battery-loading-state">
         <div class="battery-pols">
-            <div class="current-loading plus @_loadingPolPlus">
+            <div class="current-loading plus">
                 <div class="current-loading-bar @_loadingPolPlus"></div>
-                <div class="current-amp">@_loadingPlus</div>
+                <div class="current-loading-state">
+                    <div class="current-amp">@_loadingPlus</div>
+                </div>
             </div>
-            <div class="current-loading minus @_loadingPolMinus">
+            <div class="current-loading minus">
                 <div class="current-loading-bar @_loadingPolMinus"></div>
-                <div class="current-amp">@_loadingMinus</div>
+                <div class="current-loading-state">
+                    <div class="current-amp">@_loadingMinus</div>
+                </div>
             </div>
 
         </div>
@@ -18,6 +25,9 @@
             <div class="battery-loading-state-bar" style="@_loadingState">
                 <div class="battery-loading-bar @_loading"></div>
                 <div class="battery-loading-state">
+                    <div class="battery-loading-state-icon">
+                        <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.BatteryChargingFull" />
+                    </div>
                     <div class="percent">@BatteryPercent.ToString("n0")%</div>
                     <div class="ampH">@BatteryAmpereH.ToString("n0")Ah</div>
                 </div>
@@ -56,8 +66,8 @@
 
     private string _loadingState => $"width: {((decimal)((15 - 1) * 0.01m * this.BatteryPercent)).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}rem;";
     private string _loading => this.BatteryAmpere < -0.5m ? "deloading" : this.BatteryAmpere > 0.5m ? "loading" : "none";
-    private string _loadingPolPlus =>  this.BatteryAmpere > 0 ? "loading" : "none";
-    private string _loadingPolMinus => this.BatteryAmpere < -0 ? "deloading" :  "none";
+    private string _loadingPolPlus => this.BatteryAmpere > 0 ? "loading" : "none";
+    private string _loadingPolMinus => this.BatteryAmpere < -0 ? "deloading" : "none";
     private string _solarState => (this.SolarState, int.TryParse(this.SolarState.ToString("X2").Substring(0, 1), out var d), d % 2) switch
     {
         (0, _, _) => "standby",
