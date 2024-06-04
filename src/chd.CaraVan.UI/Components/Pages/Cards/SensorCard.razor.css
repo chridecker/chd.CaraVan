@@ -1,0 +1,90 @@
+﻿.sensor-container {
+    width: 16rem;
+    height: 10rem;
+    color: black;
+}
+
+    .sensor-container .sensor-header {
+        position: absolute;
+        margin-left: 6rem;
+        width: 10rem;
+        height: 2rem;
+        border: 0.15rem solid white;
+        border-bottom: 0;
+        border-radius: 0.5rem 0.5rem 0 0;
+        font-size: 1rem;
+        padding: 0.2rem;
+    }
+
+        .sensor-container .sensor-header .sensor-header-content {
+            width: 9.35rem;
+            height: 1.5rem;
+            border-bottom: 0;
+            border-radius: 0.5rem 0.5rem 0 0;
+            
+            background-color: white;
+            text-align:center;
+        }
+
+            .sensor-container .sensor-header .sensor-header-content .sensor-logo {
+                position:absolute;
+            }
+
+            .sensor-container .sensor-header .sensor-header-content .sensor-name {
+                margin-left:0.3rem;
+                font-size: 1.2rem;
+            }
+
+
+    .sensor-container .sensor-data {
+        margin-top: 2rem;
+        position: absolute;
+        width: 16rem;
+        height: 8rem;
+        border: 0.2rem solid white;
+        border-radius: 1rem 0rem 1rem 1rem;
+        padding: 0.4rem;
+    }
+
+        .sensor-container .sensor-data .sensor-data-content {
+            width: 14.85rem;
+            height: 6.8rem;
+            border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+            background-color: white;
+        }
+
+            .sensor-container .sensor-data .sensor-data-content .sensor-value {
+                position: absolute;
+            }
+
+                .sensor-container .sensor-data .sensor-data-content .sensor-value.current {
+                    font-size: 3rem;
+                    font-weight: bold;
+                    right: 3rem;
+                    bottom: 1rem;
+                }
+                .sensor-container .sensor-data .sensor-data-content .sensor-value.time {
+                    font-size: 0.8rem;
+                    right: 1rem;
+                    bottom: 0.5rem;
+                }
+
+                .sensor-container .sensor-data .sensor-data-content .sensor-value.bound {
+                    width:5.5rem;
+                    font-size: 1.5rem;
+                    top: 0.4rem;
+                    text-align:center;
+                    border-radius: 0 0 0.3rem 0.3rem;
+                }
+
+                .sensor-container .sensor-data .sensor-data-content .sensor-value.max {
+                    left: 1.5rem;
+                    border: 0.2rem solid red;
+                    border-top: 0;
+                }
+
+                .sensor-container .sensor-data .sensor-data-content .sensor-value.min {
+                    right:1.5rem;
+                    border: 0.2rem solid blue;
+                    border-top: 0;
+                }

@@ -1,0 +1,36 @@
+﻿@using MudBlazor
+<div class="sensor-container">
+    <div class="sensor-header">
+        <div class="sensor-header-content">
+            <div class="sensor-logo">
+                <MudIcon Icon="@Icons.Material.Filled.Sensors" Color="Color.Dark" />
+            </div>
+            <div class="sensor-name">@Name</div>
+        </div>
+    </div>
+    <div class="sensor-data">
+        <div class="sensor-data-content">
+            <div class="sensor-value current">@this.Value.ToString("n1")°C</div>
+            @if (Max.HasValue)
+            {
+                <div class="sensor-value max bound">@_bound(Max)</div>
+            }
+            @if (Min.HasValue)
+            {
+                <div class="sensor-value min bound">@_bound(Min)</div>
+            }
+            <div class="sensor-value time">@this.Time.ToString("HH:mm:ss dd.MM.yy")</div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public DateTime Time { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public decimal Value { get; set; }
+    [Parameter] public decimal? Min { get; set; }
+    [Parameter] public decimal? Max { get; set; }
+
+    string _bound(decimal? val) => val.HasValue ? $"{val?.ToString("n1")}°C" : string.Empty;
+}
