@@ -78,13 +78,13 @@
                 }
 
                 .sensor-container .sensor-data .sensor-data-content .sensor-value.max {
-                    left: 1.5rem;
+                    right: 1.5rem;
                     border: 0.2rem solid red;
                     border-top: 0;
                 }
 
                 .sensor-container .sensor-data .sensor-data-content .sensor-value.min {
-                    right:1.5rem;
+                    left:1.5rem;
                     border: 0.2rem solid blue;
                     border-top: 0;
                 }
