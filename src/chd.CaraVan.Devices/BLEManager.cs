@@ -33,6 +33,7 @@ namespace chd.CaraVan.Devices
 
         public event EventHandler<RuuviTagEventArgs> RuuviTagDataReceived;
         public event EventHandler<VotronicEventArgs> VotronicDataReceived;
+        public event EventHandler<VictronEventArgs> VictronDataReceived;
 
 
         public BLEManager(ILogger logger, IEnumerable<RuuviTagConfiguration> config, VotronicConfiguration votronicConfiguration, VictronConfiguration victronConfiguration)
@@ -144,7 +145,7 @@ namespace chd.CaraVan.Devices
                 if (service is not null)
                 {
                     var dataAd = await service.GetCharacteristicAsync(VICTRONENERGY_AC_CHARACTERISTIC);
-                    dataAd.Value += VotronicBattery_Received;
+                    dataAd.Value += VictronAC_Data;
                 }
             }
         }
@@ -165,14 +166,20 @@ namespace chd.CaraVan.Devices
             var device = await service.GetDeviceAsync();
             var address = await device.GetAddressAsync();
             var config = this._ruuviTagConfig.FirstOrDefault(x => x.DeviceAddress == address);
-            this._logger?.LogDebug($"Received Battery Value {config?.Alias}: {string.Join("-", e.Value)}");
+            this._logger?.LogTrace($"Received Battery Value {config?.Alias}: {string.Join("-", e.Value)}");
             this.InvokeVotronicDataReceived(new VotronicBatteryData(e.Value, this._votronicConfiguration.BatteryAH));
         }
 
         private async Task VotronicSolar_Received(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
         {
-            this._logger?.LogDebug($"Received Solar Value {this._votronicConfiguration?.Alias}: {string.Join("-", e.Value)}");
+            this._logger?.LogTrace($"Received Solar Value {this._votronicConfiguration?.Alias}: {string.Join("-", e.Value)}");
             this.InvokeVotronicDataReceived(new VotronicSolarData(e.Value));
+        }
+
+        private async Task VictronAC_Data(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        {
+            this._logger?.LogDebug($"Received Victron AC Value {this._victronConfiguration?.Alias}: {string.Join("-", e.Value)}");
+            this.InvokeVictronDataReceived(new VictronData(e.Value));
         }
 
         private void InvokeRuuviTagDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.RuuviTagDataReceived.Invoke(this, new RuuviTagEventArgs
@@ -188,6 +195,12 @@ namespace chd.CaraVan.Devices
             BatteryData = data is VotronicBatteryData b ? b : null,
             SolarData = data is VotronicSolarData s ? s : null
         });
+
+        private void InvokeVictronDataReceived(VictronData data) => this.VictronDataReceived.Invoke(this, new VictronEventArgs
+        {
+            DateTime = DateTime.Now,
+            Data = data
+        };
 
 
         public async Task DisconnectAsync(CancellationToken cancellationToken = default)
