@@ -5,7 +5,7 @@
 <PageTitle>Home</PageTitle>
 
 
-<MudCard Outlined="true" @onclick="this.NavigateToBattery">
+<MudCard Outlined="true">
     <MudCardContent>
         @if (this.VotronicBatteryData != null)
         {
@@ -15,14 +15,6 @@
                          BatteryPercent="@this.VotronicBatteryData.Percent"
             SolarAmpere="@this.VotronicSolarData.Ampere" SolarState="@this.VotronicSolarData.State" />
         }
-        else
-        {
-            <LoadingCard Time="DateTime.Now"
-                BatteryAmpere="30.6m"
-                         BatteryAmpereH="200"
-                         BatteryPercent="100"
-                         SolarAmpere="4.2m" SolarState="25" />
-        }
     </MudCardContent>
 </MudCard>
 
@@ -31,11 +23,11 @@
 {
     <MudCard Outlined="true">
         <MudCardContent>
-            <SensorCard Time="DateTime.Now"
+            <SensorCard Time="this.RuuviTagDeviceData(device).RecordDateTime"
                         Name="@device.Name"
-                        Value="12.23m"
-                        Min="4"
-                        Max="23" />
+                        Value="this.RuuviTagDeviceData(device).Value"
+                        Min="this.MinMax(device).Item1"
+                        Max="this.MinMax(device).Item2" />
         </MudCardContent>
     </MudCard>
 }
