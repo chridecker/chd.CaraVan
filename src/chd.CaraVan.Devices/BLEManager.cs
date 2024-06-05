@@ -1,4 +1,5 @@
 ﻿using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
+using chd.CaraVan.Devices.Contracts.Dtos.Victron;
 using chd.CaraVan.Devices.Contracts.Dtos.Votronic;
 using Linux.Bluetooth;
 using Linux.Bluetooth.Extensions;
@@ -27,16 +28,18 @@ namespace chd.CaraVan.Devices
         private IDictionary<string, Device> _devices;
         private readonly IEnumerable<RuuviTagConfiguration> _ruuviTagConfig;
         private readonly VotronicConfiguration _votronicConfiguration;
+        private readonly VictronConfiguration _victronConfiguration;
         private readonly ILogger _logger;
 
         public event EventHandler<RuuviTagEventArgs> RuuviTagDataReceived;
         public event EventHandler<VotronicEventArgs> VotronicDataReceived;
 
 
-        public BLEManager(ILogger logger, IEnumerable<RuuviTagConfiguration> config, VotronicConfiguration votronicConfiguration)
+        public BLEManager(ILogger logger, IEnumerable<RuuviTagConfiguration> config, VotronicConfiguration votronicConfiguration, VictronConfiguration victronConfiguration)
         {
             this._ruuviTagConfig = config;
             this._votronicConfiguration = votronicConfiguration;
+            this._victronConfiguration = victronConfiguration;
             this._logger = logger;
             this._devices = new Dictionary<string, Device>();
         }
@@ -64,7 +67,8 @@ namespace chd.CaraVan.Devices
             var device = e.Device;
             var uid = await device.GetAddressAsync();
             if (this._ruuviTagConfig.Any(a => a.DeviceAddress.ToLower() == uid.ToLower())
-                || uid.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower())
+                || uid.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower()
+                || uid.ToLower() == this._victronConfiguration.DeviceAddress.ToLower())
             {
                 await this.HandleDevice(device);
                 if (this._devices.Count == this._ruuviTagConfig.Count() + 1)
@@ -102,7 +106,8 @@ namespace chd.CaraVan.Devices
         {
             var address = await device.GetAddressAsync();
             var paired = await device.GetPairedAsync();
-            if (address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower()
+            if ((address.ToLower() == this._votronicConfiguration.DeviceAddress.ToLower()
+                || address.ToLower() == this._victronConfiguration.DeviceAddress.ToLower())
                 && !paired)
             {
                 this._logger?.LogError($"Not paired");
@@ -131,6 +136,15 @@ namespace chd.CaraVan.Devices
 
                     var solarC = await service.GetCharacteristicAsync(SOLAR_CHARACTERISTIC);
                     solarC.Value += VotronicSolar_Received;
+                }
+            }
+            else if (address.ToLower() == this._victronConfiguration.DeviceAddress.ToLower())
+            {
+                var service = await device.GetServiceAsync(VICTRONENERGY_SVC);
+                if (service is not null)
+                {
+                    var dataAd = await service.GetCharacteristicAsync(VICTRONENERGY_AC_CHARACTERISTIC);
+                    dataAd.Value += VotronicBattery_Received;
                 }
             }
         }

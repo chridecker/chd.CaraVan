@@ -11,5 +11,6 @@ namespace chd.CaraVan.Contracts.Settings
     {
         public IEnumerable<RuuviDeviceDto> RuuviTags { get; set; }
         public VotronicDto Votronic{ get; set; }
+        public VictronDto Victron{ get; set; }
     }
 }

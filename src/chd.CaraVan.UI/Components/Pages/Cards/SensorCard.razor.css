@@ -6,8 +6,8 @@
 
     .sensor-container .sensor-header {
         position: absolute;
-        margin-left: 6rem;
-        width: 10rem;
+        margin-left: 5rem;
+        width: 11rem;
         height: 2rem;
         border: 0.15rem solid white;
         border-bottom: 0;
@@ -17,13 +17,13 @@
     }
 
         .sensor-container .sensor-header .sensor-header-content {
-            width: 9.35rem;
+            width: 10.35rem;
             height: 1.5rem;
             border-bottom: 0;
             border-radius: 0.5rem 0.5rem 0 0;
             
             background-color: white;
-            text-align:center;
+            text-align:left;
         }
 
             .sensor-container .sensor-header .sensor-header-content .sensor-logo {
@@ -31,7 +31,7 @@
             }
 
             .sensor-container .sensor-header .sensor-header-content .sensor-name {
-                margin-left:0.3rem;
+                margin-left:1.5rem;
                 font-size: 1.2rem;
             }
 

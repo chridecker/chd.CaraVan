@@ -65,6 +65,12 @@ namespace chd.CaraVan.UI.Implementations
                 DeviceAddress = this._optionsMonitor.CurrentValue.Votronic?.UID,
                 Alias = this._optionsMonitor.CurrentValue.Votronic?.Name,
                 BatteryAH = this._optionsMonitor.CurrentValue.Votronic.BatteryAH
+            },
+            new Devices.Contracts.Dtos.Victron.VictronConfiguration
+            {
+                Id = this._optionsMonitor.CurrentValue.Victron.Id,
+                DeviceAddress = this._optionsMonitor.CurrentValue.Victron.UID,
+                Alias = this._optionsMonitor.CurrentValue.Victron.Name,
             });
 
             this._tag.RuuviTagDataReceived += this.RuuviTag_DataReceived;

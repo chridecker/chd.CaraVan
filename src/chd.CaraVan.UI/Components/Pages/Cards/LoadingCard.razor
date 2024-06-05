@@ -65,7 +65,7 @@
     private string _loadingMinus => this.BatteryAmpere < 0 ? this.BatteryAmpere.ToString("n2") : string.Empty;
 
     private string _loadingState => $"width: {((decimal)((15 - 1) * 0.01m * this.BatteryPercent)).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}rem;";
-    private string _loading => this.BatteryAmpere < -0.5m ? "deloading" : this.BatteryAmpere > 0.5m ? "loading" : "none";
+    private string _loading => this.BatteryAmpere < 0 ? "deloading" : this.BatteryAmpere > 0 ? "loading" : "none";
     private string _loadingPolPlus => this.BatteryAmpere > 0 ? "loading" : "none";
     private string _loadingPolMinus => this.BatteryAmpere < -0 ? "deloading" : "none";
     private string _solarState => (this.SolarState, int.TryParse(this.SolarState.ToString("X2").Substring(0, 1), out var d), d % 2) switch
