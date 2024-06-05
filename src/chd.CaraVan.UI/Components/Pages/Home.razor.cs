@@ -20,8 +20,10 @@ namespace chd.CaraVan.UI.Components.Pages
         private VotronicBatteryData VotronicBatteryData;
         private VotronicSolarData VotronicSolarData;
 
-        private RuuviTagDeviceData RuuviTagDeviceData(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature);
-        private (decimal?,decimal?) MinMax(RuuviDeviceDto dto) => this._ruuviTagDataService.GetMinMaxData(dto.Id, EDataType.Temperature);
+        private DateTime? RuuviTime(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.RecordDateTime;
+        private decimal? RuuviValue (RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.Value;
+
+        private (decimal?, decimal?) MinMax(RuuviDeviceDto dto) => this._ruuviTagDataService.GetMinMaxData(dto.Id, EDataType.Temperature);
 
         protected override async Task OnInitializedAsync()
         {

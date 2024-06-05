@@ -10,10 +10,10 @@
         @if (this.VotronicBatteryData != null)
         {
             <LoadingCard Time="@this.VotronicBatteryData.DateTime"
-                BatteryAmpere="@this.VotronicBatteryData.Ampere"
+                         BatteryAmpere="@this.VotronicBatteryData.Ampere"
                          BatteryAmpereH="@this.VotronicBatteryData.AmpereH"
                          BatteryPercent="@this.VotronicBatteryData.Percent"
-            SolarAmpere="@this.VotronicSolarData.Ampere" SolarState="@this.VotronicSolarData.State" />
+                         SolarAmpere="@this.VotronicSolarData.Ampere" SolarState="@this.VotronicSolarData.State" />
         }
     </MudCardContent>
 </MudCard>
@@ -21,13 +21,16 @@
 <MudSpacer />
 @foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
 {
-    <MudCard Outlined="true">
-        <MudCardContent>
-            <SensorCard Time="this.RuuviTagDeviceData(device).RecordDateTime"
-                        Name="@device.Name"
-                        Value="this.RuuviTagDeviceData(device).Value"
-                        Min="this.MinMax(device).Item1"
-                        Max="this.MinMax(device).Item2" />
-        </MudCardContent>
-    </MudCard>
+    @if (this.RuuviTime(device).HasValue)
+    {
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <SensorCard Time="this.RuuviTime(device).Value"
+                            Name="@device.Name"
+                            Value="this.RuuviValue(device).Value"
+                            Min="this.MinMax(device).Item1"
+                            Max="this.MinMax(device).Item2" />
+            </MudCardContent>
+        </MudCard>
+    }
 }

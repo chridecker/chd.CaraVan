@@ -20,6 +20,9 @@ namespace chd.CaraVan.Devices
         private const string BATTERY_CHARACTERISTIC = "9a082a4e-5bcc-4b1d-9958-a97cfccfa5ec";
         private const string SOLAR_CHARACTERISTIC = "971ccec2-521d-42fd-b570-cf46fe5ceb65";
 
+        private const string VICTRONENERGY_SVC = "";
+        private const string VICTRONENERGY_AC_CHARACTERISTIC = "";
+
         private Adapter _adapter;
         private IDictionary<string, Device> _devices;
         private readonly IEnumerable<RuuviTagConfiguration> _ruuviTagConfig;
