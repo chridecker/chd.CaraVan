@@ -5,6 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Pages\Button.razor" />
+    <Content Remove="Components\Pages\SmartButtons.razor" />
+  </ItemGroup>
 	
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -24,6 +29,19 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\chd.CaraVan.Contracts\chd.CaraVan.Contracts.csproj" />
 	  <ProjectReference Include="..\chd.CaraVan.Devices\chd.CaraVan.Devices.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Include="Components\Pages\Button.razor" />
+	  <None Include="Components\Pages\SmartButtons.razor" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <UpToDateCheckInput Remove="Components\Pages\SmartButtons.razor" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Components\Pages\SmartButtons.razor" />
 	</ItemGroup>
 
 </Project>

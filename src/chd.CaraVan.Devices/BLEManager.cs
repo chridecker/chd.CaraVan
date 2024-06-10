@@ -200,7 +200,7 @@ namespace chd.CaraVan.Devices
         {
             DateTime = DateTime.Now,
             Data = data
-        };
+        });
 
 
         public async Task DisconnectAsync(CancellationToken cancellationToken = default)

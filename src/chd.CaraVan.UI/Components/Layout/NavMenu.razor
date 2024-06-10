@@ -4,6 +4,7 @@
 
 <MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/smartbuttons" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.SmartButton">Buttons</MudNavLink>
     <MudNavGroup Title="Ruuvi Sensoren" Icon="@Icons.Material.Filled.Sensors" Expanded="false">
         @foreach (var dev in optionsMonitor.CurrentValue.RuuviTags)
         {

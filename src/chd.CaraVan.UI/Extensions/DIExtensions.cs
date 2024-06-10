@@ -1,4 +1,5 @@
 ﻿using chd.CaraVan.Contracts.Settings;
+using chd.CaraVan.Devices;
 using chd.CaraVan.UI.Hubs.Clients;
 using chd.CaraVan.UI.Implementations;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ namespace chd.CaraVan.UI.Extensions
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
             services.AddScoped<IDataHubClient, DataHubClient>();
 
+            services.AddSingleton<IPiManager, PiManager>();
             services.AddSingleton<ISolarStateService, SolarStateService>();
             services.AddSingleton<ITypeNameService, TypeNameService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();

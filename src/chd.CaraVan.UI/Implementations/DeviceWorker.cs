@@ -2,6 +2,7 @@
 using chd.CaraVan.Contracts.Enums;
 using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.Devices;
+using chd.CaraVan.Devices.Contracts.Dtos.Pi;
 using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
 using chd.CaraVan.Devices.Contracts.Dtos.Votronic;
 using chd.CaraVan.UI.Hubs;
@@ -21,13 +22,16 @@ namespace chd.CaraVan.UI.Implementations
         private readonly IRuuviTagDataService _dataService;
         private readonly IVotronicDataService _votronicDataService;
         private BLEManager _tag;
+        private IPiManager _pi;
 
         public DeviceWorker(ILogger<DeviceWorker> logger,
              IHubContext<DataHub, IDataHub> hub,
+             IPiManager piManager,
             IOptionsMonitor<DeviceSettings> optionsMonitor, IRuuviTagDataService dataService, IVotronicDataService votronicDataService)
         {
             this._logger = logger;
             this._hub = hub;
+            this._pi = piManager;
             this._optionsMonitor = optionsMonitor;
             this._dataService = dataService;
             this._votronicDataService = votronicDataService;
@@ -41,6 +45,7 @@ namespace chd.CaraVan.UI.Implementations
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
+            this._pi.Stop();
             await this._tag?.DisconnectAsync();
             await base.StopAsync(cancellationToken);
         }
@@ -51,7 +56,10 @@ namespace chd.CaraVan.UI.Implementations
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
-
+        private void StartPi()
+        {
+            this._pi.Start();
+        }
         private async Task StartDevices(CancellationToken cancellationToken)
         {
             this._tag = new BLEManager(this._logger, this._optionsMonitor.CurrentValue.RuuviTags.Select(s => new RuuviTagConfiguration
@@ -94,8 +102,8 @@ namespace chd.CaraVan.UI.Implementations
                     Voltage = e.BatteryData.Voltage,
                     Percent = e.BatteryData.Percent
                 };
-                 this._votronicDataService.AddData(data);
-                 await this._hub.Clients.All.VotronicData();
+                this._votronicDataService.AddData(data);
+                await this._hub.Clients.All.VotronicData();
             }
             if (e.SolarData is not null)
             {
@@ -108,7 +116,7 @@ namespace chd.CaraVan.UI.Implementations
                     State = e.SolarData.State,
                     Voltage = e.SolarData.Voltage
                 };
-                 this._votronicDataService.AddData(data);
+                this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
             }
         }
@@ -120,7 +128,7 @@ namespace chd.CaraVan.UI.Implementations
             {
                 DeviceId = device.Id
             };
-             this._dataService.AddData(device.Id, data);
+            this._dataService.AddData(device.Id, data);
             await this._hub.Clients.All.RuuviTagData();
         }
     }
