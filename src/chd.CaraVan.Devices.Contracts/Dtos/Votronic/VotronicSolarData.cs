@@ -20,5 +20,9 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Votronic
         public decimal AH => this.GetData(13, 2, 1m);
 
         public byte State => this._data[12];
+
+        public bool Active => new BitArray(new byte[] { this.State })[3];
+        public bool Reduce => new BitArray(new byte[] { this.State })[4];
+        public bool AES => new BitArray(new byte[] { this.State })[5];
     }
 }
