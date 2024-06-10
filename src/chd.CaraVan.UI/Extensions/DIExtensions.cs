@@ -1,5 +1,6 @@
 ﻿using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.Devices;
+using chd.CaraVan.Devices.Contracts.Dtos.Pi;
 using chd.CaraVan.UI.Hubs.Clients;
 using chd.CaraVan.UI.Implementations;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,8 @@ namespace chd.CaraVan.UI.Extensions
         public static IServiceCollection AddUi(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
+            services.Configure<AesSettings>(configuration.GetSection(nameof(AesSettings)));
+            services.Configure<PiSettings>(configuration.GetSection(nameof(PiSettings)));
             services.AddScoped<IDataHubClient, DataHubClient>();
 
             services.AddSingleton<IPiManager, PiManager>();

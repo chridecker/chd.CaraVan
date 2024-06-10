@@ -32,11 +32,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <None Include="Components\Pages\Button.razor" />
-	  <None Include="Components\Pages\SmartButtons.razor" />
-	</ItemGroup>
-	
-	<ItemGroup>
 	  <UpToDateCheckInput Remove="Components\Pages\SmartButtons.razor" />
 	</ItemGroup>
 	

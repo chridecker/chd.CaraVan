@@ -39,6 +39,7 @@ namespace chd.CaraVan.UI.Implementations
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
+            this.StartPi();
             await this.StartDevices(cancellationToken);
             await base.StartAsync(cancellationToken);
         }

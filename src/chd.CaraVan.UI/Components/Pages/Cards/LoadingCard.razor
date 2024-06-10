@@ -24,12 +24,12 @@
                 <div class="battery-loading-bar @_loading"></div>
             </div>
             <div class="battery-loading-state">
-                    <div class="battery-loading-state-icon">
-                        <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.BatteryChargingFull" />
-                    </div>
-                    <div class="percent">@BatteryPercent.ToString("n0")%</div>
-                    <div class="ampH">@BatteryAmpereH.ToString("n0")Ah</div>
+                <div class="battery-loading-state-icon">
+                    <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.BatteryChargingFull" />
                 </div>
+                <div class="percent">@BatteryPercent.ToString("n0")%</div>
+                <div class="ampH">@BatteryAmpereH.ToString("n0")Ah</div>
+            </div>
         </div>
     </div>
     <div class="solar-loading-state">
@@ -43,13 +43,13 @@
                         <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.SolarPower" />
                     </div>
                     <div class="amp">@SolarAmpere.ToString("n2")</div>
-                     <div class="state">
-                         <div class="state-indicator @(this.Reduce ? " reduce" : "" )"></div>
-                         <div class="state-indicator-text">SR</div>
-                     </div> <div class="state">
-                         <div class="state-indicator @(this.AES ? " aes" : "" )"></div>
-                         <div class="state-indicator-text">AES</div>
-                     </div>
+                    <div class="state">
+                        <div class="state-indicator @(this.Reduce ? " reduce" : "" )"></div>
+                        <div class="state-indicator-text">SR</div>
+                    </div> <div class="state">
+                        <div class="state-indicator @(this.AES ? " aes" : "" )"></div>
+                        <div class="state-indicator-text">AES</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,8 +89,8 @@
     [Parameter] public bool Active { get; set; }
     [Parameter] public bool Reduce { get; set; }
     [Parameter] public bool AES { get; set; }
-     [Parameter] public decimal? ACAmpereIn { get; set; }
-     [Parameter] public decimal? ACAmpereOut { get; set; }
+    [Parameter] public decimal? ACAmpereIn { get; set; }
+    [Parameter] public decimal? ACAmpereOut { get; set; }
 
     private string _loadingPlus => this.BatteryAmpere > 0 ? this.BatteryAmpere.ToString("n2") : string.Empty;
     private string _loadingMinus => this.BatteryAmpere < 0 ? this.BatteryAmpere.ToString("n2") : string.Empty;
@@ -100,14 +100,16 @@
     private string _loadingPolPlus => this.BatteryAmpere > 0 ? "loading" : "none";
     private string _loadingPolMinus => this.BatteryAmpere < -0 ? "deloading" : "none";
     private string _solarState => (this.Active, this.Reduce, this.AES) switch
-     {
-         (false, _, _) => "standby",
-         (true, false, _) => "active",
-         (true, true, _) => "reduce",
-     };
-      private string _acState => (this.ACAmpereIn.HasValue, this.ACAmpereOut.HasValue) switch
-      {
-          (false, false) => "off",
-          (true, true) => "on",
-      }
+    {
+        (false, _, _) => "standby",
+        (true, false, _) => "active",
+        (true, true, _) => "reduce",
+    };
+
+    private string _acState => (this.ACAmpereIn.HasValue, this.ACAmpereOut.HasValue) switch
+    {
+        (false, false) => "off",
+        (true, true) => "on",
+        (_,_) => string.Empty
+    };
 }

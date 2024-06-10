@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using chd.CaraVan.Contracts.Settings;
+using chd.CaraVan.UI.Implementations;
+using Microsoft.Extensions.Options;
 
 namespace BlazorApp3
 {

@@ -42,7 +42,7 @@ namespace chd.CaraVan.Devices
         {
             if (this._pinDict.TryGetValue(pin, out var p))
             {
-                var currentVal = p.Read();
+                var currentVal = p.Read() == PinValue.High;
                 if (val != currentVal)
                 {
                     this._controller.Write(p.PinNumber, val ? PinValue.High : PinValue.Low);
