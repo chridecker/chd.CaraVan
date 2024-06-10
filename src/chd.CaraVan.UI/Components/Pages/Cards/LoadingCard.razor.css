@@ -50,7 +50,7 @@
                 }
 
                     .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.loading {
-                        background-color: green;
+                        background-color: var(--bs-success);
                     }
 
                     .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.deloading {
@@ -58,7 +58,7 @@
                     }
 
                     .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-bar.none {
-                        background-color: grey;
+                        background-color: var(--bs-gray);
                     }
 
                 .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-state {
@@ -67,10 +67,11 @@
                     color: black;
                     text-align: right;
                     right: 0.2rem;
+                    padding: 0.1rem;
                 }
 
                     .loading-container .battery-loading-state .battery-pols .current-loading .current-loading-state .current-amp {
-                        font-size: 1rem;
+                        font-size: 0.9rem;
                     }
 
                 .loading-container .battery-loading-state .battery-pols .current-loading.loading {
@@ -89,6 +90,7 @@
             border: 0.25rem solid white;
             height: 6rem;
             border-radius: 0.8rem;
+            background-color: var(--bs-gray-500);
         }
 
             .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar {
@@ -96,62 +98,68 @@
                 background-color: white;
                 /*background-image: repeating-conic-gradient(white 0% 25%, transparent 0% 50%);*/
                 position: absolute;
-                top: 0.25rem;
+                /*top: 0.25rem;*/
+                bottom: 0.25rem;
                 left: 0.25rem;
-                height: 5rem;
+                width: 14rem;
+                /*height: 5rem;*/
                 border-radius: 0.3rem;
             }
 
-                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-state {
-                    position: absolute;
-                    width: 100%;
-                    text-align: right;
-                    padding-right: 1rem;
-                    padding-top: 0.2rem;
-                }
+            .loading-container .battery-loading-state .battery-charging .battery-loading-state {
+                position: absolute;
+                right: 0;
+                width: 14rem;
+                height: 5rem;
+                text-align: right;
+                padding-right: 1rem;
+                padding-bottom: 0.2rem;
+            }
 
 
-                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-state .battery-loading-state-icon ::deep {
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state .battery-loading-state-icon ::deep {
                     position: absolute;
                     right: 0.1rem;
                 }
 
-                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-state .percent {
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state .percent {
+                    position: absolute;
                     font-size: 2.5rem;
                     font-weight: bold;
                     color: black;
-                    margin-right: 2rem;
+                    margin-top: 1.5rem;
+                    right: 0.5rem;
                 }
 
-                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-state .ampH {
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state .ampH {
+                    position: absolute;
                     font-size: 1.2rem;
-                    margin-top: -0.8rem;
-                    margin-right: 2rem;
+                    right: 2rem;
                     color: black;
                 }
 
-                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar {
-                    content: "";
-                    position: absolute;
-                    height: 100%;
-                    border-radius: 0.3rem;
-                    opacity: 0.7;
+            .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar {
+                content: "";
+                position: absolute;
+                width: 100%;
+                border-radius: 0.3rem;
+                opacity: 0.7;
+            }
+
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.loading {
+                    animation: loading 5s linear infinite;
+                    background-color: var(--bs-success);
                 }
-                    .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.loading {
-                        animation: loading 5s linear infinite;
-                        background-color: green;
-                    }
 
-                    .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.deloading {
-                        animation: deloading 5s linear infinite;
-                        background-color: red;
-                    }
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.deloading {
+                    animation: deloading 5s linear infinite;
+                    background-color: var(--bs-danger);
+                }
 
-                    .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.none {
-                        width: 100%;
-                        background-color: white;
-
-                    }
+                .loading-container .battery-loading-state .battery-charging .battery-loading-state-bar .battery-loading-bar.none {
+                    width: 100%;
+                    background-color: white;
+                }
 
     .loading-container .solar-loading-state {
     }
@@ -159,8 +167,8 @@
         .loading-container .solar-loading-state .current-loading {
             position: absolute;
             margin-top: 0.2rem;
-            margin-left: 4rem;
-            width: 5rem;
+            margin-left: 2rem;
+            width: 4rem;
             height: 1rem;
             border: 0.15rem solid white;
             border-radius: 0.5rem 0.5rem 0 0;
@@ -170,7 +178,7 @@
             .loading-container .solar-loading-state .current-loading .current-loading-bar {
                 margin-top: -0.15rem;
                 margin-left: -0.15rem;
-                width: 5rem;
+                width: 4rem;
                 height: 1rem;
                 border-radius: 0.5rem 0.5rem 0 0;
                 opacity: 0.7;
@@ -178,38 +186,38 @@
 
                 .loading-container .solar-loading-state .current-loading .current-loading-bar.active {
                     animation: loadingSolar 3s linear infinite;
-                    background-color: green;
+                    background-color: var(--bs-success);
                 }
 
                 .loading-container .solar-loading-state .current-loading .current-loading-bar.reduce {
                     animation: loadingSolar 3s linear infinite;
-                    background-color: green;
+                    background-color: var(--bs-success);
                 }
 
                 .loading-container .solar-loading-state .current-loading .current-loading-bar.standby {
-                    background-color: grey;
+                    background-color: var(--bs-gray);
                 }
 
         .loading-container .solar-loading-state .solar-charging {
             margin-top: 1rem;
-            margin-left: 1.5rem;
+            margin-left: 0rem;
             position: absolute;
-            width: 10rem;
+            width: 9.5rem;
             border: 0.25rem solid white;
-            height: 4rem;
+            height: 3.2rem;
             border-radius: 0.8rem;
         }
 
             .loading-container .solar-loading-state .solar-charging.active {
-                background-color: green;
+                background-color: var(--bs-success);
             }
 
             .loading-container .solar-loading-state .solar-charging.reduce {
-                background-color: green;
+                background-color: var(--bs-success);
             }
 
             .loading-container .solar-loading-state .solar-charging.standby {
-                background-color: grey;
+                background-color: var(--bs-gray);
             }
 
             .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar {
@@ -217,8 +225,8 @@
                 position: absolute;
                 top: 0.25rem;
                 left: 0.25rem;
-                height: 3rem;
-                width: 9rem;
+                height: 2.2rem;
+                width: 8.5rem;
                 border-radius: 0.3rem;
             }
 
@@ -237,21 +245,132 @@
 
                     .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .amp {
                         position: absolute;
-                        margin-top: -0.5rem;
+                        margin-top: -0.3rem;
                         font-size: 2rem;
                         font-weight: bold;
-                        right: 2.2rem;
+                        right: 1.8rem;
                     }
 
                     .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state {
-                        position: absolute;
-                        font-size: 0.9rem;
-                        margin-top: 1.85rem;
-                        right: 0.5rem;
-                        text-align: center;
-                        width: 8rem;
+                        margin-top: 0.16rem;
+                        margin-left: 0.3rem;
+                        width: 2.5rem;
+                        height: 0.8rem;
                     }
 
+                        .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state .state-indicator {
+                            position: absolute;
+                            width: 0.8rem;
+                            height: 0.8rem;
+                            border: 0.1rem solid black;
+                            border-radius: 0.3rem;
+                            position: absolute;
+                        }
+
+                            .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state .state-indicator.aes {
+                                background-color: var(--bs-success);
+                            }
+
+                            .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state .state-indicator.reduce {
+                                background-color: var(--bs-success);
+                            }
+
+                        .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state .state-indicator-text {
+                            position: absolute;
+                            margin-left: 1rem;
+                            font-size: 0.8rem;
+                            text-align: left;
+                            margin-top: -0.1rem;
+                        }
+
+    .loading-container .ac-loading-state {
+    }
+
+        .loading-container .ac-loading-state .current-loading {
+            position: absolute;
+            margin-top: 0.2rem;
+            margin-left: 12rem;
+            width: 2rem;
+            height: 1rem;
+            border: 0.15rem solid white;
+            border-radius: 0.5rem 0.5rem 0 0;
+            background-color: white;
+        }
+
+            .loading-container .ac-loading-state .current-loading .current-loading-bar {
+                margin-top: -0.15rem;
+                margin-left: -0.15rem;
+                width: 2rem;
+                height: 1rem;
+                border-radius: 0.5rem 0.5rem 0 0;
+                opacity: 0.7;
+            }
+
+                .loading-container .ac-loading-state .current-loading .current-loading-bar.on {
+                    animation: loadingSolar 3s linear infinite;
+                    background-color: var(--bs-success);
+                }
+
+
+                .loading-container .ac-loading-state .current-loading .current-loading-bar.off {
+                    background-color: var(--bs-gray);
+                }
+
+        .loading-container .ac-loading-state .ac-charging {
+            margin-top: 1rem;
+            margin-left: 10rem;
+            position: absolute;
+            width: 6rem;
+            border: 0.25rem solid white;
+            height: 3.2rem;
+            border-radius: 0.8rem;
+        }
+
+            .loading-container .ac-loading-state .ac-charging.on {
+                background-color: var(--bs-success);
+            }
+
+            .loading-container .ac-loading-state .ac-charging.off {
+                background-color: var(--bs-gray);
+            }
+
+            .loading-container .ac-loading-state .ac-charging .ac-loading-state-bar {
+                background-color: white;
+                position: absolute;
+                top: 0.25rem;
+                left: 0.25rem;
+                height: 2.2rem;
+                width: 5rem;
+                border-radius: 0.3rem;
+            }
+
+                .loading-container .ac-loading-state .ac-charging .ac-loading-state-bar .ac-loading-state {
+                    position: absolute;
+                    width: 100%;
+                    text-align: center;
+                    color: black;
+                }
+
+                    .loading-container .ac-loading-state .ac-charging .ac-loading-state-bar .ac-loading-state .ac-loading-state-icon ::deep {
+                        position: absolute;
+                        right: 0.1rem;
+                        margin-top: 0.1rem;
+                    }
+
+                    .loading-container .ac-loading-state .ac-charging .ac-loading-state-bar .ac-loading-state .ampOut {
+                        position: absolute;
+                        margin-top: -0.3rem;
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        right: 1.8rem;
+                    }
+
+                    .loading-container .ac-loading-state .ac-charging .ac-loading-state-bar .ac-loading-state .ampIn {
+                        position: absolute;
+                        margin-top: 1.4rem;
+                        font-size: 0.6rem;
+                        right: 1.8rem;
+                    }
 
 
 @keyframes loadingSolar {
@@ -264,53 +383,27 @@
     }
 }
 
-@keyframes glowGreenSolar {
-    from {
-        box-shadow: 0 0rem 0 -0.3rem green;
-    }
-
-    to {
-        box-shadow: 0 -0.2rem 1rem 0.3rem green;
-    }
-}
-
-@keyframes loadingSmall {
-    0% {
-        width: 0;
-    }
-
-    100% {
-        width: 1rem;
-    }
-}
-
-@keyframes deloadingSmall {
-    0% {
-        width: 1rem;
-    }
-
-    100% {
-        width: 0;
-    }
-}
-
 
 @keyframes loading {
     0% {
-        width: 0%;
+        height: 0%;
+        bottom: 0;
     }
 
     100% {
-        width: 100%;
+        height: 100%;
+        bottom: 0;
     }
 }
 
 @keyframes deloading {
     0% {
-        width: 100%;
+        height: 100%;
+        bottom: 0;
     }
 
     100% {
-        width: 0%;
+        height: 0%;
+        bottom: 0;
     }
 }

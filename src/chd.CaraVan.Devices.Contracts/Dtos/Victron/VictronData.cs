@@ -10,7 +10,7 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Victron
     public class VictronData
     {
         private readonly byte[] data;
-
+    
         public VictronData(byte[] data)
         {
             this.data = data;
@@ -22,9 +22,31 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Victron
         {
             get
             {
-                var b = new BitArray(data.Skip(6).Take(3).ToArray());
-                return 0m;
+                var b = new BitArray(data.Skip(6).Take(2).ToArray());
+                var newB = new BitArray(11);
+                for (int i = 0; i < newB.Length; i++)
+                {
+                    newB[i] = b[i];
+                }
+                int[] amp = new int[1];
+                newB.CopyTo(amp, 0);
+                return amp[0] * 0.1m;
             }
         }
-    }
+        public decimal AmpereAC
+        {
+            get
+            {
+                var b = new BitArray(data.Skip(16).Take(2).ToArray());
+                var newB = new BitArray(9);
+                for (int i = 0; i < newB.Length; i++)
+                {
+                    newB[i] = b[i];
+                }
+                int[] amp = new int[1];
+                newB.CopyTo(amp, 0);
+                return amp[0] * 0.1m;
+            }
+        }
+    }            
 }
