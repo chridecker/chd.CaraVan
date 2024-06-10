@@ -74,10 +74,10 @@
     private string _loading => this.BatteryAmpere < 0 ? "deloading" : this.BatteryAmpere > 0 ? "loading" : "none";
     private string _loadingPolPlus => this.BatteryAmpere > 0 ? "loading" : "none";
     private string _loadingPolMinus => this.BatteryAmpere < -0 ? "deloading" : "none";
-    private string _solarState => (this.SolarState, int.TryParse(this.SolarState.ToString("X2").Substring(0, 1), out var d), d % 2) switch
-    {
-        (0, _, _) => "standby",
-        (_, true, 0) => "active",
-        (_, true, 1) => "reduce",
-    };
+    private string _solarState => (this.Active, this.Reduce, this.AES) switch
+     {
+         (false, _, _) => "standby",
+         (true, false, _) => "active",
+         (true, true, _) => "reduce",
+     };
 }
