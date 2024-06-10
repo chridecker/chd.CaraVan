@@ -54,6 +54,29 @@
             </div>
         </div>
     </div>
+    <div class="ac-loading-state">
+        <div class="current-loading">
+            <div class="current-loading-bar @_acState"></div>
+        </div>
+        <div class="ac-charging @_acState">
+            <div class="ac-loading-state-bar">
+                <div class="ac-loading-state">
+                    <div class="ac-loading-state-icon">
+                        <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.ChargingStation" />
+                    </div>
+                    @if (this.ACAmpereIn.HasValue && this.ACAmpereOut.HasValue)
+                    {
+                        <div class="ampIn">@ACAmpereIn.Value.ToString("n1")</div>
+                        <div class="ampOut">@ACAmpereOut.Value.ToString("n1")</div>
+                    }
+                    else
+                    {
+                        <div class="ampIn">Off</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -66,6 +89,8 @@
     [Parameter] public bool Active { get; set; }
     [Parameter] public bool Reduce { get; set; }
     [Parameter] public bool AES { get; set; }
+     [Parameter] public decimal? ACAmpereIn { get; set; }
+     [Parameter] public decimal? ACAmpereOut { get; set; }
 
     private string _loadingPlus => this.BatteryAmpere > 0 ? this.BatteryAmpere.ToString("n2") : string.Empty;
     private string _loadingMinus => this.BatteryAmpere < 0 ? this.BatteryAmpere.ToString("n2") : string.Empty;
@@ -80,4 +105,9 @@
          (true, false, _) => "active",
          (true, true, _) => "reduce",
      };
+      private string _acState => (this.ACAmpereIn.HasValue, this.ACAmpereOut.HasValue) switch
+      {
+          (false, false) => "off",
+          (true, true) => "on",
+      }
 }
