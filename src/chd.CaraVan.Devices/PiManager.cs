@@ -1,4 +1,5 @@
 ﻿using chd.CaraVan.Devices.Contracts.Dtos.Pi;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,14 @@ namespace chd.CaraVan.Devices
 {
     public class PiManager : IPiManager
     {
+        private readonly ILogger<PiManager> _logger;
         private readonly IOptionsMonitor<PiSettings> _optionsMonitor;
 
         private GpioController _controller;
-        private IDictionary<int, GpioPin> _pinDict = new Dictionary<int, GpioPin>();
 
-        public PiManager(IOptionsMonitor<PiSettings> optionsMonitor)
+        public PiManager(ILogger<PiManager> logger, IOptionsMonitor<PiSettings> optionsMonitor)
         {
+            this._logger = logger;
             this._optionsMonitor = optionsMonitor;
         }
         public void Start()
@@ -25,30 +27,30 @@ namespace chd.CaraVan.Devices
             this._controller = new GpioController();
             foreach (var g in this._optionsMonitor.CurrentValue.Gpios)
             {
-                var p = this._controller.OpenPin(g.Pin, g.Mode);
-                this._pinDict[g.Pin] = p;
-                this.WriteToPin(p.PinNumber, g.Default);
+                if (this._controller.IsPinOpen(g.Pin))
+                {
+                    this._controller.ClosePin(g.Pin);
+                }
+                this._controller.OpenPin(g.Pin, g.Mode, g.Default ? PinValue.High : PinValue.Low);
             }
         }
 
         public void Stop()
         {
+            foreach (var g in this._optionsMonitor.CurrentValue.Gpios)
+            {
+                if (this._controller.IsPinOpen(g.Pin))
+                {
+                    this._controller.ClosePin(g.Pin);
+                }
+            }
             this._controller?.Dispose();
         }
 
         public void Write(int pin, bool val) => this.WriteToPin(pin, val);
         public bool Read(int pin) => this._controller.Read(pin) == PinValue.High;
-        private void WriteToPin(int pin, bool val)
-        {
-            if (this._pinDict.TryGetValue(pin, out var p))
-            {
-                var currentVal = p.Read() == PinValue.High;
-                if (val != currentVal)
-                {
-                    this._controller.Write(p.PinNumber, val ? PinValue.High : PinValue.Low);
-                }
-            }
-        }
+        private void WriteToPin(int pin, bool val) => this._controller.Write(pin, val ? PinValue.High : PinValue.Low);
+
 
     }
     public interface IPiManager

@@ -113,7 +113,7 @@
                 height: 5rem;
                 text-align: right;
                 padding-right: 1rem;
-                padding-bottom: 0.2rem;
+                padding-top: 0.4rem;
             }
 
 
@@ -245,8 +245,8 @@
 
                     .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .amp {
                         position: absolute;
-                        margin-top: -0.3rem;
-                        font-size: 2rem;
+                        margin-top: 0rem;
+                        font-size: 1.5rem;
                         font-weight: bold;
                         right: 1.8rem;
                     }
