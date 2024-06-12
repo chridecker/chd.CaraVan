@@ -13,12 +13,14 @@
                          BatteryAmpere="@this.VotronicBatteryData.Ampere"
                          BatteryAmpereH="@this.VotronicBatteryData.AmpereH"
                          BatteryPercent="@this.VotronicBatteryData.Percent"
-                         SolarAmpere="@this.VotronicSolarData.Ampere" 
-                        Active="@this.VotronicSolarData.Active" 
-                        Reduce="@this.VotronicSolarData.Reduce" 
-                        AES="@this.VotronicSolarData.AES" />
+                         SolarAmpere="@this.VotronicSolarData.Ampere"
+                         Active="@this.VotronicSolarData.Active"
+                         Reduce="@this.VotronicSolarData.Reduce"
+                         AES="@this.VotronicSolarData.AES"
+                         ACAmpereIn="@this.VictronData?.AmpereAC"
+                         ACAmpereOut="@this.VictronData?.AmpereDC" />
         }
-        
+
     </MudCardContent>
 </MudCard>
 

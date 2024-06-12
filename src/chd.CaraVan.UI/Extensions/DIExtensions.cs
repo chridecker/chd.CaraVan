@@ -24,8 +24,7 @@ namespace chd.CaraVan.UI.Extensions
             services.AddScoped<IDataHubClient, DataHubClient>();
 
             services.AddSingleton<IPiManager, PiManager>();
-            services.AddSingleton<ISolarStateService, SolarStateService>();
-            services.AddSingleton<ITypeNameService, TypeNameService>();
+            services.AddSingleton<IVictronDataService, VictronDataService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();
             services.AddSingleton<IVotronicDataService, VotronicDataService>();
 

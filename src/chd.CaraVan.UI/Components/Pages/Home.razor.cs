@@ -13,15 +13,17 @@ namespace chd.CaraVan.UI.Components.Pages
     {
         [Inject] private IOptionsMonitor<DeviceSettings> DeviceSettings { get; set; }
         [Inject] private IVotronicDataService _votronicData { get; set; }
+        [Inject] private IVictronDataService _victronDataService { get; set; }
         [Inject] private IRuuviTagDataService _ruuviTagDataService { get; set; }
         [Inject] private IDataHubClient _dataHubClient { get; set; }
         [Inject] private NavigationManager? _navigationManager { get; set; }
 
         private VotronicBatteryData VotronicBatteryData;
         private VotronicSolarData VotronicSolarData;
+        private VictronData VictronData;
 
         private DateTime? RuuviTime(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.RecordDateTime;
-        private decimal? RuuviValue (RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.Value;
+        private decimal? RuuviValue(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.Value;
 
         private (decimal?, decimal?) MinMax(RuuviDeviceDto dto) => this._ruuviTagDataService.GetMinMaxData(dto.Id, EDataType.Temperature);
 
@@ -33,10 +35,19 @@ namespace chd.CaraVan.UI.Components.Pages
             }
             this._dataHubClient.VotronicDataReceived += this._dataHubClient_VotronicDataReceived;
             this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
+            this._dataHubClient.VictronDataReceived += this._dataHubClient_VictronDataReceived;
+
             this.VotronicSolarData = this._votronicData.GetSolarData();
             this.VotronicBatteryData = this._votronicData.GetBatteryData();
+            this.VictronData = this._victronDataService.GetData();
 
             await base.OnInitializedAsync();
+        }
+
+        private async void _dataHubClient_VictronDataReceived(object sender, EventArgs e)
+        {
+            this.VictronData = this._victronDataService.GetData();
+            await this.InvokeAsync(this.StateHasChanged);
         }
 
         private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, EventArgs e)

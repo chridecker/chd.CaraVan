@@ -31,5 +31,6 @@ namespace chd.CaraVan.UI.Hubs
     {
         Task RuuviTagData();
         Task VotronicData();
+        Task VictronData();
     }
 }
