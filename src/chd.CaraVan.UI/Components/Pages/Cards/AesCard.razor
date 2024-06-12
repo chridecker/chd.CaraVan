@@ -1,0 +1,32 @@
+﻿@using Microsoft.Extensions.Options
+@inject IAESManager manager
+@inject IOptionsMonitor<AesSettings> optionsMonitor
+
+<div class="aes-control">
+    <div class="aes-control-content">
+        <div class="aes-active">
+            <SmartButton Checked="@manager.IsActive" CheckedChanged="@OnAesButtonChanged" />
+        </div>
+        <div class="aes-active-content">
+            <div class="aes-active-battery-limit">@(optionsMonitor.CurrentValue.BatteryLimit.HasValue ? $"Batterie-Limit: {optionsMonitor.CurrentValue.BatteryLimit.Value.ToString("n0")}%" : "")</div>
+            <div class="aes-active-battery-amp-limit">@(optionsMonitor.CurrentValue.SolarAmpLimit.HasValue ? $"Solar-Limit: {optionsMonitor.CurrentValue.SolarAmpLimit.Value.ToString("n0")}A" : "")</div>
+            <div class="aes-active-since">@((manager.SolarAesOffSince.HasValue && optionsMonitor.CurrentValue.AesTimeout.HasValue) ? $"aus um {manager.SolarAesOffSince.Value.Add(optionsMonitor.CurrentValue.AesTimeout.Value).ToString("HH:mm")}" : "kein Timeout")</div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private async void OnAesButtonChanged(bool val)
+    {
+        if (val)
+        {
+            this.manager.CheckForActive();
+        }
+        else
+        {
+            this.manager.Off();
+        }
+    }
+}

@@ -1,0 +1,38 @@
+﻿.aes-control {
+    height: 4rem;
+    width: 16rem;
+    border: 0.2rem solid white;
+    border-radius: 0.5rem;
+    background-color: var(--bs-gray-500);
+}
+
+    .aes-control .aes-control-content {
+        position: absolute;
+        height: 3.25rem;
+        width: 15.25rem;
+        margin: 0.2rem;
+        background-color: var(--bs-white);
+        border-radius: 0.5rem;
+        color: black;
+    }
+
+        .aes-control .aes-control-content .aes-active {
+            position: absolute;
+            margin-top: 0.6rem;
+            margin-left: 0.2rem;
+        }
+
+        .aes-control .aes-control-content .aes-active-content {
+            position: absolute;
+            margin-left: 5rem;
+            font-size:0.8rem;
+        }
+
+            .aes-control .aes-control-content .aes-active-content .aes-active-since {
+            }
+
+            .aes-control .aes-control-content .aes-active-content .aes-active-battery-limit {
+            }
+
+            .aes-control .aes-control-content .aes-active-content .aes-active-battery-amp-limit {
+            }
