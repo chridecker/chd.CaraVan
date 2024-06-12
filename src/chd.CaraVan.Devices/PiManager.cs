@@ -31,7 +31,7 @@ namespace chd.CaraVan.Devices
                 {
                     this._controller.ClosePin(g.Pin);
                 }
-                this._controller.OpenPin(g.Pin, g.Mode, g.Default ? PinValue.High : PinValue.Low);
+                this._controller.OpenPin(g.Pin, g.Mode, g.Default);
             }
         }
 

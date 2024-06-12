@@ -1,4 +1,5 @@
-﻿using chd.CaraVan.Contracts.Dtos;
+﻿using BlazorApp3;
+using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Contracts.Enums;
 using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.Devices;
@@ -18,20 +19,24 @@ namespace chd.CaraVan.UI.Implementations
     {
         private readonly ILogger<DeviceWorker> _logger;
         private readonly IHubContext<DataHub, IDataHub> _hub;
+        private readonly IOptionsMonitor<AesSettings> _optionsMonitorAes;
         private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
         private readonly IRuuviTagDataService _dataService;
         private readonly IVotronicDataService _votronicDataService;
         private BLEManager _tag;
         private IPiManager _pi;
+        private readonly IAESManager _aesManager;
 
         public DeviceWorker(ILogger<DeviceWorker> logger,
-             IHubContext<DataHub, IDataHub> hub,
-             IPiManager piManager,
+             IHubContext<DataHub, IDataHub> hub, IOptionsMonitor<AesSettings> optionsMonitorAes,
+             IPiManager piManager, IAESManager aesManager,
             IOptionsMonitor<DeviceSettings> optionsMonitor, IRuuviTagDataService dataService, IVotronicDataService votronicDataService)
         {
             this._logger = logger;
             this._hub = hub;
+            this._optionsMonitorAes = optionsMonitorAes;
             this._pi = piManager;
+            this._aesManager = aesManager;
             this._optionsMonitor = optionsMonitor;
             this._dataService = dataService;
             this._votronicDataService = votronicDataService;
@@ -47,6 +52,7 @@ namespace chd.CaraVan.UI.Implementations
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
             this._pi.Stop();
+            this._aesManager.StateSwitched += this._aesManager_StateSwitched;
             await this._tag?.DisconnectAsync();
             await base.StopAsync(cancellationToken);
         }
@@ -54,13 +60,21 @@ namespace chd.CaraVan.UI.Implementations
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                this._aesManager.CheckForActive();
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
         private void StartPi()
         {
+            this._aesManager.StateSwitched += this._aesManager_StateSwitched;
             this._pi.Start();
         }
+
+        private void _aesManager_StateSwitched(object? sender, bool e)
+        {
+            this._pi.Write(this._optionsMonitorAes.CurrentValue.Gpio, this._optionsMonitorAes.CurrentValue.IsActive && e);
+        }
+
         private async Task StartDevices(CancellationToken cancellationToken)
         {
             this._tag = new BLEManager(this._logger, this._optionsMonitor.CurrentValue.RuuviTags.Select(s => new RuuviTagConfiguration

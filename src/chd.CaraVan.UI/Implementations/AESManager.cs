@@ -12,7 +12,6 @@ namespace BlazorApp3
         private readonly IOptionsMonitor<AesSettings> _optionsMonitor;
         private readonly IVotronicDataService _votronicDataService;
 
-
         public bool IsActive => this._isActive;
         public event EventHandler<bool> StateSwitched;
 

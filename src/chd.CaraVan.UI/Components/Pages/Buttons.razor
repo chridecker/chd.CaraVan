@@ -1,12 +1,21 @@
 ﻿@page "/buttons"
-@inject IPiManager manager
+@inject IAESManager manager
 
+@using BlazorApp3
 @using chd.CaraVan.Devices
 @using chd.CaraVan.UI.Components.Pages.Cards
-<SmartButton Checked="manager.Read(22)" CheckedChanged="Change"></SmartButton>
+
+<SmartButton Checked="manager.IsActive" CheckedChanged="Change"></SmartButton>
 @code {
     private void Change(bool val)
     {
-        manager.Write(22, val);
+        if (val)
+        {
+            manager.SetActive();
+        }
+        else
+        {
+            manager.Off();
+        }
     }
 }

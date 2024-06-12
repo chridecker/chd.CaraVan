@@ -11,6 +11,7 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Pi
     {
         public int Pin { get; set; }
         public PinMode  Mode{ get; set; }
-        public bool Default { get; set; }
+        public PinValue Default { get; set; }
+
     }
 }
