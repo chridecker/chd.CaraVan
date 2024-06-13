@@ -1,7 +1,3 @@
-﻿:root {
-    --glow-offset-left-battery: 0;
-}
-
 .loading-container {
     width: 16.5rem;
     height: 15rem;
@@ -243,12 +239,19 @@
                         margin-top: 0.1rem;
                     }
 
-                    .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .amp {
+                   .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .amp {
                         position: absolute;
-                        margin-top: 0rem;
+                        top: -0.2rem;
                         font-size: 1.5rem;
                         font-weight: bold;
                         right: 2rem;
+                    }
+                    
+                    .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .loading-phase {
+                        position: absolute;
+                        top: 1.45rem;
+                        font-size: 0.6rem;
+                        right: 0.2rem;
                     }
 
                     .loading-container .solar-loading-state .solar-charging .solar-loading-state-bar .solar-loading-state .state {
