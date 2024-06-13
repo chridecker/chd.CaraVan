@@ -16,17 +16,23 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Victron
             this.data = data;
         }
         public byte Type => data[0];
-        public byte State => data[5];
-        public byte Error => data[6];
+        public byte State => data[4];
+        public byte Error => data[5];
         public decimal Ampere
         {
             get
             {
-                var b = new BitArray(data.Skip(6).Take(2).ToArray());
+                var bitVolt = 13;
+                var b = new BitArray(data.Skip(6).Take(3).ToArray());
                 var newB = new BitArray(11);
-                for (int i = 0; i < newB.Length; i++)
+                for (int i = 0; i < b.Length; i++)
                 {
-                    newB[i] = b[i];
+                    if(i <bitVolt)
+                    {
+                    }
+                    else {
+                    newB[i-bitVolt] = b[i];
+                    }
                 }
                 int[] amp = new int[1];
                 newB.CopyTo(amp, 0);
@@ -37,11 +43,16 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Victron
         {
             get
             {
-                var b = new BitArray(data.Skip(16).Take(2).ToArray());
+                var bitTemp = 7;
+                var b = new BitArray(data.Skip(15).Take(2).ToArray());
                 var newB = new BitArray(9);
-                for (int i = 0; i < newB.Length; i++)
+                for (int i = 0; i < b.Length; i++)
                 {
-                    newB[i] = b[i];
+                    if(i<bitTemp){
+                    }
+                    else{
+                    newB[i-bitTemp] = b[i];
+                    }
                 }
                 int[] amp = new int[1];
                 newB.CopyTo(amp, 0);
