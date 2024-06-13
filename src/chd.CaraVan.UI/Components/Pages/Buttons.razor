@@ -9,7 +9,7 @@
 
 @foreach (var pin in options.CurrentValue.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderBy(o => o.Type))
 {
-    <SmartButton Checked="State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="pin.Name"></SmartButton>
+    <SmartButton Checked="State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="@pin.Name"></SmartButton>
 }
 @code {
     private bool State(Gpio pin)
