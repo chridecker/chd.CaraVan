@@ -1,7 +1,6 @@
 ﻿.aes-control {
     height: 4rem;
-    width: 16rem;
-    border: 0.2rem solid white;
+    border: 0.2rem solid var(--bs-white);
     border-radius: 0.5rem;
     background-color: var(--bs-gray-500);
 }
@@ -11,21 +10,23 @@
         height: 3.25rem;
         width: 15.25rem;
         margin: 0.2rem;
-        background-color: var(--bs-white);
-        border-radius: 0.5rem;
-        color: black;
+        color: var(--bs-dark);
     }
 
         .aes-control .aes-control-content .aes-active {
-            position: absolute;
-            margin-top: 0.6rem;
-            margin-left: 0.2rem;
+            position: relative;
+            float:left;
         }
 
         .aes-control .aes-control-content .aes-active-content {
-            position: absolute;
-            margin-left: 5rem;
-            font-size:0.8rem;
+             position: relative;
+             float: left;
+             font-size: 0.8rem;
+             min-width:8rem;
+             background-color: var(--bs-light);
+             padding-left:0.5rem;
+             padding-right:0.5rem;
+             border-radius:0.5rem;
         }
 
             .aes-control .aes-control-content .aes-active-content .aes-active-since {
