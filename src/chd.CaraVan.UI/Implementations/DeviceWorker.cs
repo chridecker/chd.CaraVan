@@ -154,7 +154,8 @@ namespace chd.CaraVan.UI.Implementations
                     WattH = e.SolarData.WattH,
                     AmpereH = e.SolarData.AH,
                     State = e.SolarData.State,
-                    Voltage = e.SolarData.Voltage
+                    Voltage = e.SolarData.Voltage,
+                    LoadingPhase = e.SolarData.LoadingPhase
                 };
                 this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
