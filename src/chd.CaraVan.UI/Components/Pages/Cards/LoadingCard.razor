@@ -43,6 +43,7 @@
                         <MudIcon Color="Color.Dark" Icon="@Icons.Material.Filled.SolarPower" />
                     </div>
                     <div class="amp">@SolarAmpere.ToString("n1")</div>
+                     <div class="loading-phase">@LoadingPhase</div>
                     <div class="state">
                         <div class="state-indicator @(this.Reduce ? " reduce" : "" )"></div>
                         <div class="state-indicator-text">SR</div>
@@ -86,6 +87,7 @@
     [Parameter] public decimal BatteryAmpereH { get; set; }
     [Parameter] public decimal BatteryAmpere { get; set; }
     [Parameter] public decimal SolarAmpere { get; set; }
+    [Parameter] public string LoadingPhase { get; set; }
     [Parameter] public bool Active { get; set; }
     [Parameter] public bool Reduce { get; set; }
     [Parameter] public bool AES { get; set; }
