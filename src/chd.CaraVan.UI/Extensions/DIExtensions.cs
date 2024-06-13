@@ -23,6 +23,7 @@ namespace chd.CaraVan.UI.Extensions
             services.Configure<PiSettings>(configuration.GetSection(nameof(PiSettings)));
             services.AddScoped<IDataHubClient, DataHubClient>();
 
+            services.AddSingleton<IAESManager, AESManager>();
             services.AddSingleton<IPiManager, PiManager>();
             services.AddSingleton<IVictronDataService, VictronDataService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();

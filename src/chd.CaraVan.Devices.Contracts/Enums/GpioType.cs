@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace chd.CaraVan.Devices.Contracts.Enums
 {
-    public enum ERuuviDataFormat
+    public enum GpioType
     {
-        None= 0,
-        NonData = 2,
-        Url = 4,
-        Raw = 3,
-        RawV2 = 5
+        None = 0,
+        Switch = 1,
+        Aes = 2
     }
 }

@@ -7,6 +7,12 @@
 
 <MudCard Outlined="true">
     <MudCardContent>
+        <AesCard />
+    </MudCardContent>
+</MudCard>
+<MudSpacer />
+<MudCard Outlined="true">
+    <MudCardContent>
         @if (this.VotronicBatteryData != null)
         {
             <LoadingCard Time="@this.VotronicBatteryData.DateTime"

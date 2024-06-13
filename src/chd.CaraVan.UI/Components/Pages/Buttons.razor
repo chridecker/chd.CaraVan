@@ -1,21 +1,45 @@
 ﻿@page "/buttons"
 @inject IAESManager manager
+@inject IPiManager piManager
+@inject IOptionsMonitor<PiSettings> options
 
-@using BlazorApp3
 @using chd.CaraVan.Devices
+@using chd.CaraVan.Devices.Contracts.Dtos.Pi
 @using chd.CaraVan.UI.Components.Pages.Cards
 
-<SmartButton Checked="manager.IsActive" CheckedChanged="Change"></SmartButton>
+@foreach (var pin in options.CurrentValue.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderBy(o => o.Type))
+{
+    <SmartButton Checked="State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="pin.Name"></SmartButton>
+}
 @code {
-    private void Change(bool val)
+    private bool State(Gpio pin)
     {
-        if (val)
+        if (pin.Type == Devices.Contracts.Enums.GpioType.Aes)
         {
-            manager.SetActive();
+            return manager.IsActive;
         }
-        else
+        else if (pin.Type == Devices.Contracts.Enums.GpioType.Switch)
         {
-            manager.Off();
+            return piManager.Read(pin.Pin);
+        }
+        return false;
+    }
+    private void Change(Gpio pin, bool val)
+    {
+        if (pin.Type == Devices.Contracts.Enums.GpioType.Aes)
+        {
+            if (val)
+            {
+                manager.SetActive();
+            }
+            else
+            {
+                manager.Off();
+            }
+        }
+        else if (pin.Type == Devices.Contracts.Enums.GpioType.Switch)
+        {
+            piManager.Write(pin.Pin, val);
         }
     }
 }

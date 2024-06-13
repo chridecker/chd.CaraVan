@@ -1,19 +1,19 @@
 ﻿using chd.CaraVan.Contracts.Settings;
-using chd.CaraVan.UI.Implementations;
 using Microsoft.Extensions.Options;
 
-namespace BlazorApp3
+namespace chd.CaraVan.UI.Implementations
 {
     public class AESManager : IAESManager
     {
 
-        private DateTime? _isActiveSince;
+        private DateTime? _solarAesOffSince;
         private bool _isActive;
         private readonly IOptionsMonitor<AesSettings> _optionsMonitor;
         private readonly IVotronicDataService _votronicDataService;
 
         public bool IsActive => this._isActive;
         public event EventHandler<bool> StateSwitched;
+        public DateTime? SolarAesOffSince => _solarAesOffSince;
 
         public AESManager(IOptionsMonitor<AesSettings> optionsMonitor, IVotronicDataService votronicDataService)
         {
@@ -32,7 +32,7 @@ namespace BlazorApp3
                     this.Off();
                 }
                 if (!solarAES && (!this._optionsMonitor.CurrentValue.AesTimeout.HasValue
-                        || (this._optionsMonitor.CurrentValue.AesTimeout.HasValue && this._isActiveSince.HasValue && this._isActiveSince.Value.Add(this._optionsMonitor.CurrentValue.AesTimeout.Value) < DateTime.Now)))
+                        || (this._optionsMonitor.CurrentValue.AesTimeout.HasValue && this._solarAesOffSince.HasValue && this._solarAesOffSince.Value.Add(this._optionsMonitor.CurrentValue.AesTimeout.Value) < DateTime.Now)))
                 {
                     this.Off();
                 }
@@ -56,7 +56,7 @@ namespace BlazorApp3
             if (this._isActive)
             {
                 this._isActive = false;
-                this._isActiveSince = null;
+                this._solarAesOffSince = null;
                 this.StateSwitched?.Invoke(this, this._isActive);
             }
         }
@@ -65,7 +65,7 @@ namespace BlazorApp3
         {
             if (!this._isActive)
             {
-                this._isActiveSince = DateTime.Now;
+                this._solarAesOffSince = DateTime.Now;
                 this._isActive = true;
                 this.StateSwitched?.Invoke(IsActive, this._isActive);
             }
@@ -77,6 +77,7 @@ namespace BlazorApp3
         void CheckForActive();
         void SetActive();
         bool IsActive { get; }
+        DateTime? SolarAesOffSince { get; }
 
         event EventHandler<bool> StateSwitched;
     }

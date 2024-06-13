@@ -1,5 +1,4 @@
-﻿using BlazorApp3;
-using chd.CaraVan.Contracts.Dtos;
+﻿using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Contracts.Enums;
 using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.Devices;
@@ -21,6 +20,7 @@ namespace chd.CaraVan.UI.Implementations
         private readonly ILogger<DeviceWorker> _logger;
         private readonly IHubContext<DataHub, IDataHub> _hub;
         private readonly IOptionsMonitor<AesSettings> _optionsMonitorAes;
+        private readonly IOptionsMonitor<PiSettings> _optionsMonitorPi;
         private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
         private readonly IRuuviTagDataService _dataService;
         private readonly IVotronicDataService _votronicDataService;
@@ -31,12 +31,14 @@ namespace chd.CaraVan.UI.Implementations
 
         public DeviceWorker(ILogger<DeviceWorker> logger,
              IHubContext<DataHub, IDataHub> hub, IOptionsMonitor<AesSettings> optionsMonitorAes,
+             IOptionsMonitor<PiSettings> optionsMonitorPi,
              IPiManager piManager, IAESManager aesManager, IVictronDataService victronDataService,
             IOptionsMonitor<DeviceSettings> optionsMonitor, IRuuviTagDataService dataService, IVotronicDataService votronicDataService)
         {
             this._logger = logger;
             this._hub = hub;
             this._optionsMonitorAes = optionsMonitorAes;
+            this._optionsMonitorPi = optionsMonitorPi;
             this._pi = piManager;
             this._aesManager = aesManager;
             this._victronDataService = victronDataService;
@@ -70,12 +72,18 @@ namespace chd.CaraVan.UI.Implementations
         private void StartPi()
         {
             this._aesManager.StateSwitched += this._aesManager_StateSwitched;
-            this._pi.Start();
+            if (OperatingSystem.IsLinux())
+            {
+                this._pi.Start();
+            }
         }
 
         private void _aesManager_StateSwitched(object? sender, bool e)
         {
-            this._pi.Write(this._optionsMonitorAes.CurrentValue.Gpio, this._optionsMonitorAes.CurrentValue.IsActive && e);
+            foreach (var pin in this._optionsMonitorPi.CurrentValue.Gpios.Where(x => x.Type == Devices.Contracts.Enums.GpioType.Aes))
+            {
+                this._pi.Write(pin.Pin, this._optionsMonitorAes.CurrentValue.IsActive && e);
+            }
         }
 
         private async Task StartDevices(CancellationToken cancellationToken)
@@ -113,11 +121,11 @@ namespace chd.CaraVan.UI.Implementations
         {
             this._victronDataService.Add(new Contracts.Dtos.VictronData()
             {
-                 AmpereAC = e.Data.AmpereAC,
-                 AmpereDC = e.Data.Ampere,
-                 Error = e.Data.Error,
-                 State = e.Data.State,
-                 DateTime = e.DateTime
+                AmpereAC = e.Data.AmpereAC,
+                AmpereDC = e.Data.Ampere,
+                Error = e.Data.Error,
+                State = e.Data.State,
+                DateTime = e.DateTime
             });
             await this._hub.Clients.All.VictronData();
         }
