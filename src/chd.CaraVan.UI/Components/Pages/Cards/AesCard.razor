@@ -1,4 +1,6 @@
 ﻿@using Microsoft.Extensions.Options
+@implements IDisposable
+
 @inject IAESManager manager
 @inject IOptionsMonitor<AesSettings> optionsMonitor
 
@@ -18,6 +20,12 @@
 
 
 @code {
+    protected override void OnInitialized()
+    {
+        manager.StateSwitched += StateSwitched;
+        base.OnInitialized();
+    }
+
     private async void OnAesButtonChanged(bool val)
     {
         if (val)
@@ -28,5 +36,11 @@
         {
             this.manager.Off();
         }
+    }
+    private async void StateSwitched(object sender, bool e) => await this.InvokeAsync(this.StateHasChanged);
+
+    public void Dispose()
+    {
+        manager.StateSwitched -= StateSwitched;
     }
 }
