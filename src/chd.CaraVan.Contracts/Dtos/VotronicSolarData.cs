@@ -10,6 +10,7 @@ namespace chd.CaraVan.Contracts.Dtos
     public class VotronicSolarData : VotronicData
     {
         public byte State { get; set; }
+        public string LoadingPhase {get;set;}
         public decimal WattH { get; set; }
 
         public bool Active => new BitArray(new byte[] { State })[3];
