@@ -1,5 +1,6 @@
 ﻿.aes-control {
-    height: 4rem;
+    height: 4.1rem;
+    max-width:17rem;
     border: 0.2rem solid var(--bs-white);
     border-radius: 0.5rem;
     background-color: var(--bs-gray-500);
