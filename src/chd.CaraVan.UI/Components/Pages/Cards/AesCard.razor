@@ -7,7 +7,7 @@
 <div class="aes-control">
     <div class="aes-control-content">
         <div class="aes-active">
-            <SmartButton Checked="@manager.IsActive" CheckedChanged="@OnAesButtonChanged" />
+            <SmartButton Checked="@manager.IsActive" CheckedChanged="@OnAesButtonChanged" ButtonTextOn="AES" ButtonTextOff="AES" />
         </div>
         <div class="aes-active-content">
             <div class="aes-active-battery-limit">@(optionsMonitor.CurrentValue.BatteryLimit.HasValue ? $"Batterie-Limit: {optionsMonitor.CurrentValue.BatteryLimit.Value.ToString("n0")}%" : "")</div>
