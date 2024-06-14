@@ -27,6 +27,8 @@ namespace chd.CaraVan.UI.Implementations
             var batteryPercent = this._votronicDataService.GetBatteryData()?.Percent ?? 0;
             if (this._isActive)
             {
+                if (solarAES && this._solarAesSince.HasValue) { this._solarAesSince = null; }
+                if (!solarAES && !this._solarAesSince.HasValue) { this._solarAesSince = DateTime.Now; }
                 if (this._optionsMonitor.CurrentValue.BatteryLimit.HasValue && batteryPercent < this._optionsMonitor.CurrentValue.BatteryLimit.Value)
                 {
                     this.Off();
@@ -65,7 +67,6 @@ namespace chd.CaraVan.UI.Implementations
         {
             if (!this._isActive)
             {
-                this._solarAesOffSince = DateTime.Now;
                 this._isActive = true;
                 this.StateSwitched?.Invoke(IsActive, this._isActive);
             }
