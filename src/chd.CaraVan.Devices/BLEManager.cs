@@ -21,8 +21,8 @@ namespace chd.CaraVan.Devices
         private const string BATTERY_CHARACTERISTIC = "9a082a4e-5bcc-4b1d-9958-a97cfccfa5ec";
         private const string SOLAR_CHARACTERISTIC = "971ccec2-521d-42fd-b570-cf46fe5ceb65";
 
-        private const string VICTRONENERGY_SVC = "";
-        private const string VICTRONENERGY_AC_CHARACTERISTIC = "";
+        private const string VICTRONENERGY_SVC = "97580001-ddf1-48be-b73e-182664615d8e";
+        private const string VICTRONENERGY_AC_CHARACTERISTIC = "97580002-ddf1-48be-b73e-182664615d8e";
 
         private Adapter _adapter;
         private IDictionary<string, Device> _devices;
@@ -145,10 +145,33 @@ namespace chd.CaraVan.Devices
                 if (service is not null)
                 {
                     var dataAd = await service.GetCharacteristicAsync(VICTRONENERGY_AC_CHARACTERISTIC);
-                    dataAd.Value += VictronAC_Data;
+                    //this.ReadTaskVictron(device, dataAd);
                 }
             }
         }
+
+        private void ReadTaskVictron(Device device, GattCharacteristic data) => Task.Run(async () =>
+        {
+            while (device != null && (await device.GetConnectedAsync()))
+            {
+                try
+                {
+                    var val = await data.GetValueAsync();
+                    this._logger?.LogDebug($"Read Victron AC Value {this._victronConfiguration?.Alias}: {string.Join("-", val)}");
+                    if (val.Length > 17)
+                    {
+                        this.InvokeVictronDataReceived(new VictronData(val));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this._logger?.LogError(ex, ex.Message);
+                    break;
+                }
+                await Task.Delay(TimeSpan.FromSeconds(10));
+            }
+        });
+
 
         private async Task RuuviTag_Value(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
         {
@@ -174,12 +197,6 @@ namespace chd.CaraVan.Devices
         {
             this._logger?.LogTrace($"Received Solar Value {this._votronicConfiguration?.Alias}: {string.Join("-", e.Value)}");
             this.InvokeVotronicDataReceived(new VotronicSolarData(e.Value));
-        }
-
-        private async Task VictronAC_Data(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
-        {
-            this._logger?.LogDebug($"Received Victron AC Value {this._victronConfiguration?.Alias}: {string.Join("-", e.Value)}");
-            this.InvokeVictronDataReceived(new VictronData(e.Value));
         }
 
         private void InvokeRuuviTagDataReceived(RuuviTagData data, RuuviTagConfiguration config) => this.RuuviTagDataReceived.Invoke(this, new RuuviTagEventArgs
