@@ -48,8 +48,8 @@ namespace chd.CaraVan.Devices
         }
 
         public void Write(int pin, bool val) => this.WriteToPin(pin, val);
-        public bool Read(int pin) => this._controller.Read(pin) == PinValue.High;
-        private void WriteToPin(int pin, bool val) => this._controller.Write(pin, val ? PinValue.High : PinValue.Low);
+        public bool Read(int pin) => this._controller?.Read(pin) == PinValue.High;
+        private void WriteToPin(int pin, bool val) => this._controller?.Write(pin, val ? PinValue.High : PinValue.Low);
 
 
     }

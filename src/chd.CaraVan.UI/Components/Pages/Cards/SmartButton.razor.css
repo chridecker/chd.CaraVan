@@ -56,7 +56,8 @@
                 }
 
     .switch-button .switch-text {
-        position: absolute;
-        margin-left:4rem;
-        font-size:1.8rem;
+        position: relative;
+        float:left;
+        margin-left:0.5rem;
+        font-size:2rem;
     }

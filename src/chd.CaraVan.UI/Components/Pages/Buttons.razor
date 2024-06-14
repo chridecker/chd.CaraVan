@@ -6,11 +6,12 @@
 @using chd.CaraVan.Devices
 @using chd.CaraVan.Devices.Contracts.Dtos.Pi
 @using chd.CaraVan.UI.Components.Pages.Cards
-
-@foreach (var pin in options.CurrentValue.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderBy(o => o.Type))
+<div style="display:grid">
+@foreach (var pin in options.CurrentValue.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderByDescending(o => o.Type).ThenBy(t => t.Name))
 {
-    <SmartButton Checked="State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="@pin.Name"></SmartButton>
+        <SmartButton Checked="State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="@pin.Name"></SmartButton>
 }
+</div>
 @code {
     private bool State(Gpio pin)
     {
