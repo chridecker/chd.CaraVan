@@ -20,13 +20,12 @@ namespace chd.CaraVan.Mobile.Extensions
             services.AddHttpClient();
             services.AddHttpClient(sp =>
             {
-                return new Uri(sp.GetRequiredService<ISettingService>().GetDataHubUri());
+                return new Uri($"{sp.GetRequiredService<ISettingService>().GetDataHubUri()}api/");
             });
 
             services.AddScoped<IDataHubClient, DataHubClient>();
 
-            services.AddSingleton<IMauiSettingService, MauiSettingService>();
-            services.AddSingleton<ISettingService>(sp => sp.GetRequiredService<IMauiSettingService>());
+            services.AddSingleton<ISettingService, MauiSettingService>();
 
 
             services.AddSingleton<IVictronDataService, MauiVictronDataService>();

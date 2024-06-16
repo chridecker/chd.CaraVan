@@ -34,7 +34,7 @@
 <MudSpacer />
 @foreach (var device in this._devices)
 {
-    @if (this.RuuviTime(device).HasValue)
+    @if (this._valueDict.ContainsKey(device.Id))
     {
         <MudCard Outlined="true">
             <MudCardContent>

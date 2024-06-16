@@ -1,0 +1,23 @@
+﻿@page "/settings"
+@inject ISettingService settings
+<h3>Settings</h3>
+
+<select @bind="settings.Url">
+    @foreach (var url in settings.Urls)
+    {
+        @if (url == settings.Url)
+        {
+            <option selected value="@url">@url</option>
+        }
+        else
+        {
+            <option value="@url">@url</option>
+        }
+    }
+</select>
+
+@code {
+
+
+}
+
