@@ -33,7 +33,7 @@ namespace chd.CaraVan.UI.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             this._devices = await this._ruuviTagDataService.Devices;
-
+            await this.Reload();
             if (!this._dataHubClient.IsConnected)
             {
                 this.StartHub();
@@ -49,6 +49,14 @@ namespace chd.CaraVan.UI.Components.Pages
             await base.OnInitializedAsync();
         }
 
+        private async Task Reload()
+        {
+            foreach (var device in await this._ruuviTagDataService.Devices)
+            {
+                this._valueDict[device.Id] = (await this._ruuviTagDataService.GetData(device.Id));
+            }
+        }
+
         private async void _dataHubClient_VictronDataReceived(object sender, EventArgs e)
         {
             this.VictronData = await this._victronDataService.GetData();
@@ -57,11 +65,7 @@ namespace chd.CaraVan.UI.Components.Pages
 
         private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, EventArgs e)
         {
-            foreach (var device in await this._ruuviTagDataService.Devices)
-            {
-                this._valueDict[device.Id] = (await this._ruuviTagDataService.GetData(device.Id));
-            }
-
+            await this.Reload();
             await this.InvokeAsync(this.StateHasChanged);
         }
 
