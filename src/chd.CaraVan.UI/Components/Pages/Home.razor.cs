@@ -24,8 +24,8 @@ namespace chd.CaraVan.UI.Components.Pages
 
         private IDictionary<int, RuuviSensorDataDto> _valueDict = new Dictionary<int, RuuviSensorDataDto>();
 
-        private DateTime? RuuviTime(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val.Record : null;
-        private decimal? RuuviValue(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val.Value : null;
+        private DateTime? RuuviTime(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val?.Record : null;
+        private decimal? RuuviValue(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val?.Value : null;
         private (decimal?, decimal?) MinMax(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? (val.Min, val.Max) : (null, null);
 
         private IEnumerable<RuuviDeviceDto> _devices = Enumerable.Empty<RuuviDeviceDto>();
