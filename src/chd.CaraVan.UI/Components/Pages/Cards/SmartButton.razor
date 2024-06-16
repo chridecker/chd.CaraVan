@@ -1,11 +1,11 @@
 ﻿<div class="switch-button">
     <div class="switch" @onclick="async()=> await CheckChanged()">
-        <div class="slider @(Checked ? "on" : "off")" style="--text-off:'@(ButtonTextOff)';--text-on:'@(ButtonTextOn)';"></div>
+        <div class="slider @(_checked ? "on" : "off")" style="--text-off:'@(ButtonTextOff)';--text-on:'@(ButtonTextOn)';"></div>
     </div>
     <div class="switch-text">
         @if (this.LabelContent is not null)
         {
-            @this.LabelContent(this.Checked)
+            @this.LabelContent(this._checked)
         }
         else
         {
@@ -15,16 +15,24 @@
 
 </div>
 @code {
-    [Parameter] public bool Checked { get; set; }
+    private bool _checked;
+
+    [Parameter] public Task<bool> Checked { get; set; }
     [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
     [Parameter] public string Text { get; set; }
     [Parameter] public RenderFragment<bool>? LabelContent { get; set; }
     [Parameter] public string ButtonTextOff { get; set; } = "OFF";
     [Parameter] public string ButtonTextOn { get; set; } = "ON";
 
+    protected override async Task OnParametersSetAsync()
+    {
+        this._checked = await this.Checked;
+        await base.OnParametersSetAsync();
+    }
+
     private async Task CheckChanged()
     {
-        Checked = !Checked;
-        await this.CheckedChanged.InvokeAsync(Checked);
+        this._checked = !this._checked;
+        await this.CheckedChanged.InvokeAsync(this._checked);
     }
 }

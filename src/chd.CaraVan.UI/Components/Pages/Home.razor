@@ -20,7 +20,7 @@
                          BatteryAmpereH="@this.VotronicBatteryData.AmpereH"
                          BatteryPercent="@this.VotronicBatteryData.Percent"
                          SolarAmpere="@this.VotronicSolarData.Ampere"
-                        LoadingPhase="@this.VotronicSolarData.LoadingPhase"
+                         LoadingPhase="@this.VotronicSolarData.LoadingPhase"
                          Active="@this.VotronicSolarData.Active"
                          Reduce="@this.VotronicSolarData.Reduce"
                          AES="@this.VotronicSolarData.AES"
@@ -32,7 +32,7 @@
 </MudCard>
 
 <MudSpacer />
-@foreach (var device in this.DeviceSettings.CurrentValue.RuuviTags)
+@foreach (var device in this._devices)
 {
     @if (this.RuuviTime(device).HasValue)
     {

@@ -65,7 +65,7 @@ namespace chd.CaraVan.UI.Implementations
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                this._aesManager.CheckForActive();
+                await this._aesManager.CheckForActive();
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }
         }
@@ -78,11 +78,11 @@ namespace chd.CaraVan.UI.Implementations
             }
         }
 
-        private void _aesManager_StateSwitched(object? sender, bool e)
+        private async void _aesManager_StateSwitched(object? sender, bool e)
         {
             foreach (var pin in this._optionsMonitorPi.CurrentValue.Gpios.Where(x => x.Type == Devices.Contracts.Enums.GpioType.Aes))
             {
-                this._pi.Write(pin.Pin, this._optionsMonitorAes.CurrentValue.IsActive && e);
+                await this._pi.Write(pin.Pin, this._optionsMonitorAes.CurrentValue.IsActive && e);
             }
         }
 

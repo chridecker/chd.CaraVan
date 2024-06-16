@@ -11,24 +11,29 @@ namespace chd.CaraVan.UI.Components.Pages
 {
     public partial class Home : IDisposable
     {
-        [Inject] private IOptionsMonitor<DeviceSettings> DeviceSettings { get; set; }
         [Inject] private IVotronicDataService _votronicData { get; set; }
         [Inject] private IVictronDataService _victronDataService { get; set; }
         [Inject] private IRuuviTagDataService _ruuviTagDataService { get; set; }
         [Inject] private IDataHubClient _dataHubClient { get; set; }
+        [Inject] private ISettingService _settingService { get; set; }
         [Inject] private NavigationManager? _navigationManager { get; set; }
 
         private VotronicBatteryData VotronicBatteryData;
         private VotronicSolarData VotronicSolarData;
         private VictronData VictronData;
 
-        private DateTime? RuuviTime(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.RecordDateTime;
-        private decimal? RuuviValue(RuuviDeviceDto dto) => this._ruuviTagDataService.GetData(dto.Id, EDataType.Temperature)?.Value;
+        private IDictionary<int, RuuviSensorDataDto> _valueDict = new Dictionary<int, RuuviSensorDataDto>();
 
-        private (decimal?, decimal?) MinMax(RuuviDeviceDto dto) => this._ruuviTagDataService.GetMinMaxData(dto.Id, EDataType.Temperature);
+        private DateTime? RuuviTime(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val.Record : null;
+        private decimal? RuuviValue(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? val.Value : null;
+        private (decimal?, decimal?) MinMax(RuuviDeviceDto dto) => this._valueDict.TryGetValue(dto.Id, out var val) ? (val.Min, val.Max) : (null, null);
+
+        private IEnumerable<RuuviDeviceDto> _devices = Enumerable.Empty<RuuviDeviceDto>();
 
         protected override async Task OnInitializedAsync()
         {
+            this._devices = await this._ruuviTagDataService.Devices;
+
             if (!this._dataHubClient.IsConnected)
             {
                 this.StartHub();
@@ -37,32 +42,37 @@ namespace chd.CaraVan.UI.Components.Pages
             this._dataHubClient.RuuviTagDeviceDataReceived += this._dataHubClient_RuuviTagDeviceDataReceived;
             this._dataHubClient.VictronDataReceived += this._dataHubClient_VictronDataReceived;
 
-            this.VotronicSolarData = this._votronicData.GetSolarData();
-            this.VotronicBatteryData = this._votronicData.GetBatteryData();
-            this.VictronData = this._victronDataService.GetData();
+            this.VotronicSolarData = await this._votronicData.GetSolarData();
+            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
+            this.VictronData = await this._victronDataService.GetData();
 
             await base.OnInitializedAsync();
         }
 
         private async void _dataHubClient_VictronDataReceived(object sender, EventArgs e)
         {
-            this.VictronData = this._victronDataService.GetData();
+            this.VictronData = await this._victronDataService.GetData();
             await this.InvokeAsync(this.StateHasChanged);
         }
 
         private async void _dataHubClient_RuuviTagDeviceDataReceived(object sender, EventArgs e)
         {
+            foreach (var device in await this._ruuviTagDataService.Devices)
+            {
+                this._valueDict[device.Id] = (await this._ruuviTagDataService.GetData(device.Id));
+            }
+
             await this.InvokeAsync(this.StateHasChanged);
         }
 
         private async void _dataHubClient_VotronicDataReceived(object sender, EventArgs e)
         {
-            this.VotronicSolarData = this._votronicData.GetSolarData();
-            this.VotronicBatteryData = this._votronicData.GetBatteryData();
+            this.VotronicSolarData = await this._votronicData.GetSolarData();
+            this.VotronicBatteryData = await this._votronicData.GetBatteryData();
             await this.InvokeAsync(this.StateHasChanged);
         }
 
-        private void StartHub() => Task.Run(async () => await this._dataHubClient.StartAsync(this._navigationManager.BaseUri));
+        private void StartHub() => Task.Run(async () => await this._dataHubClient.StartAsync(this._settingService.GetDataHubUri(this._navigationManager)));
         public void Dispose()
         {
             this._dataHubClient.VotronicDataReceived -= this._dataHubClient_VotronicDataReceived;

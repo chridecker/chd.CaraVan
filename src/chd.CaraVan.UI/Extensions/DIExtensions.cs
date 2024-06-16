@@ -21,8 +21,9 @@ namespace chd.CaraVan.UI.Extensions
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
             services.Configure<AesSettings>(configuration.GetSection(nameof(AesSettings)));
             services.Configure<PiSettings>(configuration.GetSection(nameof(PiSettings)));
-            services.AddScoped<IDataHubClient, DataHubClient>();
 
+            services.AddScoped<IDataHubClient, DataHubClient>();
+            services.AddSingleton<ISettingService, SettingService>();
             services.AddSingleton<IAESManager, AESManager>();
             services.AddSingleton<IPiManager, PiManager>();
             services.AddSingleton<IVictronDataService, VictronDataService>();

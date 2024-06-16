@@ -4,6 +4,7 @@ using chd.CaraVan.Web.Components;
 using System.Diagnostics;
 using NLog.Extensions.Logging;
 using chd.CaraVan.UI.Hubs;
+using chd.CaraVan.Web.Endpoints;
 
 if (!(Debugger.IsAttached || args.Contains("--console")))
 {
@@ -28,14 +29,21 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddCircui
     opt.DetailedErrors = true;
 });
 
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Host.UseSystemd();
 
 var app = builder.Build();
+
+
 
 app.UseExceptionHandler("/Error", createScopeForErrors: true);
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.AddApi();
+
 
 app.MapHub<DataHub>("data-hub");
 

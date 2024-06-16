@@ -15,14 +15,14 @@ namespace chd.CaraVan.UI.Implementations
 
         public void AddData(VotronicSolarData votronicSolarData) => this._votronicSolarData = votronicSolarData;
         public void AddData(VotronicBatteryData votronicBatteryData) => this._votronicBatteryData = votronicBatteryData;
-        public VotronicBatteryData GetBatteryData() => this._votronicBatteryData;
-        public VotronicSolarData GetSolarData() => this._votronicSolarData;
+        public Task<VotronicBatteryData> GetBatteryData(CancellationToken cancellationToken = default) => Task.FromResult(this._votronicBatteryData);
+        public Task<VotronicSolarData> GetSolarData(CancellationToken cancellationToken = default) => Task.FromResult(this._votronicSolarData);
     }
     public interface IVotronicDataService
     {
         void AddData(VotronicBatteryData votronicBatteryData);
         void AddData(VotronicSolarData votronicSolarData);
-        VotronicBatteryData GetBatteryData();
-        VotronicSolarData GetSolarData();
+        Task<VotronicBatteryData> GetBatteryData(CancellationToken cancellationToken = default);
+        Task<VotronicSolarData> GetSolarData(CancellationToken cancellationToken = default);
     }
 }

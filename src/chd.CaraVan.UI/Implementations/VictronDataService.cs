@@ -11,11 +11,11 @@ namespace chd.CaraVan.UI.Implementations
     {
         private VictronData _data;
         public void Add(VictronData data) => this._data = data;
-        public VictronData GetData() => this._data;
+        public Task<VictronData> GetData(CancellationToken cancellationToken) => Task.FromResult(this._data);
     }
     public interface IVictronDataService
     {
         void Add(VictronData data);
-        VictronData GetData();
+        Task<VictronData> GetData(CancellationToken cancellationToken = default);
     }
 }

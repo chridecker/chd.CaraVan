@@ -47,17 +47,17 @@ namespace chd.CaraVan.Devices
             this._controller?.Dispose();
         }
 
-        public void Write(int pin, bool val) => this.WriteToPin(pin, val);
-        public bool Read(int pin) => this._controller?.Read(pin) == PinValue.High;
+        public Task Write(int pin, bool val) => Task.Run(() => this.WriteToPin(pin, val));
+        public Task<bool> Read(int pin) => Task.FromResult(this._controller?.Read(pin) == PinValue.High);
         private void WriteToPin(int pin, bool val) => this._controller?.Write(pin, val ? PinValue.High : PinValue.Low);
 
 
     }
     public interface IPiManager
     {
-        bool Read(int pin);
+        Task<bool> Read(int pin);
         void Start();
         void Stop();
-        void Write(int pin, bool val);
+        Task Write(int pin, bool val);
     }
 }

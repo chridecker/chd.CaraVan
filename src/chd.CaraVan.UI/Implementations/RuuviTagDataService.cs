@@ -1,10 +1,13 @@
 ﻿using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Contracts.Dtos.Base;
 using chd.CaraVan.Contracts.Enums;
+using chd.CaraVan.Contracts.Settings;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +20,17 @@ namespace chd.CaraVan.UI.Implementations
         private readonly ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>> _dataDict;
         private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>> _minDataDict;
         private readonly ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>> _maxDataDict;
+        private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
 
-        public RuuviTagDataService()
+        public RuuviTagDataService(IOptionsMonitor<DeviceSettings> optionsMonitor)
         {
             this._dataDict = new ConcurrentDictionary<int, IDictionary<EDataType, RuuviTagDeviceData>>();
             this._minDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>>();
             this._maxDataDict = new ConcurrentDictionary<int, IDictionary<DateTime, IDictionary<EDataType, decimal?>>>();
+            this._optionsMonitor = optionsMonitor;
         }
+        public Task<IEnumerable<RuuviDeviceDto>> Devices => Task.FromResult(this._optionsMonitor.CurrentValue.RuuviTags);
+
         public void AddData(int id, RuuviTagDeviceData data)
         {
             if (!this._dataDict.ContainsKey(id)) { this._dataDict[id] = new Dictionary<EDataType, RuuviTagDeviceData>(); }
@@ -31,7 +38,7 @@ namespace chd.CaraVan.UI.Implementations
             this.HandleMinMax(id, data);
         }
 
-        public (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type)
+        private (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type)
         {
             decimal? min = null;
             decimal? max = null;
@@ -52,15 +59,26 @@ namespace chd.CaraVan.UI.Implementations
             }
             return (min, max);
         }
-        public RuuviTagDeviceData GetData(int id, EDataType type)
+
+        public async Task<RuuviSensorDataDto> GetData(int id, CancellationToken cancellationToken = default)
         {
+            await Task.CompletedTask;
             if (this._dataDict.TryGetValue(id, out var dic)
-                && dic.TryGetValue(type, out var val))
+                && dic.TryGetValue(EDataType.Temperature, out var val))
             {
-                return val;
+                var minMax = this.GetMinMaxData(id, EDataType.Temperature);
+                return new RuuviSensorDataDto
+                {
+                    Value = val.Value,
+                    Record = val.RecordDateTime,
+                    Id = id,
+                    Max = minMax.Max,
+                    Min = minMax.Min
+                };
             }
             return null;
         }
+
         private void HandleMinMax(int id, RuuviTagDeviceData data)
         {
             if (!this._minDataDict.ContainsKey(id)) { this._minDataDict[id] = new Dictionary<DateTime, IDictionary<EDataType, decimal?>>(); }
@@ -89,8 +107,9 @@ namespace chd.CaraVan.UI.Implementations
     }
     public interface IRuuviTagDataService
     {
+        Task<IEnumerable<RuuviDeviceDto>> Devices { get; }
+
         void AddData(int id, RuuviTagDeviceData data);
-        RuuviTagDeviceData GetData(int id, EDataType type);
-        (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type);
+        Task<RuuviSensorDataDto> GetData(int id, CancellationToken cancellationToken = default);
     }
 }

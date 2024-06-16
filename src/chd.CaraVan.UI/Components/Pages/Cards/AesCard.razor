@@ -2,7 +2,6 @@
 @implements IDisposable
 
 @inject IAESManager manager
-@inject IOptionsMonitor<AesSettings> optionsMonitor
 
 <div class="aes-control">
     <div class="aes-control-content">
@@ -10,9 +9,9 @@
             <SmartButton Checked="@manager.IsActive" CheckedChanged="@OnAesButtonChanged" ButtonTextOn="AES" ButtonTextOff="AES" />
         </div>
         <div class="aes-active-content">
-            <div class="aes-active-battery-limit">@(optionsMonitor.CurrentValue.BatteryLimit.HasValue ? $"Batterie-Limit: {optionsMonitor.CurrentValue.BatteryLimit.Value.ToString("n0")}%" : "")</div>
-            <div class="aes-active-battery-amp-limit">@(optionsMonitor.CurrentValue.SolarAmpLimit.HasValue ? $"Solar-Limit: {optionsMonitor.CurrentValue.SolarAmpLimit.Value.ToString("n0")}A" : "")</div>
-            <div class="aes-active-since">@((manager.SolarAesOffSince.HasValue && optionsMonitor.CurrentValue.AesTimeout.HasValue) ? $"aus um {manager.SolarAesOffSince.Value.Add(optionsMonitor.CurrentValue.AesTimeout.Value).ToString("HH:mm")}" : "kein Timeout")</div>
+            <div class="aes-active-battery-limit">@(_batteryLimit.HasValue ? $"Batterie-Limit: {_batteryLimit.Value.ToString("n0")}%" : "")</div>
+            <div class="aes-active-battery-amp-limit">@(_solarAmpLimit.HasValue ? $"Solar-Limit: {_solarAmpLimit.Value.ToString("n0")}A" : "")</div>
+            <div class="aes-active-since">@((_aesOffSince.HasValue && _aesTimeout.HasValue) ? $"aus um {_aesOffSince.Value.Add(_aesTimeout.Value).ToString("HH:mm")}" : "kein Timeout")</div>
         </div>
     </div>
 </div>
@@ -20,24 +19,43 @@
 
 
 @code {
-    protected override void OnInitialized()
+    private decimal? _batteryLimit;
+    private decimal? _solarAmpLimit;
+    private TimeSpan? _aesTimeout;
+    private DateTime? _aesOffSince;
+
+    protected override async Task OnInitializedAsync()
     {
         manager.StateSwitched += StateSwitched;
-        base.OnInitialized();
+        await this.Reload();
+        await base.OnInitializedAsync();
+    }
+
+  
+    private async Task Reload()
+    {
+        this._aesOffSince = await manager.SolarAesOffSince;
+        this._aesTimeout = await manager.AesTimeout;
+        this._solarAmpLimit = await manager.SolarAmpLimit;
+        this._batteryLimit = await manager.BatteryLimit;
     }
 
     private async void OnAesButtonChanged(bool val)
     {
         if (val)
         {
-            this.manager.SetActive();
+            await this.manager.SetActive();
         }
         else
         {
-            this.manager.Off();
+            await this.manager.Off();
         }
     }
-    private async void StateSwitched(object sender, bool e) => await this.InvokeAsync(this.StateHasChanged);
+    private async void StateSwitched(object sender, bool e)
+    {
+        await this.Reload();
+        await this.InvokeAsync(this.StateHasChanged);
+    }
 
     public void Dispose()
     {
