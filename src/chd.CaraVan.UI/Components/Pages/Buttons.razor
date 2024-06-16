@@ -1,18 +1,32 @@
 ﻿@page "/buttons"
 @inject IAESManager manager
 @inject IPiManager piManager
-@inject IOptionsMonitor<PiSettings> options
 
 @using chd.CaraVan.Devices
 @using chd.CaraVan.Devices.Contracts.Dtos.Pi
 @using chd.CaraVan.UI.Components.Pages.Cards
-<div style="display:grid">
-    @foreach (var pin in options.CurrentValue.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderByDescending(o => o.Type).ThenBy(t => t.Name))
-    {
-        <SmartButton Checked="this.State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="@pin.Name"></SmartButton>
-    }
-</div>
+
+@if (this._settings is not null)
+{
+
+    <div style="display:grid">
+        @foreach (var pin in this._settings.Gpios.Where(x => x.Type != Devices.Contracts.Enums.GpioType.None).OrderByDescending(o => o.Type).ThenBy(t => t.Name))
+        {
+            <SmartButton Checked="this.State(pin)" CheckedChanged="(x)=>Change(pin,x)" Text="@pin.Name"></SmartButton>
+        }
+        }
+    </div>
+}
 @code {
+    private PiSettings _settings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this._settings = await piManager.GetSettings();
+
+        await base.OnInitializedAsync();
+    }
+
     private async Task<bool> State(Gpio pin)
     {
         if (pin.Type == Devices.Contracts.Enums.GpioType.Aes)

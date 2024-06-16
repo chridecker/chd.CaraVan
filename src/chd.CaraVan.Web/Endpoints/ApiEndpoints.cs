@@ -35,6 +35,7 @@ namespace chd.CaraVan.Web.Endpoints
             var pi = api.MapGroup("/pi");
             pi.MapGet("/Read/{pin:int}", async (int pin, IPiManager manager) => await manager.Read(pin));
             pi.MapPost("/Write", async (PinWriteDto dto, IPiManager manager) => await manager.Write(dto.Pin, dto.Value));
+            pi.MapGet("/Settings", async (IPiManager manager, CancellationToken cancellationToken) => await manager.GetSettings(cancellationToken));
 
             var aes = api.MapGroup("/aes");
 

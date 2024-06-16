@@ -22,6 +22,8 @@ namespace chd.CaraVan.Devices
             this._logger = logger;
             this._optionsMonitor = optionsMonitor;
         }
+
+        public Task<PiSettings> GetSettings(CancellationToken cancellationToken) => Task.FromResult(this._optionsMonitor.CurrentValue);
         public void Start()
         {
             this._controller = new GpioController();
@@ -55,6 +57,7 @@ namespace chd.CaraVan.Devices
     }
     public interface IPiManager
     {
+        Task<PiSettings> GetSettings(CancellationToken cancellationToken = default);
         Task<bool> Read(int pin);
         void Start();
         void Stop();

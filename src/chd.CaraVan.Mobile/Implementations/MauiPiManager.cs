@@ -1,5 +1,6 @@
 ﻿using chd.CaraVan.Contracts.Dtos;
 using chd.CaraVan.Devices;
+using chd.CaraVan.Devices.Contracts.Dtos.Pi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace chd.CaraVan.Mobile.Implementations
         public MauiPiManager(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
         {
         }
+
+        public Task<PiSettings> GetSettings(CancellationToken cancellationToken)
+        => this.Get<PiSettings>("pi/Settings", cancellationToken);
 
         public Task<bool> Read(int pin) => this.Get<bool>($"pi/Read/{pin}");
 
