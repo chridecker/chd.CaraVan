@@ -51,9 +51,13 @@ namespace chd.CaraVan.UI.Components.Pages
 
         private async Task Reload()
         {
-            foreach (var device in await this._ruuviTagDataService.Devices)
+            foreach (var device in this._devices)
             {
-                this._valueDict[device.Id] = (await this._ruuviTagDataService.GetData(device.Id));
+                var data = await this._ruuviTagDataService.GetData(device.Id);
+                if (data is not null)
+                {
+                    this._valueDict[device.Id] = data;
+                }
             }
         }
 
