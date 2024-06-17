@@ -21,7 +21,7 @@ namespace chd.CaraVan.Devices
         private const string BATTERY_CHARACTERISTIC = "9a082a4e-5bcc-4b1d-9958-a97cfccfa5ec";
         private const string SOLAR_CHARACTERISTIC = "971ccec2-521d-42fd-b570-cf46fe5ceb65";
 
-        private const string VICTRONENERGY_SVC = "97580001-ddf1-48be-b73e-182664615d8e";
+        private const string VICTRONENERGY_SVC = "65970000-4bda-4c1e-af4b-551c4cf74769";
         private const string VICTRONENERGY_AC_CHARACTERISTIC = "97580002-ddf1-48be-b73e-182664615d8e";
 
         private Adapter _adapter;
