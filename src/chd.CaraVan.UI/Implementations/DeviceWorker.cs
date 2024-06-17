@@ -105,6 +105,7 @@ namespace chd.CaraVan.UI.Implementations
                 Id = this._optionsMonitor.CurrentValue.Victron.Id,
                 DeviceAddress = this._optionsMonitor.CurrentValue.Victron.UID,
                 Alias = this._optionsMonitor.CurrentValue.Victron.Name,
+                Aes = this._optionsMonitor.CurrentValue.Victron.Aes
             });
 
             this._tag.RuuviTagDataReceived += this.RuuviTag_DataReceived;

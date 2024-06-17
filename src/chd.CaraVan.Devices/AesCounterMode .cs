@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace chd.CaraVan.Devices
 {
     public class AesCounterMode : SymmetricAlgorithm
 {

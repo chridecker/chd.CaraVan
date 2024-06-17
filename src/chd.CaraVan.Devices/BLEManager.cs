@@ -156,11 +156,16 @@ namespace chd.CaraVan.Devices
             {
                 try
                 {
+                    var nonce = new byte[8];
                     var val = await data.GetValueAsync();
-                    this._logger?.LogDebug($"Read Victron AC Value {this._victronConfiguration?.Alias}: {string.Join("-", val)}");
-                    if (val.Length > 17)
+                    using var decrypt = new AesCounterMode(nonce, 8).CreateDecryptor(Encoding.UTF8.GetBytes(this._victronConfiguration.Aes), null);
+                    var decrypted = new byte[val.Length];
+                    decrypt.TransformBlock(val, 0, val.Length, decrypted, 0);
+
+                    this._logger?.LogDebug($"Read Victron AC Value {this._victronConfiguration?.Alias}: {string.Join("-", decrypted)}");
+                    if (decrypted.Length > 17)
                     {
-                        this.InvokeVictronDataReceived(new VictronData(val));
+                        this.InvokeVictronDataReceived(new VictronData(decrypted));
                     }
                 }
                 catch (Exception ex)

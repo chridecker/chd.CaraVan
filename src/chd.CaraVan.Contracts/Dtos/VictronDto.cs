@@ -8,5 +8,6 @@ namespace chd.CaraVan.Contracts.Dtos
 {
     public class VictronDto : DeviceDto
     {
+        public string Aes { get; set; }
     }
 }

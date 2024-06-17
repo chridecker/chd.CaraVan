@@ -11,5 +11,6 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Victron
         public int Id { get; set; }
         public string Alias { get; set; }
         public string DeviceAddress { get; set; }
+        public string Aes { get; set; }
     }
 }
