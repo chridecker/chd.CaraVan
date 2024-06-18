@@ -32,8 +32,10 @@ namespace chd.CaraVan.UI.Extensions
 
             services.AddMudServices();
 
-
-            services.AddHostedService<DeviceWorker>();
+            if (OperatingSystem.IsLinux())
+            {
+                services.AddHostedService<DeviceWorker>();
+            }
 
             return services;
         }
