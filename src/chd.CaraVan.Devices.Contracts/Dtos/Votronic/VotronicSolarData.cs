@@ -14,7 +14,7 @@ namespace chd.CaraVan.Devices.Contracts.Dtos.Votronic
         public VotronicSolarData(byte[] data) : base(data)
         {
         }
-
+        public decimal VoltageSolar => this.GetData(2, 2, 10m);
         public decimal Ampere => this.GetData(4, 2, 10m);
 
         public decimal WattH => this.GetData(15, 2, 0.1m);

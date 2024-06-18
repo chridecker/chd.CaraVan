@@ -156,6 +156,7 @@ namespace chd.CaraVan.UI.Implementations
                     AmpereH = e.SolarData.AH,
                     State = e.SolarData.State,
                     Voltage = e.SolarData.Voltage,
+                    VoltageSolar = e.SolarData.VoltageSolar,
                     LoadingPhase = e.SolarData.LoadingPhase
                 };
                 this._votronicDataService.AddData(data);
