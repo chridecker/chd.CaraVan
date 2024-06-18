@@ -120,7 +120,7 @@ namespace chd.CaraVan.UI.Implementations
 
         private async void _tag_VictronDataReceived(object? sender, VictronEventArgs e)
         {
-            this._victronDataService.Add(new Contracts.Dtos.VictronData()
+            await this._victronDataService.Add(new Contracts.Dtos.VictronData()
             {
                 AmpereAC = e.Data.AmpereAC,
                 AmpereDC = e.Data.Ampere,
@@ -143,7 +143,7 @@ namespace chd.CaraVan.UI.Implementations
                     Voltage = e.BatteryData.Voltage,
                     Percent = e.BatteryData.Percent
                 };
-                this._votronicDataService.AddData(data);
+                await this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
             }
             if (e.SolarData is not null)
@@ -159,7 +159,7 @@ namespace chd.CaraVan.UI.Implementations
                     VoltageSolar = e.SolarData.VoltageSolar,
                     LoadingPhase = e.SolarData.LoadingPhase
                 };
-                this._votronicDataService.AddData(data);
+                await this._votronicDataService.AddData(data);
                 await this._hub.Clients.All.VotronicData();
             }
         }
@@ -171,7 +171,7 @@ namespace chd.CaraVan.UI.Implementations
             {
                 DeviceId = device.Id
             };
-            this._dataService.AddData(device.Id, data);
+            await this._dataService.AddData(device.Id, data);
             await this._hub.Clients.All.RuuviTagData();
         }
     }
