@@ -19,6 +19,11 @@ namespace chd.CaraVan.Web.Endpoints
             {
                 return await svc.Devices;
             });
+            api.MapPost("/AddRuuviSensorData", async (RuuviAddDataDto dto, IRuuviTagDataService svc,CancellationToken ct) =>
+            {
+                await svc.AddData(data.Id, dto.Data,ct);
+            });
+            
             api.MapGet("/VotronicSolar", async (IVotronicDataService svc) =>
             {
                 return await svc.GetSolarData();
@@ -27,9 +32,21 @@ namespace chd.CaraVan.Web.Endpoints
             {
                 return await svc.GetBatteryData();
             });
+            api.MapPost("/AddVotronicSolar",async(VotronicSolarData dto, IVotronicDataService svc, CancellationToken  ct)=> {
+                await svc.AddData(dto,ct);
+            });
+             api.MapPost("/AddVotronicBattery",async(VotronicBatteryData dto, IVotronicDataService svc, CancellationToken  ct)=> {
+                await svc.AddData(dto,ct);
+            });
+            
             api.MapGet("/Victron", async (IVictronDataService svc) =>
             {
                 return await svc.GetData();
+            });
+
+            api.MapPost("/AddVictron", async (VictronData dto, IVictronDataService svc,CancellationToken ct) =>
+            {
+                await svc.Add(dto, ct);
             });
 
             var pi = api.MapGroup("/pi");
