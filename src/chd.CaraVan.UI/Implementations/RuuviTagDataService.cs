@@ -31,12 +31,12 @@ namespace chd.CaraVan.UI.Implementations
         }
         public Task<IEnumerable<RuuviDeviceDto>> Devices => Task.FromResult(this._optionsMonitor.CurrentValue.RuuviTags);
 
-        public void AddData(int id, RuuviTagDeviceData data)
+        public Task AddData(int id, RuuviTagDeviceData data, CancellationToken cancellationToken = default) => Task.Run(()=>
         {
             if (!this._dataDict.ContainsKey(id)) { this._dataDict[id] = new Dictionary<EDataType, RuuviTagDeviceData>(); }
             this._dataDict[id][data.Type] = data;
             this.HandleMinMax(id, data);
-        }
+        },cancellationToken);
 
         private (decimal? Min, decimal? Max) GetMinMaxData(int id, EDataType type)
         {
@@ -109,7 +109,7 @@ namespace chd.CaraVan.UI.Implementations
     {
         Task<IEnumerable<RuuviDeviceDto>> Devices { get; }
 
-        void AddData(int id, RuuviTagDeviceData data);
+        Task AddData(int id, RuuviTagDeviceData data, CancellationToken cancellationToken = default);
         Task<RuuviSensorDataDto> GetData(int id, CancellationToken cancellationToken = default);
     }
 }
