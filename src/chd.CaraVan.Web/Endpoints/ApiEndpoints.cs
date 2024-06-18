@@ -21,7 +21,7 @@ namespace chd.CaraVan.Web.Endpoints
             });
             api.MapPost("/AddRuuviSensorData", async (RuuviAddDataDto dto, IRuuviTagDataService svc,CancellationToken ct) =>
             {
-                await svc.AddData(data.Id, dto.Data,ct);
+                await svc.AddData(dto.Id, dto.Data,ct);
             });
             
             api.MapGet("/VotronicSolar", async (IVotronicDataService svc) =>
