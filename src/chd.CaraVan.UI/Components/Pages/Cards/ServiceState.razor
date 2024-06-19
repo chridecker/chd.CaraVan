@@ -1,0 +1,42 @@
+﻿@inject ISystemManager manager
+<SmartButton Checked="this.State()" CheckedChanged="this.Change" Text="@_runningText"></SmartButton>
+
+@code {
+    [Parameter] public string Service { get; set; }
+
+    private string _runningText;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _runningText = Service;
+        var state = await manager.IsServiceRunning(Service);
+        if (state.HasValue)
+        {
+            _runningText = $"{Service} ({state.Value.ToString("HH:mm:ss dd.MM.yy")})";
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private async Task<bool> State(CancellationToken cancellationToken = default) => (await manager.IsServiceRunning(Service, cancellationToken)).HasValue;
+
+    private async Task Change(bool val)
+    {
+        if (!val)
+        {
+            await manager.StopService(Service);
+        }
+        else
+        {
+            await manager.StartService(Service);
+        }
+        var state = await manager.IsServiceRunning(Service);
+        if (state.HasValue)
+        {
+            _runningText = $"{Service} ({state.Value.ToString("HH:mm:ss dd.MM.yy")})";
+        }
+        else
+        {
+            _runningText = Service;
+        }
+    }
+}
