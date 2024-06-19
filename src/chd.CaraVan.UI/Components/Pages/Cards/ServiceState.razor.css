@@ -1,0 +1,36 @@
+﻿.service-state-container {
+    position: absolute;
+    height: 5rem;
+    width: 15rem;
+}
+
+    .service-state-container .service-state-title {
+        position: absolute;
+        left: 1rem;
+        top: 0.5rem;
+    }
+
+    .service-state-container .service-state-button {
+        position: absolute;
+        right: 0rem;
+        top: 1.7rem;
+    }
+
+    .service-state-container .service-state-changetime {
+        position: absolute;
+        left: 0rem;
+        top: 1.5rem;
+        width: 8rem;
+    }
+
+        .service-state-container .service-state-changetime .service-state-changetime-picker {
+            position: absolute;
+            width:5.5rem;
+            left: 0;    
+        }
+
+        .service-state-container .service-state-changetime .service-state-changetime-button {
+            position:absolute;
+            right:0;
+            top:1rem;
+        }
