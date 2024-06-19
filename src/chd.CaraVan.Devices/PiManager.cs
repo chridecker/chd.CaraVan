@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,16 +52,43 @@ namespace chd.CaraVan.Devices
 
         public Task Write(int pin, bool val) => Task.Run(() => this.WriteToPin(pin, val));
         public Task<bool> Read(int pin) => Task.FromResult(this._controller?.Read(pin) == PinValue.High);
+
+        public async Task StartPiTunnel(CancellationToken cancellationToken = default)
+            => _ = await this.RunProcess("sudo service ", "pitunnel start", cancellationToken);
+
+        public async Task StopPiTunnel(CancellationToken cancellationToken = default)
+            => _ = await this.RunProcess("sudo service ", "pitunnel stop", cancellationToken);
+
+        public async Task<bool> IsPiTunnelRunning(CancellationToken cancellationToken = default)
+        {
+            var output = await this.RunProcess("sudo ps", "-x | grep \"pitunnel\"", cancellationToken);
+            return !string.IsNullOrWhiteSpace(output);
+        }
+
         private void WriteToPin(int pin, bool val) => this._controller?.Write(pin, val ? PinValue.High : PinValue.Low);
 
-
+        private async Task<string> RunProcess(string filename, string args, CancellationToken cancellationToken)
+        {
+            var info = new ProcessStartInfo(filename, args)
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = true
+            };
+            var proc = Process.Start(info);
+            proc.Start();
+            await proc.WaitForExitAsync(cancellationToken);
+            return proc.StandardOutput.ReadToEnd();
+        }
     }
     public interface IPiManager
     {
         Task<PiSettings> GetSettings(CancellationToken cancellationToken = default);
+        Task<bool> IsPiTunnelRunning(CancellationToken cancellationToken = default);
         Task<bool> Read(int pin);
         void Start();
+        Task StartPiTunnel(CancellationToken cancellationToken = default);
         void Stop();
+        Task StopPiTunnel(CancellationToken cancellationToken = default);
         Task Write(int pin, bool val);
     }
 }
