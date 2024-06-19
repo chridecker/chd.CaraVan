@@ -4,46 +4,8 @@
 @inject IPiManager manager
 <h3>Settings</h3>
 
-
-<MudButton @onclick="ChangePiTunnelState" ButtonType="ButtonType.Button" Color="Color.Primary">@_piTunnelStateButtonText</MudButton>
-
-<select @bind="settings.Url">
-    @foreach (var url in settings.Urls)
-    {
-        @if (url == settings.Url)
-        {
-            <option selected value="@url">@url</option>
-        }
-        else
-        {
-            <option value="@url">@url</option>
-        }
-    }
-</select>
-
+<ServiceState Service="pitunnel" />
 @code {
-    string _piTunnelStateButtonText = "on";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var piTunnel = await manager.IsPiTunnelRunning();
-        _piTunnelStateButtonText = piTunnel ? "OFF" : "ON";
-        await base.OnInitializedAsync();
-    }
-
-    private async Task ChangePiTunnelState()
-    {
-        if (await manager.IsPiTunnelRunning())
-        {
-            await manager.StopPiTunnel();
-            this._piTunnelStateButtonText = "ON";
-        }
-        else
-        {
-            await manager.StartPiTunnel();
-            this._piTunnelStateButtonText = "OFF";
-        }
-    }
-
+    
 }
 
