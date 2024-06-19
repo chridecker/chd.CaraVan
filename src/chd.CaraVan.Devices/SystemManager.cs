@@ -4,6 +4,24 @@ namespace chd.CaraVan.Devices
 {
     public class SystemManager : ISystemManager
     {
+     public void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken) => _ = StopAfterTime(service, span, cancellationToken);
+    
+     private Task StopAfterTime(string service, TimeSpan span, CancellationToken cancellationToken) => Task.Run(async () =>
+     {
+         var timer = new PeriodicTimer(span);
+         if (await timer.WaitForNextTickAsync(cancellationToken))
+         {
+             if ((await this.IsServiceRunning(service)).HasValue)
+             {
+                 await this.StopService(service);
+             }
+             else
+             {
+                 await this.StartService(service);
+             }
+         }
+     }, cancellationToken);
+
         public async Task<bool> StartService(string service, CancellationToken cancellationToken = default)
         {
             if (!(await this.IsServiceRunning(service, cancellationToken)).HasValue)
@@ -62,6 +80,7 @@ namespace chd.CaraVan.Devices
     }
     public interface ISystemManager
     {
+        void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken = default);
         Task<DateTime?> IsServiceRunning(string service, CancellationToken cancellationToken = default);
         Task<bool> StartService(string service, CancellationToken cancellationToken = default);
         Task<bool> StopService(string service, CancellationToken cancellationToken = default);
