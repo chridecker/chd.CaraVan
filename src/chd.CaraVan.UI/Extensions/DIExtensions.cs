@@ -26,6 +26,7 @@ namespace chd.CaraVan.UI.Extensions
             services.AddSingleton<ISettingService, SettingService>();
             services.AddSingleton<IAESManager, AESManager>();
             services.AddSingleton<IPiManager, PiManager>();
+            services.AddSingleton<ISystemManager, SystemManager>();
             services.AddSingleton<IVictronDataService, VictronDataService>();
             services.AddSingleton<IRuuviTagDataService, RuuviTagDataService>();
             services.AddSingleton<IVotronicDataService, VotronicDataService>();
