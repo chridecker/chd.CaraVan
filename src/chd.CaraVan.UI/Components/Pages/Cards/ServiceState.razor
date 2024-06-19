@@ -1,24 +1,28 @@
 ﻿@inject ISystemManager manager
-<SmartButton Checked="this.State()" CheckedChanged="this.Change" Text="@_runningText"></SmartButton>
-
+<div class="service-state-container">
+    <div class="service-state-title">
+        <MudBlazor.MudText Typo="MudBlazor.Typo.body2">@Service</MudBlazor.MudText>
+    </div>
+    <div class="service-state-button">
+        <SmartButton Checked="this.State()" CheckedChanged="this.Change"></SmartButton>
+    </div>
+    <div class="service-state-changetime">
+        <div class="service-state-changetime-picker">
+            <MudBlazor.MudTimePicker AnchorOrigin="MudBlazor.Origin.BottomLeft" Label="wechsel" @bind-Time="span" Color="MudBlazor.Color.Primary"
+                                     IconSize="MudBlazor.Size.Small" />
+        </div>
+        <div class="service-state-changetime-button">
+            <MudBlazor.MudIconButton Color="MudBlazor.Color.Warning" Icon="@MudBlazor.Icons.Material.Filled.Clear" OnClick="()=>{span = null;}" />
+        </div>
+    </div>
+</div>
 @code {
-    [Parameter] public string Service { get; set; }
+    [[Parameter] public string Service { get; set; }
 
-    private string _runningText;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _runningText = Service;
-        var state = await manager.IsServiceRunning(Service);
-        if (state.HasValue)
-        {
-            _runningText = $"{Service} ({state.Value.ToString("HH:mm:ss dd.MM.yy")})";
-        }
-        await base.OnInitializedAsync();
-    }
-
-    private async Task<bool> State(CancellationToken cancellationToken = default) => (await manager.IsServiceRunning(Service, cancellationToken)).HasValue;
-
+    private TimeSpan? span;
+    
+    private async Task<bool> State(CancellationToken cancellationToken = default) => false;
+    
     private async Task Change(bool val)
     {
         if (!val)
@@ -29,14 +33,9 @@
         {
             await manager.StartService(Service);
         }
-        var state = await manager.IsServiceRunning(Service);
-        if (state.HasValue)
+        if (span.HasValue)
         {
-            _runningText = $"{Service} ({state.Value.ToString("HH:mm:ss dd.MM.yy")})";
-        }
-        else
-        {
-            _runningText = Service;
+            manager.ChangeStateInTime(Service, span.Value);
         }
     }
 }
