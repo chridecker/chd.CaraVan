@@ -1,4 +1,5 @@
-﻿@inject ISystemManager manager
+﻿@using chd.CaraVan.Devices
+@inject ISystemManager manager
 <div class="service-state-container">
     <div class="service-state-title">
         <MudBlazor.MudText Typo="MudBlazor.Typo.body2">@Service</MudBlazor.MudText>
@@ -17,7 +18,7 @@
     </div>
 </div>
 @code {
-    [[Parameter] public string Service { get; set; }
+    [Parameter] public string Service { get; set; }
 
     private TimeSpan? span;
     
