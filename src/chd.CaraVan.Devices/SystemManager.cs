@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace BlazorApp3
+namespace chd.CaraVan.Devices
 {
     public class SystemManager : ISystemManager
     {
