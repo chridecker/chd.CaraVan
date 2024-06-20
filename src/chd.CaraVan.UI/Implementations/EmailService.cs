@@ -6,22 +6,25 @@ namespace chd.CaraVan.UI.Implementations
 {
     public class EmailService : IEmailService
     {
+        private readonly IOptionsMonitor<EmailSettings> _optionsMonitor;
+        
+        public EmailService(IOptionsMonitor<EmailSettings> optionsMonitor)
+        {
+            this._optionsMonitor = optionsMonitor;
+        }
         public async Task SendEmail(string to, string caption, string body, CancellationToken cancellationToken = default)
         {
             try
             {
-
-                using var client = new SmtpClient("mail.gmx.net", 587)
+                using var client = new SmtpClient(this._optionsMonitor.CurrentValue.Smtp, this._optionsMonitor.CurrentValue.Port)
                 {
-                    UseDefaultCredentials = true,
-                    Credentials = new NetworkCredential("chri_13@gmx.at", "35100"),
+                    Credentials = new NetworkCredential(this._optionsMonitor.CurrentValue.Username, this._optionsMonitor.CurrentValue.Password),
                     EnableSsl = true,
-                    
                 };
 
-                var mail = new MailMessage("test@example.co", to)
+                var mail = new MailMessage(this._optionsMonitor.CurrentValue.From, to)
                 {
-                    From = new MailAddress("test@example.com", "TestFromName"),
+                    From = new MailAddress(this._optionsMonitor.CurrentValue.From, "chdCaraVan Service"),
                     IsBodyHtml = false,
                     Body = body,
                     Subject = caption,
@@ -33,8 +36,7 @@ namespace chd.CaraVan.UI.Implementations
 
             catch (SmtpException ex)
             {
-                throw new ApplicationException
-                  ("SmtpException has occured: " + ex.Message);
+                throw new ApplicationException("SmtpException has occured: " + ex.Message);
             }
             catch (Exception ex)
             {
