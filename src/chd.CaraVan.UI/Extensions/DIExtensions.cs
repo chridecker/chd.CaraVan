@@ -18,7 +18,7 @@ namespace chd.CaraVan.UI.Extensions
     {
         public static IServiceCollection AddUi(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<EmailSettings>(configuration.GetSection(nameof(DeviceSettings)));
+            services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
             services.Configure<DeviceSettings>(configuration.GetSection(nameof(DeviceSettings)));
             services.Configure<AesSettings>(configuration.GetSection(nameof(AesSettings)));
             services.Configure<PiSettings>(configuration.GetSection(nameof(PiSettings)));
