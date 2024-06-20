@@ -1,6 +1,7 @@
 ﻿using chd.CaraVan.Contracts.Settings;
 using chd.CaraVan.Devices;
 using chd.CaraVan.Devices.Contracts.Dtos.Pi;
+using chd.CaraVan.Devices.Contracts.Interfaces;
 using chd.CaraVan.UI.Hubs.Clients;
 using chd.CaraVan.UI.Implementations;
 using Microsoft.Extensions.Configuration;
