@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 using chd.CaraVan.Devices.Contracts.Interfaces;
+using chd.CaraVan.Contracts.Settings;
 
 namespace chd.CaraVan.UI.Implementations
 {
@@ -13,7 +14,7 @@ namespace chd.CaraVan.UI.Implementations
         {
             this._optionsMonitor = optionsMonitor;
         }
-        public async Task SendEmail(string to, string caption, string body, CancellationToken cancellationToken = default)
+        public async Task SendEmail(string caption, string body, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -23,7 +24,7 @@ namespace chd.CaraVan.UI.Implementations
                     EnableSsl = true,
                 };
 
-                var mail = new MailMessage(this._optionsMonitor.CurrentValue.From, to)
+                var mail = new MailMessage(this._optionsMonitor.CurrentValue.From, this._optionsMonitor.CurrentValue.To)
                 {
                     From = new MailAddress(this._optionsMonitor.CurrentValue.From, "chdCaraVan Service"),
                     IsBodyHtml = false,

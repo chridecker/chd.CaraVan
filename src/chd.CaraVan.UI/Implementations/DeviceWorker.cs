@@ -6,12 +6,14 @@ using chd.CaraVan.Devices.Contracts.Dtos.Pi;
 using chd.CaraVan.Devices.Contracts.Dtos.RuvviTag;
 using chd.CaraVan.Devices.Contracts.Dtos.Victron;
 using chd.CaraVan.Devices.Contracts.Dtos.Votronic;
+using chd.CaraVan.Devices.Contracts.Interfaces;
 using chd.CaraVan.UI.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MudBlazor.Extensions;
+using System.Threading;
 
 namespace chd.CaraVan.UI.Implementations
 {
@@ -21,6 +23,7 @@ namespace chd.CaraVan.UI.Implementations
         private readonly IHubContext<DataHub, IDataHub> _hub;
         private readonly IOptionsMonitor<AesSettings> _optionsMonitorAes;
         private readonly IOptionsMonitor<PiSettings> _optionsMonitorPi;
+        private readonly IEmailService _emailService;
         private readonly IOptionsMonitor<DeviceSettings> _optionsMonitor;
         private readonly IRuuviTagDataService _dataService;
         private readonly IVotronicDataService _votronicDataService;
@@ -31,7 +34,7 @@ namespace chd.CaraVan.UI.Implementations
 
         public DeviceWorker(ILogger<DeviceWorker> logger,
              IHubContext<DataHub, IDataHub> hub, IOptionsMonitor<AesSettings> optionsMonitorAes,
-             IOptionsMonitor<PiSettings> optionsMonitorPi,
+             IOptionsMonitor<PiSettings> optionsMonitorPi, IEmailService emailService,
              IPiManager piManager, IAESManager aesManager, IVictronDataService victronDataService,
             IOptionsMonitor<DeviceSettings> optionsMonitor, IRuuviTagDataService dataService, IVotronicDataService votronicDataService)
         {
@@ -39,6 +42,7 @@ namespace chd.CaraVan.UI.Implementations
             this._hub = hub;
             this._optionsMonitorAes = optionsMonitorAes;
             this._optionsMonitorPi = optionsMonitorPi;
+            this._emailService = emailService;
             this._pi = piManager;
             this._aesManager = aesManager;
             this._victronDataService = victronDataService;
@@ -82,6 +86,8 @@ namespace chd.CaraVan.UI.Implementations
         {
             foreach (var pin in this._optionsMonitorPi.CurrentValue.Gpios.Where(x => x.Type == Devices.Contracts.Enums.GpioType.Aes))
             {
+
+                await this._emailService.SendEmail($"AES switched to {(e ? "ON" : "OFF")}", "AES");
                 await this._pi.Write(pin.Pin, this._optionsMonitorAes.CurrentValue.IsActive && e);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using chd.CaraVan.Devices.Contracts.Interfaces;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace chd.CaraVan.Devices
@@ -6,11 +7,14 @@ namespace chd.CaraVan.Devices
     public class SystemManager : ISystemManager
     {
         private readonly ILogger<SystemManager> _logger;
+        private readonly IEmailService _emailService;
 
-        public SystemManager(ILogger<SystemManager> logger)
+        public SystemManager(ILogger<SystemManager> logger, IEmailService emailService)
         {
             this._logger = logger;
+            this._emailService = emailService;
         }
+
         public void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken) => _ = StopAfterTime(service, span, cancellationToken);
 
         private Task StopAfterTime(string service, TimeSpan span, CancellationToken cancellationToken) => Task.Run(async () =>
@@ -20,10 +24,13 @@ namespace chd.CaraVan.Devices
             {
                 if ((await this.IsServiceRunning(service)).HasValue)
                 {
+                    await this._emailService.SendEmail($"Service '{service}' stopped @{DateTime.Now.ToString("dd.MM.yy HH:MM:ss")}", "Gestarted", cancellationToken);
                     await this.StopService(service);
                 }
                 else
                 {
+
+                    await this._emailService.SendEmail($"Service '{service}' started @{DateTime.Now.ToString("dd.MM.yy HH:MM:ss")}", "Gestarted", cancellationToken);
                     await this.StartService(service);
                 }
             }
