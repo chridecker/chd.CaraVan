@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
+using chd.CaraVan.Devices.Contracts.Interfaces;
 
 namespace chd.CaraVan.UI.Implementations
 {
@@ -43,9 +44,5 @@ namespace chd.CaraVan.UI.Implementations
                 throw ex;
             }
         }
-    }
-    public interface IEmailService
-    {
-        Task SendEmail(string to, string caption, string body, CancellationToken cancellationToken = default);
     }
 }
