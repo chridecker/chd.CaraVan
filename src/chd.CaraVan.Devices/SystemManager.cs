@@ -1,26 +1,33 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace chd.CaraVan.Devices
 {
     public class SystemManager : ISystemManager
     {
-     public void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken) => _ = StopAfterTime(service, span, cancellationToken);
-    
-     private Task StopAfterTime(string service, TimeSpan span, CancellationToken cancellationToken) => Task.Run(async () =>
-     {
-         var timer = new PeriodicTimer(span);
-         if (await timer.WaitForNextTickAsync(cancellationToken))
-         {
-             if ((await this.IsServiceRunning(service)).HasValue)
-             {
-                 await this.StopService(service);
-             }
-             else
-             {
-                 await this.StartService(service);
-             }
-         }
-     }, cancellationToken);
+        private readonly ILogger<SystemManager> _logger;
+
+        public SystemManager(ILogger<SystemManager> logger)
+        {
+            this._logger = logger;
+        }
+        public void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken) => _ = StopAfterTime(service, span, cancellationToken);
+
+        private Task StopAfterTime(string service, TimeSpan span, CancellationToken cancellationToken) => Task.Run(async () =>
+        {
+            using var timer = new PeriodicTimer(span);
+            if (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                if ((await this.IsServiceRunning(service)).HasValue)
+                {
+                    await this.StopService(service);
+                }
+                else
+                {
+                    await this.StartService(service);
+                }
+            }
+        }, cancellationToken);
 
         public async Task<bool> StartService(string service, CancellationToken cancellationToken = default)
         {
@@ -43,22 +50,29 @@ namespace chd.CaraVan.Devices
 
         public async Task<DateTime?> IsServiceRunning(string service, CancellationToken cancellationToken = default)
         {
-            var activeRunnigString = "Active: ";
-            var sinceString = " since";
-            var isActiveText = "active (running)";
-            var output = await CommandService(service, "status");
-            var startIndex = output.IndexOf(activeRunnigString);
-            var endOfLine = output.Substring(startIndex + activeRunnigString.Length).IndexOf(';');
-
-            var activeStateIndex = output.Substring(startIndex + activeRunnigString.Length).IndexOf(sinceString);
-
-            var activeText = output.Substring(startIndex + activeRunnigString.Length, activeStateIndex);
-            var runningSincetext = output.Substring(startIndex + activeRunnigString.Length + activeStateIndex + sinceString.Length + 1 + 3, endOfLine - activeStateIndex - sinceString.Length - 1 - 8);
-            var isActive = activeText.Contains(isActiveText);
-            if (isActive &&
-                DateTime.TryParse(runningSincetext, out var running))
+            try
             {
-                return running;
+                var activeRunnigString = "Active: ";
+                var sinceString = " since";
+                var isActiveText = "active (running)";
+                var output = await CommandService(service, "status");
+                var startIndex = output.IndexOf(activeRunnigString);
+                var endOfLine = output.Substring(startIndex + activeRunnigString.Length).IndexOf(';');
+
+                var activeStateIndex = output.Substring(startIndex + activeRunnigString.Length).IndexOf(sinceString);
+
+                var activeText = output.Substring(startIndex + activeRunnigString.Length, activeStateIndex);
+                var runningSincetext = output.Substring(startIndex + activeRunnigString.Length + activeStateIndex + sinceString.Length + 1 + 3, endOfLine - activeStateIndex - sinceString.Length - 1 - 8);
+                var isActive = activeText.Contains(isActiveText);
+                if (isActive &&
+                    DateTime.TryParse(runningSincetext, out var running))
+                {
+                    return running;
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger?.LogError(ex, ex.Message);
             }
             return null;
         }
@@ -68,14 +82,22 @@ namespace chd.CaraVan.Devices
 
         private async Task<string> RunProcess(string filename, string args, CancellationToken cancellationToken)
         {
-            var info = new ProcessStartInfo(filename, args)
+            try
             {
-                RedirectStandardOutput = true,
-            };
-            var proc = Process.Start(info);
-            proc.Start();
-            await proc.WaitForExitAsync(cancellationToken);
-            return await proc.StandardOutput.ReadToEndAsync();
+                var info = new ProcessStartInfo(filename, args)
+                {
+                    RedirectStandardOutput = true,
+                };
+                var proc = Process.Start(info);
+                proc.Start();
+                await proc.WaitForExitAsync(cancellationToken);
+                return await proc.StandardOutput.ReadToEndAsync();
+            }
+            catch (Exception ex)
+            {
+                this._logger?.LogError(ex, ex.Message);
+                return string.Empty;
+            }
         }
     }
     public interface ISystemManager

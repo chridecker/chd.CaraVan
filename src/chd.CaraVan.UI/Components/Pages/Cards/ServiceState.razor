@@ -9,7 +9,8 @@
     </div>
     <div class="service-state-changetime">
         <div class="service-state-changetime-picker">
-            <MudBlazor.MudTimePicker AnchorOrigin="MudBlazor.Origin.BottomLeft" Label="wechsel" @bind-Time="span" Color="MudBlazor.Color.Primary"
+            <MudBlazor.MudTimePicker Label="wechsel" @bind-Time="span" Color="MudBlazor.Color.Primary"
+                                     PickerVariant="MudBlazor.PickerVariant.Dialog"
                                      IconSize="MudBlazor.Size.Small" />
         </div>
         <div class="service-state-changetime-button">
@@ -21,9 +22,9 @@
     [Parameter] public string Service { get; set; }
 
     private TimeSpan? span;
-    
-    private async Task<bool> State(CancellationToken cancellationToken = default) => false;
-    
+
+    private async Task<bool> State(CancellationToken cancellationToken = default) => (await manager.IsServiceRunning(Service)).HasValue;
+
     private async Task Change(bool val)
     {
         if (!val)
