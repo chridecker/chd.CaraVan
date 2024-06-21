@@ -1,0 +1,13 @@
+﻿@using chd.CaraVan.Devices
+@inject ISystemManager manager
+<div class="reboot-container">
+    <div class="reboot-button">
+        <MudIconButton Icon="@Icons.Material.Filled.RestartAlt" Color="Color.Error" Size="Size.Large" OnClick="async()=>await manager.Reboot()"></MudIconButton>
+    </div>
+    <div class="reboot-text">
+        Reboot
+    </div>
+</div>
+@code {
+
+}

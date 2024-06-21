@@ -1,5 +1,5 @@
 ﻿.service-state-container {
-    position: absolute;
+    position: relative;
     height: 5rem;
     width: 15rem;
 }

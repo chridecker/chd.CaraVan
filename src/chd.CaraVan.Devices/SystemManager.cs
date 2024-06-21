@@ -55,6 +55,8 @@ namespace chd.CaraVan.Devices
             return false;
         }
 
+        public Task Reboot(CancellationToken cancellationToken = default) => this.RunProcess("reboot", "", cancellationToken);
+
         public async Task<DateTime?> IsServiceRunning(string service, CancellationToken cancellationToken = default)
         {
             try
@@ -109,6 +111,7 @@ namespace chd.CaraVan.Devices
     }
     public interface ISystemManager
     {
+        Task Reboot(CancellationToken cancellationToken = default);
         void ChangeStateInTime(string service, TimeSpan span, CancellationToken cancellationToken = default);
         Task<DateTime?> IsServiceRunning(string service, CancellationToken cancellationToken = default);
         Task<bool> StartService(string service, CancellationToken cancellationToken = default);
