@@ -3,16 +3,19 @@ using System.Net;
 using System.Net.Mail;
 using chd.CaraVan.Devices.Contracts.Interfaces;
 using chd.CaraVan.Contracts.Settings;
+using Microsoft.Extensions.Logging;
 
 namespace chd.CaraVan.UI.Implementations
 {
     public class EmailService : IEmailService
     {
         private readonly IOptionsMonitor<EmailSettings> _optionsMonitor;
-        
-        public EmailService(IOptionsMonitor<EmailSettings> optionsMonitor)
+        private readonly ILogger<EmailService> _logger;
+
+        public EmailService(IOptionsMonitor<EmailSettings> optionsMonitor, ILogger<EmailService> logger)
         {
             this._optionsMonitor = optionsMonitor;
+            this._logger = logger;
         }
         public async Task SendEmail(string caption, string body, CancellationToken cancellationToken = default)
         {
@@ -33,16 +36,11 @@ namespace chd.CaraVan.UI.Implementations
                     BodyEncoding = System.Text.Encoding.UTF8,
                     SubjectEncoding = System.Text.Encoding.UTF8
                 };
-                await client.SendMailAsync(mail,cancellationToken);
-            }
-
-            catch (SmtpException ex)
-            {
-                throw new ApplicationException("SmtpException has occured: " + ex.Message);
+                await client.SendMailAsync(mail, cancellationToken);
             }
             catch (Exception ex)
             {
-                throw ex;
+                this._logger?.LogError(ex, ex.Message);
             }
         }
     }
